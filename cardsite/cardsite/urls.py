@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+## Our Imports
+from dashboard import views as dashboard_views
+
 urlpatterns = [
+    path('', dashboard_views.dashboard),
     path('admin/', admin.site.urls),
 ]
