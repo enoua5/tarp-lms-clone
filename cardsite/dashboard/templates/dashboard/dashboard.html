@@ -7,16 +7,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 </head>
 <body>
-{% block body %}
-{% for course in course_list %}
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">{{ course.department }} {{course.coursenum }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ course.coursename }}</h6>
-        <p class="card-text">{{ course.instname }}<br>{{ course.meetingtime }}</p>
-      </div>
+    <div class="container text-center">
+        <div class="row row-cols-3">
+            {% block body %}
+            {% for course in course_list %}
+                <div class="p-3 col">
+                    <div class="card btn" style="width: 18rem;">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ course.department }} {{course.coursenum }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ course.coursename }}</h6>
+                        <p class="card-text">{{ course.instname }}<br>{{ course.meetingtime }}</p>
+                      </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endblock %}
+        </div>
     </div>
-{% endfor %}
-{% endblock %}
 </body>
 </html>
