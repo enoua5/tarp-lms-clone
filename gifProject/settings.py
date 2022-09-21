@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'project_database',  
         'USER': 'root',  
-        'PASSWORD': 'gifisjiff',  
+        'PASSWORD': 'friend',
         'HOST': '127.0.0.1',  
         'PORT': '3306',  
         'OPTIONS': {  
@@ -126,3 +126,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# url that will serve the media files
+MEDIA_URL = '/media/'
+
+# path to the root dir where the files are getting stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
