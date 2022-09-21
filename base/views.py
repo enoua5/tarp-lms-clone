@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import ImageForm
+from .forms import ProfileForm
 
 
 # Create your views here.
@@ -9,12 +9,12 @@ def test(req):
 
 def profile(req):
     if req.method == 'POST':
-        form = ImageForm(req.POST, req.FILES)
+        form = ProfileForm(req.POST, req.FILES)
         if form.is_valid():
             form.save()
             # Get the current instance object to display in the template
             img_obj = form.instance
             return render(req, 'main/profile.html', {'form': form, 'img_obj': img_obj})
     else:
-        form = ImageForm()
+        form = ProfileForm()
     return render(req, 'main/profile.html', {'form': form})
