@@ -42,12 +42,17 @@
                         {% if field.name == 'birthday' %}
                             Date of birth (MM/DD/YY)
                         {% endif %}
+                        {% if field.name == 'account_type' %}
+                            Choose the account type
+                        {% endif %}
                         <br>
                         {{ field }}
                     </div>
                     {% endfor %}
-                    <input class="btn btn-primary" type="submit" value="Sign Up">
-                    <a href="{% url 'authentication:login' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Back to log In</a>
+                    <div class="mt-3">
+                        <input class="btn btn-primary" type="submit" value="Sign Up">
+                        <a href="{% url 'authentication:login' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Back to log In</a>
+                    </div>
                 </div> 
             </form>
         </div>
