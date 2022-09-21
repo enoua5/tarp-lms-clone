@@ -20,7 +20,7 @@ def login(request):
                 user = User.objects.get(username=username)
                 name = user.get_full_name()
                 messages.success(request, f'Welcome {name}')
-                return redirect('authentication:viewData')
+                return redirect('../dashboard/')
                 # User not found
         else:
             # If there were errors, we render the form with these
@@ -35,7 +35,7 @@ def signup(request):
             fName = form.cleaned_data.get('first_name')
             lName = form.cleaned_data.get('last_name')
             messages.success(request, f'Welcome {fName} {lName}!')
-            return redirect('authentication:viewData')
+            return redirect('../dashboard/')
     else:
         form = RegistrationForm()
 
