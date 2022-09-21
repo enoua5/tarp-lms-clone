@@ -38,4 +38,7 @@ def signup(request):
             return redirect('authentication:viewData')
     else:
         form = RegistrationForm()
-    return render(request, 'authentication/signup.html', {'form':form})
+
+    args = {}
+    args['form'] = form
+    return render(request, 'authentication/signup.html', args)

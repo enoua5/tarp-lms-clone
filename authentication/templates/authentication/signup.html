@@ -5,6 +5,15 @@
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
             <h4>Sign Up</h4>
+    {% if form.errors %}
+        <ul class="list-group">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li class="list-group-item list-group-item-danger">{{error}}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
         </div>
         <div class="card-body mx-auto">
             <form method="POST">
