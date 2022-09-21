@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+{% block body %}
+<div class="container text-center">
+    <div class="row row-cols-3">
+        {% for course in course_list %}
+            <div class="p-3 col">
+                <div class="card btn" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ course.department }} {{course.coursenum }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ course.coursename }}</h6>
+                    <p class="card-text">{{ course.instname }}<br>{{ course.meetingtime }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
