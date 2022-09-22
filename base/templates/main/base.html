@@ -14,6 +14,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Profile</a>
                     </li>
+                    <!-- THIS IS VERY TEMPORARY, PLEASE REMOVE AFTER DEMO!!! -->
+                    {% if request.META.QUERY_STRING == "i" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Classes</a>
+                    </li>
+                    {% elif request.META.QUERY_STRING == "s" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Registration</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
