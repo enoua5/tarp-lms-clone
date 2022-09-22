@@ -18,8 +18,6 @@ def login(request):
             if user is not None:
                 auth.login(request, user)
                 user = User.objects.get(username=username)
-                name = user.get_full_name()
-                messages.success(request, f'Welcome {name}')
                 return redirect('../dashboard/')
                 # User not found
         else:
@@ -32,10 +30,7 @@ def signup(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            fName = form.cleaned_data.get('first_name')
-            lName = form.cleaned_data.get('last_name')
-            messages.success(request, f'Welcome {fName} {lName}!')
-            return redirect('../dashboard/')
+            return redirect('../../dashboard/')
     else:
         form = RegistrationForm()
 
