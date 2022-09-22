@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', include('base.urls')),
+    path('dashboard/', include('dashboard.urls'))
 ]
 # will allow images to be viewed using local development server
 if settings.DEBUG:
