@@ -1,0 +1,29 @@
+{% extends 'authentication/base.html' %}
+
+{% block body %}
+
+<div class="container mt-3" style="width: 25rem">
+    <div class="card border-secondary">
+        <div class="card-header" style="text-align: center">
+            <h4>Log In</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="container" style="width: 70%">
+                    {% for field in form %}
+                    <div class="form-group mb-2">
+                        {{ field.name }}
+                        <br>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <input class="btn btn-primary" type="submit" value="Log In">
+                    <a href="{% url 'authentication:signup' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Sign Up</a>
+                </div> 
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
