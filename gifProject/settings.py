@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
-    'dashboard.apps.DashboardConfig'
+    'dashboard.apps.DashboardConfig',
+    'account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'project_database',  
         'USER': 'root',  
-        'PASSWORD': 'gifisjiff',
+        'PASSWORD': 'friend',
         'HOST': '127.0.0.1',  
         'PORT': '3306',  
         'OPTIONS': {  
