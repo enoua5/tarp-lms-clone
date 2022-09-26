@@ -1,0 +1,9 @@
+{% extends 'main/base.html' %}
+{% block body %}
+<h1>Index</h1>
+<ul>
+{% for item in urls %}
+    <li><a href="{% url 'test:'|add:item.name %}">{{ item.name }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
