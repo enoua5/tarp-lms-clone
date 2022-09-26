@@ -1,3 +1,12 @@
 {% extends 'main/base.html' %}
 {% block body %}
+    <img src="{{ user.profile.image.url }}">
+    <h1>{{ user.username }}</h1>
+    <div>{{ user.firstname }} {{ user.lastname }}</div>
+    <div>{{ user.email }}</div>
+    <div>{{ user.profile.bio }}</div>
+    <a href="{{ user.profile.link1 }}">{{ user.profile.link1 }}</a>
+    <a href="{{ user.profile.link2 }}">{{ user.profile.link2 }}</a>
+    <a href="{{ user.profile.link3 }}">{{ user.profile.link3 }}</a>
+
 {% endblock %}
