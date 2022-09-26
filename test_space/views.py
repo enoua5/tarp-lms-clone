@@ -15,3 +15,11 @@ def template(req):
 
 def profile(req):
     return render(req, 'tests/profile.html')
+
+def accounttype(req):
+    ctx = {
+        'isStudent': req.user.groups.filter(name="Student").exists(),
+        'isInstructor': req.user.groups.filter(name="Instructor").exists(),
+    }
+
+    return render(req, 'tests/accounttype.html', ctx)
