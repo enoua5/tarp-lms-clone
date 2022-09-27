@@ -50,5 +50,5 @@ def dashboard(request):
     # Step 2: Get list of courses.
     course_list = Course.objects.all()
 
-    # Step 3: Render our HTML page, passing it the list of courses
-    return render(request, 'dashboard/dashboard.html', {'course_list' : course_list})
+    # Step 2: Render our HTML page, passing it the list of courses
+    return render(request, 'dashboard/dashboard.html', {'course_list' : course_list, 'page_title': "Dashboard"})

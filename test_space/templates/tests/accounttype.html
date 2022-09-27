@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load auth_utils %}
+{% block body %}
+<h1>Account type</h1>
+
+<h2>Loaded from context</h2>
+{% if isInstructor %}
+    <p>You are an instructor</p>
+{% endif %}
+{% if isStudent %}
+    <p>You are a student</p>
+{% endif %}
+
+<h2>Loaded from template</h2>
+{% if request.user|has_group:"Instructor" %}
+    <p>You are an instructor</p>
+{% endif %}
+{% if request.user|has_group:"Student" %}
+    <p>You are a student</p>
+{% endif %}
+
+{% endblock %}
