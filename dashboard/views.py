@@ -2,17 +2,21 @@
 from django.shortcuts import render
 
 # Our Imports
-from .models import Course
+from course_management.models import Course
+# Need to import User here.
 
 # Course Dashboard
 def dashboard(request):
-    # Step 0: Create hard-coded courses for testing, REMOVE LATER.
+    # Step 0: Create hard-coded Instructors for testing, REMOVE LATER.
+    
+    # Step 1.: Create hard-coded courses for testing, REMOVE LATER.
     cs3750 = Course.objects.get_or_create(
         department="CS",
         course_num=3750,
         course_name="Software Engineering II",
-        inst_name="Arpit Christi",
-        meeting_time="T/TH 9:30-11:20AM",
+        instructor=
+        
+        meeting_="T/TH 9:30-11:20AM",
         meeting_location="NOORDA 304"
     )
 
@@ -43,8 +47,8 @@ def dashboard(request):
         meeting_location="TH 402"
     )
 
-    # Step 1: Get list of courses.
+    # Step 2: Get list of courses.
     course_list = Course.objects.all()
 
-    # Step 2: Render our HTML page, passing it the list of courses
+    # Step 3: Render our HTML page, passing it the list of courses
     return render(request, 'dashboard/dashboard.html', {'course_list' : course_list})
