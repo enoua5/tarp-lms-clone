@@ -1,4 +1,5 @@
 {% load static %}
+{% load auth_utils %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,12 +15,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'test:profile' %}">Profile</a>
                     </li>
-                    <!-- THIS IS VERY TEMPORARY, PLEASE REMOVE AFTER DEMO!!! -->
-                    {% if request.META.QUERY_STRING == "i" %}
+                    {% if request.user|has_group:"Instructor" %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Classes</a>
                     </li>
-                    {% elif request.META.QUERY_STRING == "s" %}
+                    {% elif request.user|has_group:"Student" %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Registration</a>
                     </li>
