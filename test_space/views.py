@@ -12,3 +12,11 @@ def index(req):
 
 def template(req):
     return render(req, 'tests/template.html')
+
+def accounttype(req):
+    ctx = {
+        'isStudent': req.user.groups.filter(name="Student").exists(),
+        'isInstructor': req.user.groups.filter(name="Instructor").exists(),
+    }
+
+    return render(req, 'tests/accounttype.html', ctx)
