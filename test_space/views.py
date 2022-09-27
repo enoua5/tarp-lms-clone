@@ -12,6 +12,3 @@ def index(req):
 
 def template(req):
     return render(req, 'tests/template.html')
-
-def profile(req):
-    return render(req, 'tests/profile.html')

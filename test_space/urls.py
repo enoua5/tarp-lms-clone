@@ -6,5 +6,4 @@ app_name = 'test'
 urlpatterns = [
     path('', views.index, name="index"),
     path('template', views.template, name="Template Loading"),
-    path('profile', views.profile, name="profile")
 ]
