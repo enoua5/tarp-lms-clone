@@ -5,4 +5,5 @@ app_name = 'account'
 
 urlpatterns = [
     path('profile/', views.profile, name='profile'),
+    path('editprofile', views.edit, name='editprofile')
 ]

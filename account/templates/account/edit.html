@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+{% block body %}
+    <div class="col-md-6 offset-3">
+        <div class="row">
+            <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 200px; height: 200px;">
+        </div>
+
+        <div class="row">
+            <div class="form-content">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <ul class="list-group">
+                            <li class="list-group-item py-4">
+                                <label class="small">Profile image:</label>
+                                    {{ profile_form.image }}
+                            </li>
+                            <li class="list-group-item py-4">
+                                <label class="small">First name:</label>
+                                {{ user_form.first_name }}
+                                <label class="small">Last name:</label>
+                                {{ user_form.last_name }}
+                            </li>
+                            <li class="list-group-item py-4">
+                                <label class="small">Bio:</label>
+                                {{ profile_form.bio }}
+                            </li>
+                            <li class="list-group-item py-4">
+                                <label class="small">Address:</label>
+                                {{ profile_form.address }}
+                            </li>
+                            <li class="list-group-item py-4">
+                                <label class="small">Links:</label>
+                                {{ profile_form.link1 }}
+                                {{ profile_form.link2 }}
+                                {{ profile_form.link3 }}
+                            </li>
+                        </ul>
+                    <button type="submit" class="btn btn-dark">Save Changes</button>
+                    <button type="reset" class="btn btn-dark">Reset</button>
+                </form>
+            </div>
+        </div>
+        <a class="btn btn-primary mt-4" href="{% url 'account:profile' %}" role="button">Cancel</a>
+    </div>
+{% endblock %}
