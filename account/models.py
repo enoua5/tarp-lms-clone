@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='profile_images/default_profile.png', upload_to='profile_images')
-    bio = models.CharField(max_length=300, default='bio')
+    bio = models.CharField(max_length=3000, default='bio')
     address = models.CharField(max_length=200, default='address')
     link1 = models.URLField(max_length=200)
     link2 = models.URLField(max_length=200)

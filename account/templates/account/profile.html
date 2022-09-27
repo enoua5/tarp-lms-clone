@@ -4,20 +4,43 @@
         <div class="row">
             <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 200px; height: 200px;">
         </div>
-
-        <div class="row">
-            <ul class="list-group">
-                <li class="list-group-item">{{ user.username }}</li>
-                <li class="list-group-item">{{ user.first_name }} {{ user.last_name }}</li>
-                <li class="list-group-item">{{ user.email }}</li>
-                <li class="list-group-item">{{ user.birthday }}</li>
-                <li class="list-group-item">{{ user.profile.bio }}</li>
-                <li class="list-group-item">{{ user.profile.address }}</li>
-                <li class="list-group-item"><a href="{{ user.profile.link1 }}">{{ user.profile.link1 }}</a></li>
-                <li class="list-group-item"><a href="{{ user.profile.link2 }}">{{ user.profile.link2 }}</a></li>
-                <li class="list-group-item"><a href="{{ user.profile.link3 }}">{{ user.profile.link3 }}</a></li>
-            </ul>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">My Profile</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Username</h5>
+                <p class="card-text">{{ user.username }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Name</h5>
+                <p class="card-text">{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Bio</h5>
+                <p class="card-text">{{ user.profile.bio }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Email</h5>
+                <p class="card-text">{{ user.email }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Birthdate</h5>
+                <p class="card-text">01/01/01</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Address</h5>
+                <p class="card-text">{{ user.profile.address }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Links</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="{{ user.profile.link1 }}">{{ user.profile.link1 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link2 }}">{{ user.profile.link2 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link3 }}">{{ user.profile.link3 }}</a></li>
+                </ul>
+            </div>
         </div>
-        <a class="btn btn-primary mt-4" href="{% url 'account:editprofile' %}" role="button">Edit profile</a>
+        <a class="btn btn-primary my-4" href="{% url 'account:editprofile' %}" role="button">Edit profile</a>
     </div>
 {% endblock %}
