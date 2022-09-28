@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'dashboard.apps.DashboardConfig',
     'account.apps.AccountConfig',
+    'test_space.apps.TestSpaceConfig',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+            ]
         },
     },
 ]
@@ -82,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'project_database',  
         'USER': 'root',  
-        'PASSWORD': 'friend',
+        'PASSWORD': 'gifisjiff',
         'HOST': '127.0.0.1',  
         'PORT': '3306',  
         'OPTIONS': {  

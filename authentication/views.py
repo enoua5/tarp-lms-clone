@@ -5,6 +5,8 @@ from django.contrib import auth
 from django.contrib import messages
 from .forms import RegistrationForm
 from account.models import Profile
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 
 
 def login(request):
@@ -43,6 +45,18 @@ def signup(request):
             # create profile record for new user
             new_user_profile = Profile(user=new_user, birthdate=form.cleaned_data.get('birthdate'))
             new_user_profile.save()
+
+            # Get the group name from the form
+            groupname = form.cleaned_data.get('account_type')
+
+            # Get our group with a selected name
+            ourGroups = Group.objects.get(name=(groupname))
+
+            # Get the user with the found username
+            user = User.objects.get(username=username)
+
+            # Push the user into an appropriate group!
+            ourGroups.user_set.add(user)
 
             return redirect('dashboard:dashboard')
     else:
