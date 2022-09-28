@@ -7,20 +7,12 @@ from .models import Profile
 # Create your views here.
 @login_required
 def profile(request):
-    # # janky way to make sure there is actually a profile
-    # if not Profile.objects.filter(user=request.user).exists():
-    #     new_profile = Profile(user=request.user)
-    #     new_profile.save()
 
     return render(request, 'account/profile.html', {})
 
 
 @login_required
 def edit(request):
-    # # janky way to make sure there is actually a profile
-    # if not Profile.objects.filter(user=request.user).exists():
-    #     new_profile = Profile(user=request.user)
-    #     new_profile.save()
 
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)
