@@ -4,11 +4,11 @@ from django.conf import settings # Used for linking to user model
 from multiselectfield import MultiSelectField # Used for picking multiple days.
 
 # List of days that can be chosen for a class.
-COURSE_DAYS = ((1, "M"),
-               (2, "T"),
-               (3, "W"),
-               (4, "Th"),
-               (5, "F"))
+COURSE_DAYS = ((1, 'M'),
+               (2, 'T'),
+               (3, 'W'),
+               (4, 'Th'),
+               (5, 'F'))
 
 
 class Course(models.Model):
@@ -19,7 +19,7 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete = models.CASCADE,
     )
-    meeting_days = MultiSelectField(choices=COURSE_DAYS, min_choices=1)
+    meeting_days = MultiSelectField(choices=COURSE_DAYS)
     meeting_start_time = models.TimeField()
     meeting_end_time = models.TimeField()
     meeting_location = models.CharField(max_length=25, default="TBA")
