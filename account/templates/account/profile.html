@@ -2,7 +2,7 @@
 {% block body %}
     <div class="col-md-8 offset-2">
         <div class="row">
-            <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 200px; height: 200px;">
+            <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 250px; height: 250px;">
         </div>
         <div class="card">
             <div class="card-header">
@@ -35,9 +35,9 @@
             <div class="card-body">
                 <h5 class="card-title">Links</h5>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="{{ user.profile.link1 }}">{{ user.profile.link1 }}</a></li>
-                    <li class="list-group-item"><a href="{{ user.profile.link2 }}">{{ user.profile.link2 }}</a></li>
-                    <li class="list-group-item"><a href="{{ user.profile.link3 }}">{{ user.profile.link3 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link1 }}" target="_blank">{{ user.profile.link1 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link2 }}" target="_blank">{{ user.profile.link2 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link3 }}" target="_blank">{{ user.profile.link3 }}</a></li>
                 </ul>
             </div>
         </div>
