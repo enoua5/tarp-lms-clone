@@ -5,7 +5,6 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from django.core.exceptions import ObjectDoesNotExist
 
 # Our Imports
 from course_management.models import Course
@@ -18,7 +17,7 @@ def dashboard(request):
     try:
         test_instructor = User.objects.get(username='professor')
     except:
-        test_instructor = User.objects.create(username='professor', password='professor')
+        test_instructor = User.objects.create(username='professor', password='gifisjiff')
         instructor_group.user_set.add(test_instructor)
     
     # Step 1.: Create hard-coded courses for testing, REMOVE LATER.
