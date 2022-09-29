@@ -15,3 +15,6 @@ class Course(models.Model):
     meeting_end_time = models.TimeField()
     meeting_location = models.CharField(max_length=25, default="TBA")
     credit_hours = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self):
+        return self.department + " " + str(self.course_num) + " " + self.course_name
