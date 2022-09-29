@@ -17,7 +17,7 @@ def dashboard(request):
     try:
         test_instructor = User.objects.get(username='professor')
     except:
-        test_instructor = User.objects.create(username='professor', password='gifisjiff')
+        test_instructor = User.objects.create(username='professor', first_name="Professor", last_name="Bean")
         instructor_group.user_set.add(test_instructor)
     
     # Step 1.: Create hard-coded courses for testing, REMOVE LATER.
@@ -75,7 +75,7 @@ def dashboard(request):
     
     # Step 2: Get list of courses that are under the currently authenticated instructor
     try:        
-        course_list = Course.objects.get(instructor=request.user)
+        course_list = Course.objects.filter(instructor=request.user)
         return render(request, 'dashboard/dashboard.html', {'course_list' : course_list, 'page_title': "Dashboard"})
     except:
         # This will run if the currently logged in user doesn't have any courses, or isn't logged in.
