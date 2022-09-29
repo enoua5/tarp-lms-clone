@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'test_space.apps.TestSpaceConfig',
     'calendars.apps.CalendarsConfig'
+    'course_management.apps.CourseManagementConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'project_database',  
         'USER': 'root',  
-        'PASSWORD': 'LewsTherinTelamon4',
+        'PASSWORD': 'gifisjif',
         'HOST': '127.0.0.1',  
         'PORT': '3306',  
         'OPTIONS': {  

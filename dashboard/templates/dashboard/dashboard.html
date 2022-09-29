@@ -1,5 +1,7 @@
 {% extends 'main/base.html' %}
 {% block body %}
+{% comment %} Checks if current user has any courses. {% endcomment %}
+{% if course_list %}
 <div class="container text-center">
     <div class="row row-cols-3">
         {% for course in course_list %}
@@ -8,11 +10,18 @@
                     <div class="card-body">
                     <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                    <p class="card-text">{{ course.inst_name }}<br>{{ course.meeting_time }}<br>{{ course.meeting_location }}</p>
+                    <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
+                                     <br>{{ course.meeting_days}} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
+                                     <br>{{ course.meeting_location }}</p>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
+{% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You don't have any courses assigned to you.
+    </div>
+{% endif %}
 {% endblock %}
