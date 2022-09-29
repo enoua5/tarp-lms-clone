@@ -12,18 +12,13 @@ from course_management.models import Course
 # Course Dashboard
 def dashboard(request):
     # Step 0: Create hard-coded Instructors for testing, REMOVE LATER.
-    if not Group.objects.get(name="Instructor"):
-        Group.objects.create(name="Instructor")
-        
-    if not Group.objects.get(name="Student"):
-        Group.objects.create(name="Student")
-        
-    ## Create test instructor.
-    instructor_group = Group.objects.get(name="Instructor")
-    test_instructor = User.objects.create_user(username='professor',
-                                 email='professor@lms.com',
-                                 password='admin')
-    instructor_group.user_set.add(test_instructor)
+    instructor_group, already_created = Group.objects.get_or_create(name="Instructor")
+    test_instructor = None
+    try:
+        test_instructor = User.objects.get(username='professor')
+    except:
+        test_instructor = User.objects.create(username='professor', password='gifisjiff')
+        instructor_group.user_set.add(test_instructor)
     
     # Step 1.: Create hard-coded courses for testing, REMOVE LATER.
     cs3750 = Course.objects.get_or_create(
@@ -69,7 +64,7 @@ def dashboard(request):
         department="PHSY",
         course_num=2100,
         course_name="Physics I",
-        inst_name=test_instructor,
+        instructor=test_instructor,
         meeting_days="T,Th",
         # Datetime format: hour, minute, seconds
         meeting_start_time=datetime.time(4, 30, 0),
@@ -77,10 +72,15 @@ def dashboard(request):
         meeting_location="TH 402",
         credit_hours=5
     )
-
+    
     # Step 2: Get list of courses that are under the currently authenticated instructor
-    current_user = request.user
-    course_list = Course.objects.get(username=current_user.username)
+    try:        
+        course_list = Course.objects.get(instructor=request.user)
+        return render(request, 'dashboard/dashboard.html', {'course_list' : course_list, 'page_title': "Dashboard"})
+    except:
+        # This will run if the currently logged in user doesn't have any courses, or isn't logged in.
+        return render(request, 'dashboard/dashboard.html', {'page_title': "Dashboard"})
+        
 
     # Step 2: Render our HTML page, passing it the list of courses
-    return render(request, 'dashboard/dashboard.html', {'course_list' : course_list, 'page_title': "Dashboard"})
+    

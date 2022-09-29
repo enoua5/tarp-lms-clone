@@ -1,15 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
 from django.conf import settings # Used for linking to user model
-from multiselectfield import MultiSelectField # Used for picking multiple days.
-
-# List of days that can be chosen for a class.
-COURSE_DAYS = ((1, 'M'),
-               (2, 'T'),
-               (3, 'W'),
-               (4, 'Th'),
-               (5, 'F'))
-
 
 class Course(models.Model):
     department = models.CharField(max_length=4)
@@ -19,7 +10,7 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete = models.CASCADE,
     )
-    meeting_days = MultiSelectField(choices=COURSE_DAYS)
+    meeting_days = models.CharField(default="M,W,F", max_length=10)
     meeting_start_time = models.TimeField()
     meeting_end_time = models.TimeField()
     meeting_location = models.CharField(max_length=25, default="TBA")
