@@ -1,23 +1,28 @@
 {% extends 'main/base.html' %}
 {% block body %}
-<div class="container-fluid mt-2" style="width: 50%">
-
+<div class="container-fluid mt-2" style="width: 80%">
+    <a class="btn btn-dark" href="#" role="button">Add Course</a>
+    {% if course_list %}
     <h2 style="text-align: center;">Entrees in the database</h2>
     <ul class="list-group">
-    {% for course in course_list %}
-        <li class="list-group-item">
-            <!-- Don't forget to apply namespacing!!!! -->
-            <div class="d-flex justify-content-between">
-                <div class="d-flex justify-content-between" style="width: 25%">
-                    <!--
-                    <a href="{% url 'login:update' user.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                    <a href="{% url 'login:delete' user.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
-                    -->
+        {% for course in course_list %}
+            <li class="list-group-item">
+                <!-- Don't forget to apply namespacing!!!! -->
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" style="width: 25%">
+                        <!--
+                        <a href="{% url 'login:update' user.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                        <a href="{% url 'login:delete' user.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                        -->
+                    </div>
                 </div>
-            </div>
-        </li>
-    {% endfor %}
+            </li>
+        {% endfor %}
     </ul>
-
+    {% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You don't have any courses.
+    </div>
+    {% endif %} 
 </div>
 {% endblock %}
