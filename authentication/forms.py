@@ -4,11 +4,14 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 import datetime
 
-ACCOUNT_TYPES = [('student', 'Student'),
-         ('instructor', 'Instructor'),]
+ACCOUNT_TYPES = [
+    ('student', 'Student'),
+    ('instructor', 'Instructor'),
+]
+
 
 class RegistrationForm(UserCreationForm):
-    birthday = forms.DateField(label='birthday', required=True)
+    birthdate = forms.DateField(label='birthdate', required=True)
     account_type = forms.CharField(label='role', widget=forms.Select(choices=ACCOUNT_TYPES))
 
     # Used the clean method to validate if the user
@@ -16,10 +19,10 @@ class RegistrationForm(UserCreationForm):
     def clean(self):
         cd = super().clean()
 
-        date = cd.get("birthday")
+        date = cd.get("birthdate")
 
         # Checks if the date is in a valid format
-        if(date):
+        if date:
             d = datetime.date.today()
             oldEnough = datetime.timedelta(days=6574)
 
@@ -30,10 +33,10 @@ class RegistrationForm(UserCreationForm):
             # Compares this difference to the value of 18 years
             if diff.days < oldEnough.days:
                 raise ValidationError("You have to be 18 or older to sign up.")
-            
+
             return cd
 
     class Meta:
         model = get_user_model() 
         
-        fields = ['username','email', 'first_name','last_name','birthday','password1', 'password2', 'account_type']
+        fields = ['username', 'email', 'first_name', 'last_name', 'birthdate', 'password1', 'password2', 'account_type']
