@@ -47,3 +47,13 @@ def deleteCourse(request, id):
     toDelete.delete()
 
     return course_management(request)
+
+def updateCourse(request, id):
+    toUpdate = Course.objects.get(id=id)
+    form = CourseForm(request.POST or None, instance=toUpdate)
+
+    if form.is_valid():
+        form.save()
+        return redirect('course_management:coursesMain')
+
+    return render(request, 'course_management/course_form.html', {'form':form, 'course':toUpdate})
