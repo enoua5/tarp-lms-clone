@@ -41,3 +41,9 @@ def addCourse(request):
     # args = {}
     # args['form'] = form
     # return render(request, 'course_management/course_form.html', args)
+
+def deleteCourse(request, id):
+    toDelete = Course.objects.get(id=id)
+    toDelete.delete()
+
+    return course_management(request)

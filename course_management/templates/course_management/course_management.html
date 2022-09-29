@@ -11,7 +11,7 @@
                     {{ course.course_num }}  {{ course.course_name }} 
                     <div class="d-flex justify-content-between" style="width: 25%">
                         <a href="#" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                        <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                        <a href="{% url 'course_management:deleteCourse' course.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
                     </div>
                 </div>
                 
