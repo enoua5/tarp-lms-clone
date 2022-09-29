@@ -16,10 +16,28 @@ def course_management(request):
         return render(request, 'course_management/course_management.html', {})
 
 def addCourse(request):
-    form = CourseForm(request.POST or None, instance=request.user)
+    form = CourseForm(request.POST or None)
 
     if form.is_valid():
         form.save()
         return redirect('course_management:coursesMain')
+    
+    args = {}
+    args['form'] = form
+    return render(request, 'course_management/course_form.html', args)
 
-    return render(request, 'course_management/course_form.html', {'form':form})
+    # if request.method == 'POST':
+
+    #     form = CourseForm(request.POST or None, instance = request.user)
+
+    #     if form.is_valid():
+    #         course = form.save()
+    #         print(course)
+    #         return redirect('course_management:coursesMain')
+    
+    # else: 
+    #     form = CourseForm()
+
+    # args = {}
+    # args['form'] = form
+    # return render(request, 'course_management/course_form.html', args)
