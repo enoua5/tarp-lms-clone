@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'dashboard.apps.DashboardConfig',
     'test_space.apps.TestSpaceConfig',
-    #'calendars.apps.CalendarsConfig',
+    'calendars.apps.CalendarsConfig',
     'course_management.apps.CourseManagementConfig',
 ]
 
