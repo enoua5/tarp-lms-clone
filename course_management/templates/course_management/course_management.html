@@ -3,7 +3,6 @@
 <div class="container-fluid mt-2" style="width: 80%">
     <a class="btn btn-dark" href="{% url 'course_management:addCourse' %}" role="button">Add Course</a>
     {% if course_list %}
-    <h2 style="text-align: center;">Entrees in the database</h2>
     <ul class="list-group">
         {% for course in course_list %}
             <li class="list-group-item">
