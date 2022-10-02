@@ -10,6 +10,7 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete = models.CASCADE,
     )
+    students = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="courses")
     meeting_days = models.CharField(default="M,W,F", max_length=10)
     meeting_start_time = models.TimeField()
     meeting_end_time = models.TimeField()
