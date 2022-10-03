@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
 from django.conf import settings # Used for linking to user model
+import datetime
 
 class Course(models.Model):
     department = models.CharField(max_length=20)
@@ -11,8 +12,8 @@ class Course(models.Model):
         on_delete = models.CASCADE,
     )
     meeting_days = models.CharField(max_length=100)
-    meeting_start_time = models.TimeField()
-    meeting_end_time = models.TimeField()
+    meeting_start_time = models.TimeField(default='12:00')
+    meeting_end_time = models.TimeField(default='12:00')
     meeting_location = models.CharField(max_length=25, default="TBA")
     credit_hours = models.PositiveSmallIntegerField(default=1)
 

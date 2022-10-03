@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block body %}
 <div class="container-fluid mt-2" style="width: 80%">
-    <a class="btn btn-dark" href="{% url 'course_management:addCourse' %}" role="button">Add Course</a>
+    <a class="btn btn-dark mb-2" href="{% url 'course_management:addCourse' %}" role="button">Add Course</a>
     {% if course_list %}
     <ul class="list-group">
         {% for course in course_list %}

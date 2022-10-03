@@ -6,9 +6,6 @@ from .models import Course
 
 # Create your views here.
 def course_management(request):
-    
-    #current_user = request.user
-    #course_list = Course.objects.all()
     try:        
         course_list = Course.objects.filter(instructor=request.user)
         return render(request, 'course_management/course_management.html', {'course_list' : course_list})
@@ -19,36 +16,26 @@ def addCourse(request):
     form = CourseForm(request.POST or None)
 
     if form.is_valid():
-        form.save()
+        # I cannot believe that this was the solution. Hour count to approach this issue: at least 6
+        # The problem was for the form to determine the current instructor automatically, without having 
+        # a dropdown menu with all instructors showing up.
+        course = form.save(commit=False)
+        course.instructor = request.user
+        course.save()
         return redirect('course_management:coursesMain')
-    
-    args = {}
-    args['form'] = form
-    return render(request, 'course_management/course_form.html', args)
 
-    # if request.method == 'POST':
+    return render(request, 'course_management/course_form.html', {'form':form})
 
-    #     form = CourseForm(request.POST or None, instance = request.user)
-
-    #     if form.is_valid():
-    #         course = form.save()
-    #         print(course)
-    #         return redirect('course_management:coursesMain')
-    
-    # else: 
-    #     form = CourseForm()
-
-    # args = {}
-    # args['form'] = form
-    # return render(request, 'course_management/course_form.html', args)
-
+# Gets the id from the course_management.html template
 def deleteCourse(request, id):
     toDelete = Course.objects.get(id=id)
     toDelete.delete()
 
-    return course_management(request)
+    return redirect('course_management:coursesMain')
 
+# Uses the same form as before.
 def updateCourse(request, id):
+    # Gets the course we are trying to update
     toUpdate = Course.objects.get(id=id)
     form = CourseForm(request.POST or None, instance=toUpdate)
 
