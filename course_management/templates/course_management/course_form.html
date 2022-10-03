@@ -18,15 +18,29 @@
     <!-- An actual form is here -->
     <form method="POST">
         {% csrf_token %}
-        
-        {% for field in form %}
+        <div class="container mx-auto" style="width: 35%">
+            <div class="column">
+                {% for field in form %}
+                    <div class="row g-0">
+                    {{ field.label }}
+                    <br>
+                    {% if field.name == 'meeting_days' %}
+                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            {% for checkbox in form.meeting_days %}
+                                <label class="btn btn-primary">
+                                    {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <br>
+                    {% else %}
 
-            {{ field.label }}
-            <br>
-            {{ field }}
-            <br>
-
-        {% endfor %}
+                    {{ field }}
+                    {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="mt-2">
             <input class="btn btn-primary" type="submit" value="Submit">
             <a class="btn btn-dark" href="{% url 'course_management:coursesMain' %}" role="button">Cancel</a>
