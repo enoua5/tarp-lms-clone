@@ -1,10 +1,10 @@
 {% extends 'main/base.html' %}
 {% block body %}
-<div class="container mt-3 form-content" style="width: 50%;">
+<div class="container mt-2 form-content" style="width: 50%;">
     <!-- A Header, that countains potential errors -->
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
-        <h4>Add a course</h4>
+        <h4 class="mb-0">Add a course</h4>
         {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -22,12 +22,12 @@
             <div class="column">
                 {% for field in form %}
                     <div class="row g-0">
-                    {{ field.label }}
+                    <label for="{{ field.name }}" class="form-label mt-1 mb-1">{{ field.label }}</label>
                     <br>
                     {% if field.name == 'meeting_days' %}
                         <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                             {% for checkbox in form.meeting_days %}
-                                <label class="btn btn-primary">
+                                <label class="btn btn-secondary">
                                     {{ checkbox.tag }} {{ checkbox.choice_label }}
                                 </label>
                             {% endfor %}
@@ -39,11 +39,11 @@
                     {% endif %}
                     </div>
                 {% endfor %}
+                <div class="mt-2 mb-2">
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                    <a class="btn btn-dark" href="{% url 'course_management:coursesMain' %}" role="button">Cancel</a>
+                </div>
             </div>
-        </div>
-        <div class="mt-2">
-            <input class="btn btn-primary" type="submit" value="Submit">
-            <a class="btn btn-dark" href="{% url 'course_management:coursesMain' %}" role="button">Cancel</a>
         </div>
     </form>
     </div>
