@@ -20,3 +20,6 @@ def accounttype(req):
     }
 
     return render(req, 'tests/accounttype.html', ctx)
+
+def stats(req):
+    return render(req, 'tests/stats.html')
