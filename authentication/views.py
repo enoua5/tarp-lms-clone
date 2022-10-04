@@ -7,6 +7,7 @@ from .forms import RegistrationForm
 from account.models import Profile
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 
 
 def login(request):
@@ -65,3 +66,7 @@ def signup(request):
     args = {}
     args['form'] = form
     return render(request, 'authentication/signup.html', args)
+
+def logout_user(req):
+    logout(req)
+    return redirect('authentication:login')
