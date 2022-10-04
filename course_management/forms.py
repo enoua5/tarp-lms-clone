@@ -1,4 +1,3 @@
-from attr import attributes
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms import ModelForm
@@ -15,7 +14,7 @@ DAYS_OF_WEEK = [
 class CourseForm(ModelForm):
     class Meta:
         model = Course 
-        exclude = ['instructor']
+        exclude = ['instructor', 'students']
 
         # We can change the labels for anything!
         labels = {
