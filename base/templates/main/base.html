@@ -24,7 +24,7 @@
                     </li>
                     {% if request.user|has_group:"Instructor" %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Classes</a>
+                        <a class="nav-link" href="{% url 'course_management:coursesMain' %}">Courses</a>
                     </li>
                     {% elif request.user|has_group:"Student" %}
                     <li class="nav-item">
