@@ -1,0 +1,55 @@
+{% extends 'main/base.html' %}
+{% block body %}
+    <div class="col-md-8 offset-2">
+        <div class="row">
+            <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 250px; height: 250px;">
+        </div>
+            <div class="form-content">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">Edit Profile</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Profile image:</h5>
+                            <p class="card-text">{{ profile_form.image }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">First name:</h5>
+                            <p class="card-text">{{ user_form.first_name }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Last name:</h5>
+                            <p class="card-text">{{ user_form.last_name }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Bio:</h5>
+                            <p class="card-text">{{ profile_form.bio }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Birthdate:</h5>
+                            <p class="card-text">{{ profile_form.birthdate }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Address:</h5>
+                            <p class="card-text">{{ profile_form.address }}</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Links:</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{ profile_form.link1 }}</li>
+                                <li class="list-group-item">{{ profile_form.link2 }}</li>
+                                <li class="list-group-item">{{ profile_form.link3 }}</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-dark">Save Changes</button>
+                            <button type="reset" class="btn btn-dark">Reset</button>
+                        </div>
+                    </div> {# end card #}
+                </form>
+        </div>
+        <a class="btn btn-primary my-4" href="{% url 'account:profile' %}" role="button">Cancel</a>
+    </div>
+{% endblock %}

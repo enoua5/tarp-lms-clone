@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% block body %}
+    <div class="col-md-8 offset-2">
+        <div class="row">
+            <img src="{{ user.profile.image.url }}" class="rounded-circle shadow-lg p-2 my-5 mx-auto" style="width: 250px; height: 250px;">
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">My Profile</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Username</h5>
+                <p class="card-text">{{ user.username }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Name</h5>
+                <p class="card-text">{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Bio</h5>
+                <p class="card-text">{{ user.profile.bio }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Email</h5>
+                <p class="card-text">{{ user.email }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Birthdate</h5>
+                <p class="card-text">{{ user.profile.birthdate }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Address</h5>
+                <p class="card-text">{{ user.profile.address }}</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Links</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="{{ user.profile.link1 }}" target="_blank">{{ user.profile.link1 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link2 }}" target="_blank">{{ user.profile.link2 }}</a></li>
+                    <li class="list-group-item"><a href="{{ user.profile.link3 }}" target="_blank">{{ user.profile.link3 }}</a></li>
+                </ul>
+            </div>
+        </div>
+        <a class="btn btn-primary my-4" href="{% url 'account:editprofile' %}" role="button">Edit profile</a>
+    </div>
+{% endblock %}

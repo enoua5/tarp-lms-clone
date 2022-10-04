@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
     'dashboard.apps.DashboardConfig',
+    'account.apps.AccountConfig',
     'test_space.apps.TestSpaceConfig',
     'calendars.apps.CalendarsConfig',
     'course_management.apps.CourseManagementConfig',
@@ -136,4 +137,10 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 # path to the root dir where the files are getting stored
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# redirect from log in
+LOGIN_REDIRECT_URL = 'dashboard'
+
+# tells login_required decorator where to go
+LOGIN_URL = 'authentication:login'
