@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% block body %}
+<div class="container-fluid mt-2" style="width: 80%">
+    <a class="btn btn-dark mb-2" href="{% url 'course_management:addCourse' %}" role="button">Add Course</a>
+    {% if course_list %}
+    <ul class="list-group">
+        {% for course in course_list %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="mt-2 col">{{ course.course_num }}  {{ course.course_name }}</div>
+                    <div class="col d-flex justify-content-between" style="width: 25%">
+                        <a href="#" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
+                        <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                        <a href="{% url 'course_management:deleteCourse' course.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                    </div>
+                </div>
+                
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You don't have any courses.
+    </div>
+    {% endif %} 
+</div>
+{% endblock %}
