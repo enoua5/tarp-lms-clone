@@ -73,9 +73,26 @@ def dashboard(request):
         credit_hours=5
     )
     
-    # Step 2: Get list of courses that are under the currently authenticated instructor
+    # Create test student (REMOVE LATER).
+    student_group, already_created = Group.objects.get_or_create(name="Student")
+    test_student = None
+    try:
+        test_student = User.objects.get(username='student')
+    except:
+        test_student = User.objects.create(username='student', first_name="Nerdy", last_name="McNerd")
+        student_group.user_set.add(test_student)
+    
+    cs3750[0].students.add(test_student)
+    math3110[0].students.add(test_student)
+    
+    # Step 2: Get list of courses that are under the currently authenticated user.
     try:        
-        course_list = Course.objects.filter(instructor=request.user)
+        # Check if user is an instructor or user
+        if request.user.groups.filter(name='Instructor').exists():
+            course_list = Course.objects.filter(instructor=request.user)
+        else:
+            course_list = request.user.courses.all()
+            
         return render(request, 'dashboard/dashboard.html', {'course_list' : course_list, 'page_title': "Dashboard"})
     except:
         # This will run if the currently logged in user doesn't have any courses, or isn't logged in.
