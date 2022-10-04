@@ -17,15 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('authentication/', include('authentication.urls')),
+    path('login/', include('authentication.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('calendars/', include('calendars.urls')),
     path('courses/', include('course_management.urls')),
     path('test/', include('base.urls')),
-    path('account/', include('account.urls'))
+    path('account/', include('account.urls')),
+    path('', RedirectView.as_view(pattern_name="dashboard:dashboard"))
 ]
 # will allow images to be viewed using local development server
 # will allow tests to be reached
