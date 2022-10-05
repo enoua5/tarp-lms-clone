@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:id>', views.coursePage, name='coursePage'),
     path('<int:id>/updateCourse', views.updateCourse, name="updateCourse"),
     path('<int:id>/deleteCourse', views.deleteCourse, name="deleteCourse"),
+    path('<int:id>/addAssignment', views.addAssignment, name='addAssignment'),
 ]

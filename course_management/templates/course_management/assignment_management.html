@@ -1,0 +1,4 @@
+{% extends 'main/base.html' %}
+{% block body %}
+    <a class="btn btn-dark mb-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a>
+{% endblock %}

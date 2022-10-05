@@ -54,3 +54,9 @@ def updateCourse(request, id):
 def coursePage(request, id):
     course = Course.objects.get(id=id)
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course)})
+
+
+def addAssignment(request, id):
+    course = Course.objects.get(id=id)
+    # form stuff
+    return render(request, 'course_management/assignment_management.html', {'course': course, 'page_title': str(course)})
