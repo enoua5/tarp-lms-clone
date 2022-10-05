@@ -6,5 +6,6 @@ app_name = 'test'
 urlpatterns = [
     path('', views.index, name="index"),
     path('template', views.template, name="Template Loading"),
-    path('accountype', views.accounttype, name="Account Type")
+    path('accountype', views.accounttype, name="Account Type"),
+    path('stats', views.stats, name="Stats"),
 ]

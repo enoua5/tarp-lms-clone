@@ -13,11 +13,15 @@
                 Tarp LMS
             {% endif %}
         </title>
+
+        {% block head %}
+
+        {% endblock %}
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">.GIF LMS</a>
+                <a class="navbar-brand" href="#">Tarp LMS</a>
                 <ul class="navbar-nav me-auto nav-pills">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'account:profile' %}">Profile</a>
@@ -32,10 +36,16 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Calendar</a>
+                        <a class="nav-link" href="{% url 'displaycalendar' %}">Calendar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'authentication:logout' %}">Logout</a>
                     </li>
                 </ul>
             </div>
