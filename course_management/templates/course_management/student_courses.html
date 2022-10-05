@@ -1,0 +1,87 @@
+{% extends 'main/base.html' %}
+{% block body %}
+<div class="container-fluid mt-2" style="width: 80%">
+    <h2>Your courses</h2>
+    {% if my_course_list %}
+        <ul class="list-group">
+            {% for course in my_course_list %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="mt-2 col">{{ course.course_num }}  {{ course.course_name }}</div>
+                        <div class="col d-flex justify-content-evenly" style="width: 25%">
+                            <a href="#" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
+                            <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmDropModal" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">Drop</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-primary mt-2" role="alert" >
+            You are not enrolled in any courses.
+        </div>
+    {% endif %} 
+    <h2 class="mt-3">All courses</h2>
+    {% if all_course_list %}
+        <ul class="list-group">
+            {% for course in all_course_list %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="mt-2 col">{{ course.course_num }}  {{ course.course_name }}</div>
+                        <div class="col d-flex justify-content-evenly" style="width: 25%">
+                            <a href="{% url 'course_management:register' course.id %}" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true">Register</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-primary mt-2" role="alert" >
+            There are no courses offered at this moment.
+        </div>
+    {% endif %} 
+</div>
+<!-- Modal attatched -->
+<div class="modal fade" id="confirmDropModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalLabel">Title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to drop this course?</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="#" class="btn btn-danger addHref" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#confirmDropModal">Drop course</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const confirmDropModal = document.getElementById('confirmDropModal')
+    confirmDropModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+
+    // Extract info from data-bs-* attributes
+    const dropID = button.getAttribute('data-bs-id')
+    const dropName = button.getAttribute('data-bs-name')
+
+    // Update the modal's content.
+    const lbl = confirmDropModal.querySelector('#modalLabel')
+    const btn = confirmDropModal.querySelector('.addHref')
+
+    const modalBodyInput = confirmDropModal.querySelector('.modal-body input')
+
+    // Update the title 
+    lbl.textContent = dropName
+    // Now, add the correct link
+    btn.href = 'drop/'.concat(dropID)
+})
+</script>
+{% endblock %}
+
+<!-- set django variables -->

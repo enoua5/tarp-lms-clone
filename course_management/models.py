@@ -28,7 +28,6 @@ class Course(models.Model):
     )
     
     meeting_days = models.TextField()
-
     meeting_start_time = models.TimeField(default='12:00')
     meeting_end_time = models.TimeField(default='12:00')
     meeting_location = models.CharField(max_length=25)
