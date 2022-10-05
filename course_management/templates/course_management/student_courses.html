@@ -31,7 +31,7 @@
                         </li>
                     </ul>
                     <a href="#" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Go to course</a>
-                    <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmDropModal" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">Drop</a>
+                    <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmModal" data-bs-type = "drop" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">Drop</a>
                   </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
         </div>
     {% else %}
         <div class="alert alert-primary mt-2" role="alert" >
-            You are not enrolled in any courses.
+            You are not registered for any courses.
         </div>
     {% endif %} 
     <h2 class="mt-3">Courses offered</h2>
@@ -71,22 +71,28 @@
                             <strong>Credit hours: </strong> {{course.credit_hours}}
                         </li>
                     </ul>
-                    <a href="{% url 'course_management:register' course.id %}" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true">Register</a>
+                    <a href="#" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmModal" data-bs-type = "register" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">Register</a>
                   </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     {% else %}
+        {% if my_course_list %}
+        <div class="alert alert-primary mt-2" role="alert" >
+            There are no other courses offered at this moment.
+        </div>
+        {% else %}
         <div class="alert alert-primary mt-2" role="alert" >
             There are no courses offered at this moment.
         </div>
+        {% endif %} 
     {% endif %} 
 </div>
 
 
-<!-- Modal attatched -->
-<div class="modal fade" id="confirmDropModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<!--  Modal attatched -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -94,37 +100,58 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to drop this course?</p>
+                <!-- <p>Are you sure you want to drop this course?</p> -->
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="#" class="btn btn-danger addHref" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#confirmDropModal">Drop course</a>
+            <a href="#" class="btn addHref" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#confirmModal">Placeholder</a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const confirmDropModal = document.getElementById('confirmDropModal')
-    confirmDropModal.addEventListener('show.bs.modal', event => {
+    const confirmModal = document.getElementById('confirmModal')
+    confirmModal.addEventListener('show.bs.modal', event => {
     // Button that triggered the modal
     const button = event.relatedTarget
 
+    // There are two types of possible modals: one for dropping a course, one for registering for a course
+    const typeOf = button.getAttribute('data-bs-type')
+
     // Extract info from data-bs-* attributes
-    const dropID = button.getAttribute('data-bs-id')
-    const dropName = button.getAttribute('data-bs-name')
+    const ID = button.getAttribute('data-bs-id')
+    const Name = button.getAttribute('data-bs-name')
 
-    // Update the modal's content.
-    const lbl = confirmDropModal.querySelector('#modalLabel')
-    const btn = confirmDropModal.querySelector('.addHref')
-
-    const modalBodyInput = confirmDropModal.querySelector('.modal-body input')
+    // Get the modal's content we want to dynamically update
+    const lbl = confirmModal.querySelector('#modalLabel')
+    const btn = confirmModal.querySelector('.addHref')
+    const modalBody = confirmModal.querySelector('.modal-body')
 
     // Update the title 
-    lbl.textContent = dropName
-    // Now, add the correct link
-    btn.href = 'drop/'.concat(dropID)
+    lbl.textContent = Name
+    
+    // Now, add the correct link to a correct modal
+    if (typeOf == "drop")
+    {
+        // Update the inner text
+        modalBody.textContent = 'Are you sure you want to drop this course?'
+        // Display a correct button
+        btn.href = 'drop/'.concat(ID)
+        btn.classList.add('btn-danger')
+        btn.textContent = 'Drop'
+    }
+    if (typeOf == "register")
+    {
+        // Update the inner text
+        modalBody.textContent = 'Are you sure you want to register for this course?'
+        btn.href = 'register/'.concat(ID)
+        btn.classList.add('btn-success')
+        btn.textContent = 'Register'
+    }
 })
+
+
 </script>
 {% endblock %}
 
