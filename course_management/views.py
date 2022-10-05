@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 
 from course_management.forms import CourseForm
-from .models import Course
+from .models import Course, Assignment
 
 
 # Create your views here.
@@ -53,10 +53,11 @@ def updateCourse(request, id):
 # course page view
 def coursePage(request, id):
     course = Course.objects.get(id=id)
-    return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course)})
+    assignment_list = Assignment.objects.filter(course=course)
+    return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course), 'assignment_list': assignment_list})
 
 
 def addAssignment(request, id):
     course = Course.objects.get(id=id)
     # form stuff
-    return render(request, 'course_management/assignment_management.html', {'course': course, 'page_title': str(course)})
+    return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course)})

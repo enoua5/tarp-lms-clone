@@ -39,7 +39,9 @@ class Course(models.Model):
         return self.department + " " + str(self.course_num) + " " + self.course_name
 
 
+# assignment model
 class Assignment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
     due_date = models.DateTimeField()
