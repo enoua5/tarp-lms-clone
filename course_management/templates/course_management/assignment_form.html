@@ -1,4 +1,39 @@
 {% extends 'main/base.html' %}
 {% block body %}
-
+<div class="container mt-2 form-content" style="width: 60%;">
+    <!-- A Header, that countains potential errors -->
+    <div class="card border-secondary">
+        <div class="card-header" style="text-align: center">
+        <h4 class="mb-0">Add an assignment</h4>
+        {% if form.errors %}
+            <ul class="list-group">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li class="list-group-item list-group-item-danger">{{error}}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <!-- An actual form is here -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="container mx-auto" style="width: 80%">
+            <div class="column">
+                {% for field in form %}
+                    <div class="row g-0">
+                        <label for="{{ field.name }}" class="form-label mt-1 mb-1">{{ field.label }}</label>
+                        <br>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <div class="mt-2 mb-2">
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                    <a class="btn btn-dark" href="{% url 'course_management:coursePage' course.id %}" role="button">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
 {% endblock %}
