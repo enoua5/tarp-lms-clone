@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block body %}
 <div class="container-fluid mt-2" style="width: 80%">
-    <h2>Your courses</h2>
+    <h2>Your Courses</h2>
     {% if my_course_list %}
         <div class="accordion" id="courseAccordion">
             {% for course in my_course_list %}
@@ -42,7 +42,7 @@
             You are not registered for any courses.
         </div>
     {% endif %} 
-    <h2 class="mt-3">Courses offered</h2>
+    <h2 class="mt-3">Courses Offered</h2>
         {% if all_course_list %}
         <div class="accordion" id="courseAccordion">
             {% for course in all_course_list %}
