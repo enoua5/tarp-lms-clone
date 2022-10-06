@@ -1,9 +1,5 @@
-{% extends 'main/base.html' %}
-{% block head %}
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel='stylesheet' />
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
+// Function creates calendar on load.
+     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth'
@@ -46,7 +42,7 @@
                 title: courses.course_name[i],
                 daysOfWeek: days,
                 startRecur: "2022-09-01",
-                endRecur: "2022-12-21"
+                endRecur: "2022-12-31"
             };
 
             // Add the event.
@@ -56,8 +52,3 @@
         // Render the calendar.
         calendar.render();
      });
-</script>
-{% endblock %}
-{% block body %}
-<div id='calendar'></div>
-{% endblock %}
