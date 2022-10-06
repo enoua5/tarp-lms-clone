@@ -4,20 +4,6 @@ from django.conf import settings # Used for linking to user model
 import datetime
 from django.forms.widgets import NumberInput
 
-MONDAY = 'M'
-TUESDAY = 'T'
-WEDNESDAY = 'W'
-THURSDAY = 'Th'
-FRIDAY = 'F'
-
-YEAR_IN_SCHOOL_CHOICES = [
-    (MONDAY, 'Monday'),
-    (TUESDAY, 'Tesday'),
-    (WEDNESDAY, 'Wednesday'),
-    (THURSDAY, 'Thursday'),
-    (FRIDAY, 'Friday'),
-]
-
 class Course(models.Model):
     department = models.CharField(max_length=20)
     course_num = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10000)])
@@ -37,6 +23,30 @@ class Course(models.Model):
     
     def __str__(self):
         return self.department + " " + str(self.course_num) + " " + self.course_name
+        
+        
+    '''!
+        @brief Formats the course's meeting days and returns a string in the format
+               D, D, D.
+    '''
+    def getFormattedCourseDays(self):
+        DAY_OF_WEEK_CHOICES = [
+        ("M", "Monday"),
+        ("T", "Tuesday"),
+        ("W", "Wednesday"),
+        ("Th", "Thursday"),
+        ("F", "Friday"),
+        ]
+        # Removing brackets
+        courseDays = self.meeting_days.replace('[', '')
+        courseDays = courseDays.replace(']', '')
+        # Removing apostrophes
+        courseDays = courseDays.replace("'", '')
+        # Condensing day names into their abbreviations
+        for weekday in DAY_OF_WEEK_CHOICES:
+            courseDays = courseDays.replace(str(weekday[1]), str(weekday[0]))
+            
+        return courseDays
 
 
 # assignment model
