@@ -5,11 +5,13 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
 # Our Imports
 from course_management.models import Course
 
 # Course Dashboard
+@login_required
 def dashboard(request):    
     # Get list of courses that are under the currently authenticated user.
     try:        
