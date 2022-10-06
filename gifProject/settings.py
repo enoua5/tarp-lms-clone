@@ -84,8 +84,8 @@ DATABASES = {
     'default': {  
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'project_database',  
-        'USER': 'root',
-        'PASSWORD': 'LewsTherinTelamon4',
+        'USER': 'toor',
+        'PASSWORD': 'sonic-brazil-last-rumour',
         'HOST': '159.89.144.42',
         'PORT': '3306',  
         'OPTIONS': {  
