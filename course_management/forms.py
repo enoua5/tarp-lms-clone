@@ -1,7 +1,8 @@
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms import ModelForm
-from .models import Course
+from .models import Course, Assignment
+
+# ------------------ COURSE MANAGEMENT ------------------
 
 DAYS_OF_WEEK = [
     ('Monday', 'M'),
@@ -10,6 +11,7 @@ DAYS_OF_WEEK = [
     ('Thursday', 'Th'),
     ('Friday', 'Fr')
 ]
+
 
 class CourseForm(ModelForm):
     class Meta:
@@ -43,5 +45,37 @@ class CourseForm(ModelForm):
         # fields = ["course_num", "department", "course_name", 
         #           "meeting_days", "meeting_start_time", "instructor",
         #           "meeting_end_time", "meeting_location", "credit_hours"]
-        
 
+
+# ------------------ ASSIGNMENT MANAGEMENT ------------------
+
+# the following 2 classes are required to ensure that the html datetime-local type plays nicely with the django form
+# code from https://www.davidjabb.com/blog/2021/12/1/how-to-use-the-built-in-html-datetime-local-widget-in-a-django-form/
+# if we need to change this I will cry  ~ Daniel
+class DateTimeLocalInput(forms.DateTimeInput):
+    input_type = "datetime-local"
+
+
+class DateTimeLocalField(forms.DateTimeField):
+    # Set DATETIME_INPUT_FORMATS here because, if USE_L10N
+    # is True, the locale-dictated format will be applied
+    # instead of settings.DATETIME_INPUT_FORMATS.
+
+    input_formats = [
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M"
+    ]
+    widget = DateTimeLocalInput(format="%Y-%m-%dT%H:%M", attrs={'class': 'form-control'})
+
+
+class AssignmentForm(ModelForm):
+    title = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=True)
+    due_date = DateTimeLocalField()
+    points = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    type = forms.ChoiceField(choices=(('t', 'Text entry'), ('f', 'File upload')), widget=forms.Select(attrs={'class': 'form-select'}))
+
+    class Meta:
+        model = Assignment
+        exclude = ['course']

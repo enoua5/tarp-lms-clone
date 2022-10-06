@@ -23,7 +23,8 @@ class Course(models.Model):
     
     def __str__(self):
         return self.department + " " + str(self.course_num) + " " + self.course_name
-    
+        
+        
     '''!
         @brief Formats the course's meeting days and returns a string in the format
                D, D, D.
@@ -46,3 +47,16 @@ class Course(models.Model):
             courseDays = courseDays.replace(str(weekday[1]), str(weekday[0]))
             
         return courseDays
+
+
+# assignment model
+class Assignment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField(max_length=1000)
+    due_date = models.DateTimeField()
+    points = models.PositiveIntegerField()
+    type = models.CharField(max_length=1, choices=(('t', 'Text entry'), ('f', 'File upload')))
+
+    def __str__(self):
+        return self.title
