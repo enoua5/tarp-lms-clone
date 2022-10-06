@@ -42,7 +42,7 @@
                 title: courses.course_name[i],
                 daysOfWeek: days,
                 startRecur: "2022-09-01",
-                endRecur: "2022-12-21"
+                endRecur: "2022-12-31"
             };
 
             // Add the event.
