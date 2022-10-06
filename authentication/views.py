@@ -13,7 +13,7 @@ from django.contrib.auth import logout
 def login(request):
     if request.method == 'GET':
         form = AuthenticationForm()
-        return render(request, 'authentication/login.html', {'form':form})
+        return render(request, 'authentication/login.html', {'form':form, 'page_title': "Login"})
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -28,7 +28,7 @@ def login(request):
         else:
             # If there were errors, we render the form with these
             # errors
-            return render(request, 'authentication/login.html', {'form': form}) 
+            return render(request, 'authentication/login.html', {'form': form, 'page_title': "Login"}) 
 
 
 def signup(request):
@@ -65,6 +65,7 @@ def signup(request):
 
     args = {}
     args['form'] = form
+    args['page_title'] = "Signup"
     return render(request, 'authentication/signup.html', args)
 
 def logout_user(req):

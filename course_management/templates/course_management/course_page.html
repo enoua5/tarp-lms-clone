@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% block body %}
+    <div class="container-fluid mt-2" style="width: 80%">
+    <h1>
+        <div class="text-center">{{ page_title }}</div>
+    </h1>
+    {% if assignment_list %}
+    <ul class="list-group">
+        {% for assignment in assignment_list %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="mt-2 col">{{ assignment.title }}</div>
+                    <div class="col d-flex justify-content-between" style="width: 25%">
+                        <a href="#" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
+                        <a href="#" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                        <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You don't have any assignments.
+    </div>
+    {% endif %}
+    <a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a>
+</div>
+{% endblock %}

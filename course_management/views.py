@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
-from course_management.forms import CourseForm
-from .models import Course
+from course_management.forms import CourseForm, AssignmentForm
+from .models import Course, Assignment
 
 # A view of courses for instructors
 def course_management(request):
@@ -10,6 +10,7 @@ def course_management(request):
         return render(request, 'course_management/course_management.html', {'course_list' : course_list})
     except:
         return render(request, 'course_management/course_management.html', {})
+
 
 def addCourse(request):
     form = CourseForm(request.POST or None)
@@ -25,12 +26,14 @@ def addCourse(request):
 
     return render(request, 'course_management/course_form.html', {'form':form})
 
+
 # Gets the id from the course_management.html template
 def deleteCourse(request, id):
     toDelete = Course.objects.get(id=id)
     toDelete.delete()
 
     return redirect('course_management:coursesMain')
+
 
 # Uses the same form as before.
 def updateCourse(request, id):
@@ -66,3 +69,22 @@ def drop(request, id):
     toDrop = Course.objects.get(id=id)
     toDrop.students.remove(request.user)
     return redirect('course_management:studentCourses')
+
+# course page view
+def coursePage(request, id):
+    course = Course.objects.get(id=id)
+    assignment_list = Assignment.objects.filter(course=course)
+    return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course), 'assignment_list': assignment_list})
+    
+def addAssignment(request, id):
+    course = Course.objects.get(id=id)
+
+    # form stuff
+    form = AssignmentForm(request.POST or None)
+    if form.is_valid():
+        assignment = form.save()
+        assignment.course = course
+        assignment.save()
+        return redirect('course_management:coursePage', id)
+
+    return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})

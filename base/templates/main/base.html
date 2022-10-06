@@ -8,10 +8,9 @@
         <link rel="stylesheet" href="{% static 'main/style.css' %}">
         <title>
             {% if page_title %}
-                {{ page_title }}
-            {% else %}
-                Tarp LMS
+                {{ page_title }} —
             {% endif %}
+            Tarp LMS
         </title>
 
         {% block head %}
@@ -36,7 +35,7 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'displaycalendar' %}">Calendar</a>
+                        <a class="nav-link" href="{% url 'calendar:displaycalendar' %}">Calendar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
