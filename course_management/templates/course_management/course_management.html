@@ -7,7 +7,7 @@
         {% for course in course_list %}
             <li class="list-group-item">
                 <div class="row">
-                    <div class="mt-2 col">{{ course.course_num }}  {{ course.course_name }}</div>
+                    <div class="mt-2 col">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
                     <div class="col d-flex justify-content-between" style="width: 25%">
                         <a href="{% url 'course_management:coursePage' course.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
                         <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
