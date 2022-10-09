@@ -10,11 +10,11 @@ def displaycalendar(request):
         # Create course list
         courses_list = None
 
-        # Check if instructor or not. If student give an empty list.
+        # Check if instructor or not.
         if request.user.groups.filter(name='Instructor').exists():
             courses_list = Course.objects.filter(instructor=request.user)
         else:
-            courses_list = []
+            courses_list = request.user.courses.all()
 
         # Create two lists to store the course names and the meeting days.
         names = []
