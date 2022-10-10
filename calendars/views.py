@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from course_management.models import Course
+from course_management.models import Assignment
 from json import dumps
 import json
 
@@ -10,17 +11,38 @@ def displaycalendar(request):
         # Create course list
         courses_list = None
 
+        # Create assignment list
+        assignment_list = None
+
         # Check if instructor or not.
         if request.user.groups.filter(name='Instructor').exists():
             courses_list = Course.objects.filter(instructor=request.user)
+            assignment_list = Assignment.objects.all()
         else:
             courses_list = request.user.courses.all()
+            assignment_list = Assignment.objects.all()
+
+        assignment_title = []
+        assignment_due = []
+
+        c = 0
+        for assignment in assignment_list:
+            assignment_title.append(assignment_list[c].title)
+            assignment_due.append(str(assignment_list[c].due_date))
+            c = c + 1
+
+        assignment_dict = {
+            "titles": assignment_title,
+            "dates": assignment_due
+        }
+
+        json_assignment_list = dumps(assignment_dict)
 
         # Create two lists to store the course names and the meeting days.
         names = []
         times = []
-        i = 0
 
+        i = 0
         # Fill the lists.
         for course in courses_list:
             names.append(courses_list[i].department + str(courses_list[i].course_num))
@@ -36,7 +58,9 @@ def displaycalendar(request):
         # Turn the dictionary into a json string.
         json_list = dumps(course_dict)
 
-        return render(request, 'calendars/calendar.html', {'json_list': json_list, 'page_title': 'Calendar'})
+        return render(request, 'calendars/calendar.html', {'json_list': json_list,
+                                                           'json_assignment_list': json_assignment_list,
+                                                           'page_title': 'Calendar'})
 
     except:
         # Render without data if user isn't logged in.

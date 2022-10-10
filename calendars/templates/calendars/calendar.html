@@ -12,6 +12,7 @@
         // Parse the json into a Javascript object.
         let courses = JSON.parse("{{json_list|escapejs}}");
 
+
         // Loop through the lists and create event objects
         let length = courses.course_name.length;
         for (let i = 0; i < length; i++)
@@ -50,6 +51,22 @@
             };
 
             // Add the event.
+            calendar.addEvent(e);
+        }
+
+        // Add the assignment events.
+        // Parse assignment JSON into javascript object.
+        let assignments = JSON.parse("{{json_assignment_list|escapejs}}");
+
+        // Add the events to the calendar.
+        let assignment_length = assignments.titles.length;
+        for (let i = 0; i < assignment_length; i++)
+        {
+            e = {
+                id: 'a',
+                title: assignments.titles[i],
+                start: assignments.dates[i]
+            }
             calendar.addEvent(e);
         }
 
