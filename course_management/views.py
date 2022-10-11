@@ -94,35 +94,29 @@ def assignmentSubmission(request, course_id, assignment_id):
     course = Course.objects.get(id=course_id)
     assignment = Assignment.objects.get(id=assignment_id)
 
-    if request.method == 'POST':
-        # form will be different depending on the submission type
-        if assignment.type == 'f':
-            # if there is already a submission, pass it as the instance
-            current_submission = FileSubmission.objects.filter(assignment=assignment, student=request.user).first()
-            if current_submission:
-                form = FileSubmissionForm(request.POST, request.FILES, instance=current_submission)
-            else:
-                form = FileSubmissionForm(request.POST)
+    if assignment.type == 'f':
+        # get current submission, pass it as an instance if it exists
+        current_submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if current_submission:
+            form = FileSubmissionForm(request.POST or None, request.FILES, instance=current_submission)
         else:
-            # if there is already a submission, pass it as the instance
-            current_submission = TextSubmission.objects.filter(assignment=assignment, student=request.user).first()
-            if current_submission:
-                form = TextSubmissionForm(request.POST, instance=current_submission)
-            else:
-                form = TextSubmissionForm(request.POST)
-        if form.is_valid():
-            submission = form.save(commit=False)
-            submission.assignment = assignment
-            submission.student = request.user
-            submission.save()
-            return redirect('course_management:coursePage', course_id)
+            form = FileSubmissionForm(request.POST or None)
     else:
-        if assignment.type == 'f':
-            form = FileSubmissionForm()
-            return render(request, 'course_management/assignment_submission.html',
-                          {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
+        # get current submission, pass it as an instance if it exists
+        current_submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if current_submission:
+            form = TextSubmissionForm(request.POST or None, instance=current_submission)
         else:
-            form = TextSubmissionForm()
-            return render(request, 'course_management/assignment_submission.html',
-                          {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
+            form = TextSubmissionForm(request.POST or None)
+
+    # save form if it is valid
+    if form.is_valid():
+        submission = form.save(commit=False)
+        submission.assignment = assignment
+        submission.student = request.user
+        submission.save()
+        return redirect('course_management:coursePage', course_id)
+
+    return render(request, 'course_management/assignment_submission.html',
+                  {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
 
