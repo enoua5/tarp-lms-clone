@@ -30,18 +30,17 @@ def queryset_to_list(qs, fields=None, exclude=None):
         arr.append(model_to_dict(i, fields=fields, exclude=exclude))
     return arr
 
-def ItemQueryDesc(model, permission, only_mine=True, user_fields=[], user_lists=[]):
+def ItemQueryDesc(model, permission, only_mine=True, user_fields=[]):
     return {
         'model': model,
         'permission': permission,
         'only_mine': only_mine,
         'user_fields': user_fields,
-        'user_lists': user_lists,
     }
 
 ITEM_MODELS = {
-    'course': ItemQueryDesc(Course, "course_management.view_course", only_mine=False, user_lists=["students"], user_fields=["instructor_id"]),
-    'assignment': ItemQueryDesc(Assignment, "course_management.view_assignment", user_lists=["course__students"], user_fields=["course__instructor_id"]),
+    'course': ItemQueryDesc(Course, "course_management.view_course", only_mine=False, user_fields=["instructor_id", "students"]),
+    'assignment': ItemQueryDesc(Assignment, "course_management.view_assignment", user_fields=["course__instructor_id", "course__students"]),
     'profile': ItemQueryDesc(Profile, "account.view_profile", user_fields=["user"]),
 
 }
@@ -104,12 +103,8 @@ def get_mine(req, query_dict):
         keyword = {}
         keyword[field] = req.user.id
         search_params |= Q(**keyword)
-    for field in item_query_desc["user_lists"]:
-        keyword = {}
-        keyword['{0}__id'.format(field)] = req.user.id
-        search_params |= Q(**keyword)
         
-    items = item_model.objects.filter(search_params)
+    items = item_model.objects.filter(search_params).distinct()
 
     data = {
         'items': queryset_to_list(items)
