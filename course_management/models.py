@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
 from django.contrib.auth.models import User
 from django.conf import settings # Used for linking to user model
+import os
 
 import datetime
 from django.forms.widgets import NumberInput
@@ -63,8 +64,23 @@ class Assignment(models.Model):
         return self.title
 
 
-# submission model
-# class Submission(models.Model):
-#     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-#     student = models.ForeignKey(User, on_delete=models.CASCADE)
+# submission models
+class FileSubmission(models.Model):
+    # file will save to MEDIA_ROOT/submissions/<assignment.id>/<student.id>/<filename>
+    def get_submission_path(self, filename):
+        return os.path.join(
+            'submissions',
+            str(self.assignment.id),
+            str(self.student.id),
+            filename,
+        )
 
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_submission_path)
+
+
+class TextSubmission(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=30000)
