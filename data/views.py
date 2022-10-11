@@ -57,11 +57,11 @@ def get_all(req, query_dict):
 
     item_query_desc = ITEM_MODELS.get(item_type)
 
-    if item_query_desc["only_mine"]:
-        return HttpResponse('{"message": "You can only get your own data from this list"}', status=HTTPStatus.FORBIDDEN)
-
     if(item_query_desc == None):
         return HttpResponse('{"message":"Item type not recognized"}', status=HTTPStatus.NOT_FOUND)
+
+    if item_query_desc["only_mine"]:
+        return HttpResponse('{"message": "You can only get your own data from this list"}', status=HTTPStatus.FORBIDDEN)
 
     item_model = item_query_desc['model']
 

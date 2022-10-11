@@ -1,9 +1,258 @@
 <!DOCTYPE html>
 <html>
     <head>
-        {% include 'main/shared_headers.html' %}
-    </head>
-    <body>
+        {% include 'main/shared_header.html' %}
 
+        <script>
+            const API_URL = new URL('data', location.origin);
+            function createAPICallURL(obj)
+            {
+                let url = new URL(API_URL);
+                url.search = new URLSearchParams(obj);
+                return url;
+            }
+
+            function setAlertType(id, type)
+            {
+                let element = document.getElementById(id);
+                element.classList.remove("alert-success");
+                element.classList.remove("alert-warning");
+                element.classList.remove("alert-danger");
+                element.classList.add("alert-"+type);
+            }
+
+
+            function run_test(query, outbox_id)
+            {
+                let el = document.getElementById(outbox_id);
+                fetch(createAPICallURL(query)).then(
+                    response => {
+                        if(response.ok)
+                        {
+                            setAlertType(outbox_id, "success");
+                            el.innerText = "";
+                        }
+                        else
+                        {
+                            setAlertType(outbox_id, "danger");
+                            el.innerText = response.status + " -";
+                            
+                        }
+                        return response.json();
+                    }
+                ).then(
+                    data => {
+                        if(data.items)
+                        {
+                            let items = data.items;
+
+                            if(items.length > 0)
+                            {
+                                let table = document.createElement("table");
+                                el.appendChild(table);
+
+                                // create head
+                                let template_element = items[0];
+                                let trh = document.createElement("tr")
+                                table.appendChild(trh);
+                                for(let attr in template_element)
+                                {
+                                    let th = document.createElement("th");
+                                    th.innerText = attr;
+                                    trh.appendChild(th);
+                                }
+
+                                // create body
+                                for(let item of items)
+                                {
+                                    let tr = document.createElement("tr");
+                                    table.appendChild(tr);
+                                    for(let attr in item)
+                                    {
+                                        let td = document.createElement("td");
+                                        td.innerText = item[attr];
+                                        tr.appendChild(td);
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                el.innerText = "The query was successful, but zero items were found";
+                            }
+                        }
+                        else if(data.message)
+                            // putting the space here because HTML shenanegans
+                            el.innerText += " " + data.message;
+
+                    }
+                );
+            }
+
+            function onload()
+            {
+                run_test({command: "get_all", item_type: "course"}, "ob_ac");
+                run_test({command: "get_all", item_type: "assignment"}, "ob_aa");
+                run_test({command: "get_all", item_type: "profile"}, "ob_ap");
+                run_test({command: "get_mine", item_type: "course"}, "ob_mc");
+                run_test({command: "get_mine", item_type: "assignment"}, "ob_ma");
+                run_test({command: "get_mine", item_type: "profile"}, "ob_mp");
+                run_test({}, "ob_nn");
+                run_test({item_type: "course"}, "ob_nc");
+                run_test({command: "bad", item_type: "course"}, "ob_bc");
+                run_test({command: "get_all"}, "ob_an");
+                run_test({command: "get_mine"}, "ob_mn");
+                run_test({command: "get_all", item_type: "bad"}, "ob_ab");
+                run_test({command: "get_mine", item_type: "bed"}, "ob_mb");
+            }
+        </script>
+
+        <style>
+            body
+            {
+                padding: 2em;
+            }
+            .test-box
+            {
+                padding: 1em;
+            }
+            h3
+            {
+                font-size: 1rem;
+            }
+            td, th
+            {
+                border: 1px solid black;
+                padding: 0.5em;
+            }
+        </style>
+    </head>
+    <body onload="onload()">
+        <h1>REST Query Test</h1>
+
+        <p>You will need to run this test 4 times, for 4 different users. Run it as a teacher (username=professor, password=asdfasdfasdf), a student (username=student, password=asdfasdfasdf), an account with no permissions (username=no_perm, password=asdfasdfasdf), and while logged out.</p>
+        <p>In each case, wait for all tests to load, and then ensure that the description for what each test should display is accurate.</p>
+
+        <h2>get_all</h2>
+        <div class="test-box">
+            <h3>?command=get_all&item_type=course</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.course_management.view_course %}
+                <p>A list of all courses</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_ac">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_all&item_type=assignment</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.course_management.view_assignment %}
+                <p>403 - you can only view your own data</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_aa">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_all&item_type=profile</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.account.view_profile %}
+                <p>403 - you can only view your own data</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_ap">Loading...</p>
+        </div>
+        <h2>get_mine</h2>
+        <div class="test-box">
+            <h3>?command=get_mine&item_type=course</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.course_management.view_course %}
+                <p>A list of courses enrolled in or teaching</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_mc">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_mine&item_type=assignment</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.course_management.view_assignment %}
+                <p>A list of assignments in courses enrolled in or teaching</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_ma">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_mine&item_type=profile</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% elif perms.account.view_profile %}
+                <p>A list containing only the user's profile</p>
+            {% else  %}
+                <p>403 - you do not have permission</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_mp">Loading...</p>
+        </div>
+
+        <h2>Malformed commands</h2>
+        <div class="test-box">
+            <h3>?</h3>
+            <p>400 - command not specified</p>
+            <p class="output-box alert alert-warning" id="ob_nn">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?item_type=course</h3>
+            <p>400 - command not specified</p>
+            <p class="output-box alert alert-warning" id="ob_nc">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=bad&item_type=course</h3>
+            <p>400 - unrecognized command</p>
+            <p class="output-box alert alert-warning" id="ob_bc">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_all</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% else  %}
+                <p>400 - item not specified</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_an">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_mine</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% else  %}
+                <p>400 - item not specified</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_mn">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_all&item_type=bad</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% else  %}
+                <p>404 - item not recognized</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_ab">Loading...</p>
+        </div>
+        <div class="test-box">
+            <h3>?command=get_mine&item_type=bad</h3>
+            {% if not user.is_authenticated %}
+                <p>401 - not logged in</p>
+            {% else  %}
+                <p>404 - item not recognized</p>
+            {% endif %}
+            <p class="output-box alert alert-warning" id="ob_mb">Loading...</p>
+        </div>
     </body>
 </html>
