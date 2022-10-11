@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from course_management.models import Course
+from django.contrib.auth.models import Group
 
 # A helper function to calculate the balance of a student
 def calculateBalance(course_list):
@@ -14,6 +15,8 @@ def calculateBalance(course_list):
 
 # Create your views here.
 def tuition(request):
+    group = Group.objects.get(name='Student')
+    print(group)
     # A precaution, in case student/course relationship does not exist
     try:        
         course_list = request.user.courses.all()
