@@ -82,9 +82,9 @@ def addAssignment(request, id):
     # form stuff
     form = AssignmentForm(request.POST or None)
     if form.is_valid():
-        assignment = form.save()
+        assignment = form.save(commit=False)
         assignment.course = course
-        assignment.save(commit=False)
+        assignment.save()
         return redirect('course_management:coursePage', id)
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})

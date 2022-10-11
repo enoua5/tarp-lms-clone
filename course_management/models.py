@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
 from django.conf import settings # Used for linking to user model
-import datetime
+import datetime, pytz # Time & timezone abilities
 from django.forms.widgets import NumberInput
 
 class Course(models.Model):
@@ -22,6 +22,12 @@ class Course(models.Model):
     def __str__(self):
         return self.department + " " + str(self.course_num) + " " + self.course_name
         
+    '''!
+        @brief Returns the "short" course name of the current course.
+        @details Returns a string in the format "XX 0000".
+    '''
+    def getShortCourseName(self):
+        return f"{self.department} {self.course_num}"
         
     '''!
         @brief Formats the course's meeting days and returns a string in the format
@@ -61,11 +67,14 @@ class Assignment(models.Model):
     
     '''!
         @brief Returns whether or not the current assignment is overdue.
+        @return True if the assignment is overdue; False otherwise.
     '''
     def overdue(self):
-        now = datetime.datetime.now()
-        if self.due_date < now:
+        universalTimeZone = pytz.UTC
+        now = universalTimeZone.localize(datetime.datetime.now())
+        if self.due_date <= now:
             return True
+        return False
         
     '''!
         @brief Returns a user-friendly string that indicates when the assignment is due.
@@ -74,8 +83,8 @@ class Assignment(models.Model):
     def getUserFriendlyDueDate(self):
         due_date_string = ""
 
-        today = datetime.datetime.now().date.day
-        assignment_due_day = self.due_date.date.day
+        today = datetime.datetime.now().day
+        assignment_due_day = self.due_date.day
         
         # Check if assignment is due today or tomorrow.
         if (today == assignment_due_day):
@@ -83,7 +92,7 @@ class Assignment(models.Model):
         elif ((today+1) == assignment_due_day):
             due_date_string += "Tomorrow"
         else:
-            due_date_string += f"{self.due_date.strftime('%m/%d')}"
+            due_date_string += f"{self.due_date.strftime('%m/%d/%Y')}"
             
         due_date_string += f" at {self.due_date.strftime('%I:%M%p')}"
         
