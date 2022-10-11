@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
-from course_management.forms import CourseForm, AssignmentForm
-from .models import Course, Assignment
+from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm
+from .models import Course, Assignment, FileSubmission, TextSubmission
 
 # A view of courses for instructors
 def course_management(request):
@@ -93,4 +93,36 @@ def addAssignment(request, id):
 def assignmentSubmission(request, course_id, assignment_id):
     course = Course.objects.get(id=course_id)
     assignment = Assignment.objects.get(id=assignment_id)
-    return render(request, 'course_management/assignment_submission.html', {'course': course, 'assignment': assignment, 'path_title': str(assignment)})
+
+    if request.method == 'POST':
+        # form will be different depending on the submission type
+        if assignment.type == 'f':
+            # if there is already a submission, pass it as the instance
+            current_submission = FileSubmission.objects.filter(assignment=assignment, student=request.user).first()
+            if current_submission:
+                form = FileSubmissionForm(request.POST, request.FILES, instance=current_submission)
+            else:
+                form = FileSubmissionForm(request.POST)
+        else:
+            # if there is already a submission, pass it as the instance
+            current_submission = TextSubmission.objects.filter(assignment=assignment, student=request.user).first()
+            if current_submission:
+                form = TextSubmissionForm(request.POST, instance=current_submission)
+            else:
+                form = TextSubmissionForm(request.POST)
+        if form.is_valid():
+            submission = form.save(commit=False)
+            submission.assignment = assignment
+            submission.student = request.user
+            submission.save()
+            return redirect('course_management:coursePage', course_id)
+    else:
+        if assignment.type == 'f':
+            form = FileSubmissionForm()
+            return render(request, 'course_management/assignment_submission.html',
+                          {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
+        else:
+            form = TextSubmissionForm()
+            return render(request, 'course_management/assignment_submission.html',
+                          {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
+

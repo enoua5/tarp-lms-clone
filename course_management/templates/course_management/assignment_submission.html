@@ -1,4 +1,23 @@
 {% extends 'course_management/course_base.html' %}
 {% block content %}
+    <h1 class="display-6 text-center">Assignment Submission</h1>
+
+    <div class="card">
+        <h5 class="card-header">{{ assignment.title }}</h5>
+        <div class="card-body">{{ assignment.description }}</div>
+        <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <div class="card-body">
+                {{ form }}
+            </div>
+            <div class="card-body">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-dark">Reset</button>
+            </div>
+        </form>
+        <div class="card-body">
+            <a href="{% url 'course_management:coursePage' course.id %}">Back to assignment</a>
+        </div>
+        <div class="card-footer text-muted">Due {{ assignment.due_date }}</div>
+    </div>
 
 {% endblock %}
