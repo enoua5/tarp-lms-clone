@@ -49,7 +49,8 @@
                             if(items.length > 0)
                             {
                                 let table = document.createElement("table");
-                                el.appendChild(table);
+                                el.parentElement.appendChild(table);
+                                el.innerText = "The data successfully queried is shown below";
 
                                 // create head
                                 let template_element = items[0];
