@@ -88,3 +88,9 @@ def addAssignment(request, id):
         return redirect('course_management:coursePage', id)
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
+
+
+def assignmentSubmission(request, course_id, assignment_id):
+    course = Course.objects.get(id=course_id)
+    assignment = Assignment.objects.get(id=assignment_id)
+    return render(request, 'course_management/assignment_submission.html', {'course': course, 'assignment': assignment, 'path_title': str(assignment)})
