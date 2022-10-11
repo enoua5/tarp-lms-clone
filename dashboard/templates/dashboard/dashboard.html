@@ -4,24 +4,27 @@
 {% comment %} Dashboard Container {% endcomment %}
 <div id="dashboard-container" class="container-fluid">
 <div class="row">
-    
+
     {% comment %} Course Card Display {% endcomment %}
     <div id="course-card-container" class="container text-center col-md-8">
         <h3 class="mt-2">Courses</h3>
         {% if course_list %}
             <div class="row row-cols-3">
                 {% for course in course_list %}
-                    <div class="p-3 col">
-                        <div class="card btn" style="width: 18rem;">
-                            <div class="card-body">
-                            <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                            <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
-                                            <br>{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
-                                            <br>{{ course.meeting_location }}</p>
-                            </div>
+                        <div class="p-3 col">
+                            {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
+                            <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
+                                <div class="card btn" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
+                                        <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
+                                                            <br>{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
+                                                            <br>{{ course.meeting_location }}</p>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </div>
                 {% endfor %}
             </div>
         {% else %}
