@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% block body %}
+
+<div class="container-fluid mt-2" style="width: 80%">
+    {% if course_list %}
+    <div class="alert alert-dark mt-3" role="alert">
+        <h1>Your balance: ${{balance}}</h1>
+    </div>
+    <ul class="list-group">
+        {% for course in course_list %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="mt-2 col">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
+                </div>   
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="#" class="btn btn-danger mt-3" tabindex="-1" role="button" aria-disabled="true">Pay</a>
+    {% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You are not enrolled in any courses.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
