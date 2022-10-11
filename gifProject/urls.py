@@ -27,7 +27,8 @@ urlpatterns = [
     path('courses/', include('course_management.urls')),
     path('test/', include('base.urls')),
     path('account/', include('account.urls')),
-    path('', RedirectView.as_view(pattern_name="dashboard:dashboard"))
+    path('', RedirectView.as_view(pattern_name="dashboard:dashboard")),
+    path('tuition/', include('payments.urls')),
 ]
 # will allow images to be viewed using local development server
 # will allow tests to be reached
