@@ -12,7 +12,6 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete = models.CASCADE,
     )
-    
     meeting_days = models.TextField()
     meeting_start_time = models.TimeField(default='12:00')
     meeting_end_time = models.TimeField(default='12:00')
@@ -50,7 +49,7 @@ class Course(models.Model):
 
 # assignment model
 class Assignment(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="assignments")
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
     due_date = models.DateTimeField()
@@ -59,3 +58,33 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
+    
+    '''!
+        @brief Returns whether or not the current assignment is overdue.
+    '''
+    def overdue(self):
+        now = datetime.datetime.now()
+        if self.due_date < now:
+            return True
+        
+    '''!
+        @brief Returns a user-friendly string that indicates when the assignment is due.
+        @return due_date_string A string of the format "Today at 11:59PM" or "05/29 at 10:40PM"
+    '''
+    def getUserFriendlyDueDate(self):
+        due_date_string = ""
+
+        today = datetime.datetime.now().date.day
+        assignment_due_day = self.due_date.date.day
+        
+        # Check if assignment is due today or tomorrow.
+        if (today == assignment_due_day):
+            due_date_string += "Today"
+        elif ((today+1) == assignment_due_day):
+            due_date_string += "Tomorrow"
+        else:
+            due_date_string += f"{self.due_date.strftime('%m/%d')}"
+            
+        due_date_string += f" at {self.due_date.strftime('%I:%M%p')}"
+        
+        return due_date_string  
