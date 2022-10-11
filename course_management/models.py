@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
+from django.contrib.auth.models import User
 from django.conf import settings # Used for linking to user model
+
 import datetime
 from django.forms.widgets import NumberInput
 
@@ -59,3 +61,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# submission model
+# class Submission(models.Model):
+#     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+#     student = models.ForeignKey(User, on_delete=models.CASCADE)
+
