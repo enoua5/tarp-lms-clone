@@ -23,8 +23,7 @@ def displaycalendar(request):
         for course in courses_list:
             assignment_list = assignment_list | Assignment.objects.filter(course_id=courses_list[a].id).select_related()
             a = a + 1
-        print("DueDate:")
-        print(assignment_list[0])
+
         assignment_title = []
         assignment_due = []
 
