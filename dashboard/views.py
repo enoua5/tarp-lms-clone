@@ -59,7 +59,8 @@ def getNextAssignments(student_user):
                 assignment_list.append(assignment)
     
     # Filter assigment list down to first 5, if possible
-    if len(assignment_list) > 5:
+    if len(assignment_list) > 0:
+        assignment_list.sort(key=lambda assignment: assignment.due_date)
         assignment_list = (assignment_list)[:5]
         
     return assignment_list
