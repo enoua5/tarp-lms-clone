@@ -7,27 +7,26 @@ import unittest
 
 # Create your tests here.
 
-class TestClass(TestCase):
+class TestMakeCourse(TestCase):
     # Set up for the run
+    user = None
+    c = Client()
     def setUp(self):
-        # Place code here you want to run before the test.
-        pass
-
-    # Test add class
-    def test_addclass(self):
         # Create a test user
         user = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
         Profile.user = user
-        c = Client()
 
         # Login the user
-        success = c.login(username='testprofessor', password='asdfasdfasdf')
+        success = self.c.login(username='testprofessor', password='asdfasdfasdf')
 
         # Check if login was successful
         self.assertTrue(success, msg='Error: Login failed.')
 
+    # Test add class
+    def test_addclass(self):
+
         # Create the course
-        response = c.post('/courses/addCourse/', {'department': 'CS',
+        response = self.c.post('/courses/addCourse/', {'department': 'CS',
                                                   'course_num': 4000,
                                                   'course_name': 'Test course',
                                                   'meeting_days': 'T,Th',
@@ -39,12 +38,10 @@ class TestClass(TestCase):
         # Status code should be 302 for redirect
         self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
 
-        course_list = Course.objects.filter(instructor=user)
+        course_list = Course.objects.filter(course_num=4000)
 
         # Check if the course was created
         self.assertEqual(course_list[0].course_num, 4000, msg='Error: Failed to create a course.')
-
-        pass
 
     # Clean up after the test
     def tearDown(selfself):
