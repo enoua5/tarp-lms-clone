@@ -21,7 +21,7 @@
                                     {% endif %}
                                     {# student can start the assignment or edit their submission #}
                                     {% if request.user|has_group:"Student" %}
-                                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Start assignment</a>
+                                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
                                     {% endif %}
                                 </div>
                             </div>
