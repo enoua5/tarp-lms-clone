@@ -24,6 +24,7 @@
         registerLoadFunction(()=>{
             var courses = [];
             var filtered_courses = [];
+            var searchedCourseName = "";
             var searchedDepartment = "";
             var searchedInstructorId = -1;
             var searchedMinHours = 0;
@@ -59,11 +60,15 @@
                         else
                         {
                             courses = data.items.filter(course => getCourseElementById(course.id));
-                            console.table(courses);
                             filtered_courses = courses;
                         }
                     }
                 );
+            }
+
+            function filterCourseName(str)
+            {
+                return str.toLowerCase().replace(/[^a-z]*/g, "")
             }
 
             function filterCourses()
@@ -76,6 +81,8 @@
                     if(searchedMinHours > course.credit_hours)
                         return false;
                     if(searchedMaxHours < course.credit_hours)
+                        return false;
+                    if(!filterCourseName(course.course_name).includes(filterCourseName(searchedCourseName)))
                         return false;
                     return true;
                 });
@@ -92,6 +99,10 @@
 
             getCourseList();
 
+            document.getElementById("search-course-name").onchange = (event)=>{
+                searchedCourseName = event.srcElement.value;
+                filterCourses();
+            };
             document.getElementById("search-dep-code").onchange = (event)=>{
                 searchedDepartment = event.srcElement.value;
                 filterCourses();
@@ -181,6 +192,8 @@
                             <p id="init-fail-info"></p>
                         </div>
                         <div id="course-search-controls">
+                            <label for="search-desc">Course name</label> <input id="search-course-name">
+                            <br>
                             <label for="search-dep-code">Department code</label> <input id="search-dep-code">
                             <br>
                             <label for="search-instructor">Taught by</label>
