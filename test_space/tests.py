@@ -44,6 +44,8 @@ class TestClass(TestCase):
         # Check if the course was created
         self.assertEqual(course_list[0].course_num, 4000)
 
+
+
         pass
 
     # Clean up after the test
