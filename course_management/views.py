@@ -98,9 +98,9 @@ def assignmentSubmission(request, course_id, assignment_id):
         # get current submission, pass it as an instance if it exists
         current_submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
         if current_submission:
-            form = FileSubmissionForm(request.POST or None, request.FILES, instance=current_submission)
+            form = FileSubmissionForm(request.POST or None, instance=current_submission)
         else:
-            form = FileSubmissionForm(request.POST or None)
+            form = FileSubmissionForm(request.POST or None, request.FILES)
     else:
         # get current submission, pass it as an instance if it exists
         current_submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()

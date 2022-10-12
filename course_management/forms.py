@@ -90,7 +90,7 @@ class FileSubmissionForm(ModelForm):
 
 
 class TextSubmissionForm(ModelForm):
-    text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 10}), required=True)
+    text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 15}), required=True)
 
     class Meta:
         model = TextSubmission
