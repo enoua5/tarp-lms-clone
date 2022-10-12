@@ -53,10 +53,12 @@ def studentCourses(request):
         try:        
             my_course_list = request.user.courses.all()
             all_course_list = Course.objects.all().exclude(students=request.user)
-            return render(request, 'course_management/student_courses.html', {'my_course_list' : my_course_list, 'all_course_list' : all_course_list})
+            all_instructors_list = User.objects.filter(groups__name='Instructor')
+            return render(request, 'course_management/student_courses.html', {'my_course_list' : my_course_list, 'all_course_list' : all_course_list, 'all_instructors_list': all_instructors_list})
         except:
             all_course_list = Course.objects.all().exclude(students=request.user)
-            return render(request, 'course_management/student_courses.html', {'all_course_list' : all_course_list})
+            all_instructors_list = User.objects.filter(groups__name='Instructor')
+            return render(request, 'course_management/student_courses.html', {'all_course_list' : all_course_list, 'all_instructors_list': all_instructors_list})
 
 # Allows a student to register for a course
 def register(request, id):
