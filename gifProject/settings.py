@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'test_space.apps.TestSpaceConfig',
     'calendars.apps.CalendarsConfig',
     'course_management.apps.CourseManagementConfig',
+    'data.apps.DataConfig',
 ]
 
 MIDDLEWARE = [

@@ -25,8 +25,8 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('calendars/', include('calendars.urls')),
     path('courses/', include('course_management.urls')),
-    path('test/', include('base.urls')),
     path('account/', include('account.urls')),
+    path('data/', include('data.urls')),
     path('', RedirectView.as_view(pattern_name="dashboard:dashboard"))
 ]
 # will allow images to be viewed using local development server
