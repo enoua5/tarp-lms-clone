@@ -11,9 +11,6 @@ def displaycalendar(request):
         # Create course list
         courses_list = None
 
-        # Create assignment list
-        assignment_list = None
-
         # Check if instructor or not.
         if request.user.groups.filter(name='Instructor').exists():
             courses_list = Course.objects.filter(instructor=request.user)
