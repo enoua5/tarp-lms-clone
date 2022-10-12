@@ -17,11 +17,17 @@ def displaycalendar(request):
         # Check if instructor or not.
         if request.user.groups.filter(name='Instructor').exists():
             courses_list = Course.objects.filter(instructor=request.user)
-            assignment_list = Assignment.objects.all()
         else:
             courses_list = request.user.courses.all()
-            assignment_list = Assignment.objects.all()
 
+        # Grab the assignments attached to the courses and add to assignment_list
+        assignment_list = Assignment.objects.none()
+        a = 0
+        for course in courses_list:
+            assignment_list = assignment_list | Assignment.objects.filter(course_id=courses_list[a].id).select_related()
+            a = a + 1
+        print("DueDate:")
+        print(assignment_list[0])
         assignment_title = []
         assignment_due = []
 
