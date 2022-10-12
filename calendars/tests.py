@@ -10,7 +10,7 @@ import unittest
 class TestClass(TestCase):
     # Set up for the run
     def setUp(self):
-
+        # Place code here you want to run before the test.
         pass
 
     # Test add class
@@ -24,7 +24,7 @@ class TestClass(TestCase):
         success = c.login(username='testprofessor', password='asdfasdfasdf')
 
         # Check if login was successful
-        self.assertTrue(success)
+        self.assertTrue(success, msg='Error: Login failed.')
 
         # Create the course
         response = c.post('/courses/addCourse/', {'department': 'CS',
@@ -37,18 +37,18 @@ class TestClass(TestCase):
                                                   'credit_hours': 4})
 
         # Status code should be 302 for redirect
-        self.assertTrue(response.status_code == 302)
+        self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
 
         course_list = Course.objects.filter(instructor=user)
 
         # Check if the course was created
-        self.assertEqual(course_list[0].course_num, 4000)
+        self.assertEqual(course_list[0].course_num, 4000, msg='Error: Failed to create a course.')
 
         pass
 
     # Clean up after the test
     def tearDown(selfself):
-
+        # Place code here you want to run after the test
         pass
 
 if __name__ == '__main__':
