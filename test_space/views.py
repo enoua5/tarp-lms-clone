@@ -23,3 +23,6 @@ def accounttype(req):
 
 def stats(req):
     return render(req, 'tests/stats.html')
+
+def rest_api(req):
+    return render(req, 'tests/rest_api.html')
