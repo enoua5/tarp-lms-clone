@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'calendars.apps.CalendarsConfig',
     'course_management.apps.CourseManagementConfig',
     'payments.apps.PaymentsConfig',
+    'data.apps.DataConfig',
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,8 @@ DATABASES = {
     }  
 }
 
+# set auto field to remove warnings
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

@@ -55,10 +55,12 @@ def studentCourses(request):
         try:        
             my_course_list = request.user.courses.all()
             all_course_list = Course.objects.all().exclude(students=request.user)
-            return render(request, 'course_management/student_courses.html', {'my_course_list' : my_course_list, 'all_course_list' : all_course_list})
+            all_instructors_list = User.objects.filter(groups__name='Instructor')
+            return render(request, 'course_management/student_courses.html', {'my_course_list' : my_course_list, 'all_course_list' : all_course_list, 'all_instructors_list': all_instructors_list})
         except:
             all_course_list = Course.objects.all().exclude(students=request.user)
-            return render(request, 'course_management/student_courses.html', {'all_course_list' : all_course_list})
+            all_instructors_list = User.objects.filter(groups__name='Instructor')
+            return render(request, 'course_management/student_courses.html', {'all_course_list' : all_course_list, 'all_instructors_list': all_instructors_list})
 
 # Allows a student to register for a course
 def register(request, id):
@@ -96,7 +98,7 @@ def addAssignment(request, id):
     # form stuff
     form = AssignmentForm(request.POST or None)
     if form.is_valid():
-        assignment = form.save()
+        assignment = form.save(commit=False)
         assignment.course = course
         assignment.save()
         return redirect('course_management:coursePage', id)

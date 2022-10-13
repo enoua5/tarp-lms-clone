@@ -8,4 +8,5 @@ urlpatterns = [
     path('template', views.template, name="Template Loading"),
     path('accountype', views.accounttype, name="Account Type"),
     path('stats', views.stats, name="Stats"),
+    path('rest/', views.rest_api, name="Rest API Test")
 ]
