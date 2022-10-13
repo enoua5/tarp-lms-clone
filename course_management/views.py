@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
-from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm
-from .models import Course, Assignment, FileSubmission, TextSubmission
+from course_management.forms import CourseForm, AssignmentForm
+from .models import Course, Assignment
 from payments.models import Tuition
 
 
@@ -104,35 +104,3 @@ def addAssignment(request, id):
         return redirect('course_management:coursePage', id)
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
-
-
-def assignmentSubmission(request, course_id, assignment_id):
-    course = Course.objects.get(id=course_id)
-    assignment = Assignment.objects.get(id=assignment_id)
-
-    if assignment.type == 'f':
-        # get current submission, pass it as an instance if it exists
-        current_submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
-        if current_submission:
-            form = FileSubmissionForm(request.POST or None, instance=current_submission)
-        else:
-            form = FileSubmissionForm(request.POST or None, request.FILES)
-    else:
-        # get current submission, pass it as an instance if it exists
-        current_submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
-        if current_submission:
-            form = TextSubmissionForm(request.POST or None, instance=current_submission)
-        else:
-            form = TextSubmissionForm(request.POST or None)
-
-    # save form if it is valid
-    if form.is_valid():
-        submission = form.save(commit=False)
-        submission.assignment = assignment
-        submission.student = request.user
-        submission.save()
-        return redirect('course_management:coursePage', course_id)
-
-    return render(request, 'course_management/assignment_submission.html',
-                  {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
-
