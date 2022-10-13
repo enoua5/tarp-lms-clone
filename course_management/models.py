@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
+from django.contrib.auth.models import User
 from django.conf import settings # Used for linking to user model
 import datetime, pytz # Time & timezone abilities
+import os
 from django.forms.widgets import NumberInput
 
 class Course(models.Model):
@@ -97,3 +99,24 @@ class Assignment(models.Model):
         due_date_string += f" at {self.due_date.strftime('%I:%M%p')}"
         
         return due_date_string  
+
+# submission models
+class FileSubmission(models.Model):
+    # file will save to MEDIA_ROOT/submissions/<assignment.id>/<student.id>/<filename>
+    def get_submission_path(self, filename):
+        return os.path.join(
+            'submissions',
+            str(self.assignment.id),
+            str(self.student.id),
+            filename,
+        )
+
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_submission_path)
+
+
+class TextSubmission(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=30000)
