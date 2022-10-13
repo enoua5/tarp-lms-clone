@@ -90,6 +90,7 @@ def addAssignment(request, id):
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
 
 
+# assignment submission view - distinguishes between file and text submission
 def assignmentSubmission(request, course_id, assignment_id):
     course = Course.objects.get(id=course_id)
     assignment = Assignment.objects.get(id=assignment_id)
