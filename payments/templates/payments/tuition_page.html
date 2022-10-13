@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% block body %}
+
+<div class="container-fluid mt-3" style="width: 80%">
+    {% if course_list %}
+    <div class="alert alert-success" role="alert">
+        <div class="d-flex justify-content-between">
+            <h1>Your balance: ${{balance}}</h1>
+            <a href="#" class="btn btn-success btn-lg" style="width: 20%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
+        </div>
+    </div>
+    <div class="container-fluid mt-3" style="width: 95%">
+        <ul class="list-group">
+        {% for course in course_list %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="mt-2 col-10">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
+                    <div class="mt-2 col-1">${{ course.credit_hours }}00</div>
+                </div>   
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% else %}
+    <div class="alert alert-primary mt-2" role="alert" >
+        You are not enrolled in any courses.
+    </div>
+    {% endif %}
+</div>
+
+<!--  Modal attatched -->
+<div class="modal modal-xl fade" id="payModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-3" id="modalLabel">Pay</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                This is where you will pay for stuff
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="#" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#payModal">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

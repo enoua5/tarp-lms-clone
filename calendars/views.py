@@ -30,7 +30,7 @@ def displaycalendar(request):
         c = 0
         for assignment in assignment_list:
             assignment_title.append(assignment_list[c].title)
-            assignment_due.append(str(assignment_list[c].due_date))
+            assignment_due.append(str(assignment_list[c].due_date.strftime("%Y-%m-%d %H:%M")))
             c = c + 1
 
         assignment_dict = {
