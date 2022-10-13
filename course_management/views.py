@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from course_management.forms import CourseForm, AssignmentForm
 from .models import Course, Assignment
+from payments.models import Tuition
+
 
 # A view of courses for instructors
 def course_management(request):
@@ -64,12 +66,24 @@ def studentCourses(request):
 def register(request, id):
     toRegister = Course.objects.get(id=id)
     toRegister.students.add(request.user)
+
+    # Now, we put a student into cellege debdt. STONKS 
+    student_tuition = Tuition.objects.get(user=request.user)
+    student_tuition.balance += 100*toRegister.credit_hours
+    student_tuition.save()
+
     return redirect('course_management:studentCourses')
 
 # Allows a student to drop a course
 def drop(request, id):
     toDrop = Course.objects.get(id=id)
     toDrop.students.remove(request.user)
+
+    # We need to refund the class fee
+    student_tuition = Tuition.objects.get(user=request.user)
+    student_tuition.balance -= 100*toDrop.credit_hours
+    student_tuition.save()
+
     return redirect('course_management:studentCourses')
 
 # course page view

@@ -33,6 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
                     </li>
+                    {% if request.user|has_group:"Student" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'payments:tuition' %}">Tuition</a>
+                    </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
