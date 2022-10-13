@@ -130,6 +130,3 @@ dmypy.json
 
 # pycharm
 /.idea/
-
-# file submission files
-/media/submissions/

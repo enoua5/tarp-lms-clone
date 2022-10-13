@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Course, Assignment, FileSubmission, TextSubmission
+from .models import Course, Assignment
 
 # ------------------ COURSE MANAGEMENT ------------------
 
@@ -79,19 +79,3 @@ class AssignmentForm(ModelForm):
     class Meta:
         model = Assignment
         exclude = ['course']
-
-
-class FileSubmissionForm(ModelForm):
-    file = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control', 'type': 'file'}), required=True)
-
-    class Meta:
-        model = FileSubmission
-        exclude = ['assignment', 'student']
-
-
-class TextSubmissionForm(ModelForm):
-    text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 15}), required=True)
-
-    class Meta:
-        model = TextSubmission
-        exclude = ['assignment', 'student']

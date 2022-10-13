@@ -1,8 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator # Integer validators.
-from django.contrib.auth.models import User
 from django.conf import settings # Used for linking to user model
-import os
 import datetime, pytz # Time & timezone abilities
 from django.forms.widgets import NumberInput
 
@@ -66,29 +64,6 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# submission models
-class FileSubmission(models.Model):
-    # file will save to MEDIA_ROOT/submissions/<assignment.id>/<student.id>/<filename>
-    def get_submission_path(self, filename):
-        return os.path.join(
-            'submissions',
-            str(self.assignment.id),
-            str(self.student.id),
-            filename,
-        )
-
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=get_submission_path)
-
-
-class TextSubmission(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField(max_length=30000)
-
     
     '''!
         @brief Returns whether or not the current assignment is overdue.
@@ -121,4 +96,4 @@ class TextSubmission(models.Model):
             
         due_date_string += f" at {self.due_date.strftime('%I:%M%p')}"
         
-        return due_date_string
+        return due_date_string  
