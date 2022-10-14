@@ -125,7 +125,6 @@ QUERY_COMMANDS = {
 
 @csrf_exempt
 def basic_query(req):
-    print(req.method)
     if req.method == 'BREW':
         return brew_coffee()
 
