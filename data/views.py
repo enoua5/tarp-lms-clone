@@ -8,6 +8,7 @@ from django.db.models import Model, Q
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 # import ALL THE MODELS!!!
 from course_management.models import Assignment, Course
@@ -112,6 +113,9 @@ def get_mine(req, query_dict):
 
     return HttpResponse(dumps(data, cls=DatabaseEncoder))
 
+def brew_coffee():
+    return HttpResponse("Tip me over and pour me out", status=HTTPStatus.IM_A_TEAPOT)
+
 QUERY_COMMANDS = {
     'get_all': get_all,
     'get_mine': get_mine,
@@ -119,7 +123,12 @@ QUERY_COMMANDS = {
 
 # Create your views here.
 
+@csrf_exempt
 def basic_query(req):
+    print(req.method)
+    if req.method == 'BREW':
+        return brew_coffee()
+
     query_dict = req.GET
     command = query_dict.get('command')
 
