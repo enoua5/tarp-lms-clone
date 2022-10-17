@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from account.models import Profile
-from course_management.models import Course
+from course_management.models import Course, Assignment, TextSubmission
 import unittest
 
 # Create your tests here.
@@ -47,6 +47,58 @@ class TestMakeCourse(TestCase):
     def tearDown(selfself):
         # Place code here you want to run after the test
         pass
+
+
+class StudentSubmitTextAssignmentTest(TestCase):
+    # Set up for the run
+    user = None
+    c = Client()
+    def setUp(self):
+        # Create test objects
+        user = User.objects.create_user('teststudent', 'student@gmail.com', 'asdfasdfasdf')
+        professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
+        course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
+                                       instructor=professor, meeting_days='T,Th', meeting_start_time='12:00',
+                                       meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4)
+        assignment = Assignment.objects.create(course=course, title='Test Assignment',
+                                               description='This is the test assignment',
+                                               due_date='2022-12-31 23:59:00', points=100, type='t')
+
+        Profile.user = user
+
+        # Login the user
+        success = self.c.login(username='teststudent', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+
+    # Test add class
+    def test_student_submit_text_assignment(self):
+
+        # get objects created in setup
+        user = User.objects.filter(username='teststudent').first()
+        course = Course.objects.filter(course_num=4000).first()
+        assignment = Assignment.objects.filter(title='Test Assignment').first()
+
+        # create url for submission post
+        url = '/courses/' + str(course.id) + '/' + str(assignment.id)
+
+        # Create the submission
+        response = self.c.post(url, {'text': 'This is the test text submission'})
+
+        # Status code should be 302 for redirect
+        self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
+
+        submissions = TextSubmission.objects.filter(student=user, assignment=assignment)
+
+        # Check if the course was created
+        self.assertEqual(submissions[0].text, 'This is the test text submission', msg='Error: Failed to create submission.')
+
+    # Clean up after the test
+    def tearDown(self):
+        # Place code here you want to run after the test
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
