@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
-from .models import Course, Assignment, FileSubmission, TextSubmission
+from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 from payments.models import Tuition
 from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm
 
@@ -136,3 +136,16 @@ def assignmentSubmission(request, course_id, assignment_id):
     return render(request, 'course_management/assignment_submission.html',
                   {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
 
+def submission_list(req, assignment_id):
+    assignment = Assignment.objects.get(id=assignment_id)
+    course = assignment.course
+    submissions = Submission.objects.filter(assignment=assignment)
+
+
+    ctx = {
+        'assignment': assignment,
+        'course': course,
+        'submissions': submissions
+    }
+
+    return render(req, 'course_management/submission_list.html', ctx)
