@@ -1,7 +1,7 @@
-{% extends 'authentication/base.html' %}
+{% extends 'main/base.html' %}
 
 {% block body %}
-<div class="container mt-3" style="width: 25rem">
+<div class="container mt-2" style="width: 40rem">
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
             <h4>Sign Up</h4>
@@ -15,37 +15,13 @@
         </ul>
     {% endif %}
         </div>
-        <div class="card-body mx-auto">
+        <div class="card-body mx-auto pb-2 pt-2">
             <form method="POST">
                 {% csrf_token %}
                 <div class="container">
                     {% for field in form %}
                     <div class="form-group mb-2">       
-                        {% if field.name == 'username' %}
-                            Choose your username
-                        {% endif %}                 
-                        {% if field.name == 'password1' %}
-                            Create your password
-                        {% endif %}
-                        {% if field.name == 'password2' %}
-                            Confirm your password
-                        {% endif %}
-                        {% if field.name == 'first_name' %}
-                            First name
-                        {% endif %}
-                        {% if field.name == 'last_name' %}
-                            Last name
-                        {% endif %}
-                        {% if field.name == 'email' %}
-                            Email
-                        {% endif %}
-                        {% if field.name == 'birthdate' %}
-                            Date of birth (MM/DD/YY)
-                        {% endif %}
-                        {% if field.name == 'account_type' %}
-                            Choose the account type
-                        {% endif %}
-                        <br>
+                        <label for="{{ field.name }}" class="form-label mt-0 mb-0">{{ field.label }}</label>
                         {{ field }}
                     </div>
                     {% endfor %}
@@ -58,5 +34,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
