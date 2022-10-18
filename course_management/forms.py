@@ -86,7 +86,7 @@ class FileSubmissionForm(ModelForm):
 
     class Meta:
         model = FileSubmission
-        exclude = ['assignment', 'student']
+        exclude = ['assignment', 'student', 'score']
 
 
 class TextSubmissionForm(ModelForm):
@@ -94,4 +94,4 @@ class TextSubmissionForm(ModelForm):
 
     class Meta:
         model = TextSubmission
-        exclude = ['assignment', 'student']
+        exclude = ['assignment', 'student', 'score']

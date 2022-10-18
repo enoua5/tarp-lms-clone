@@ -101,7 +101,14 @@ class Assignment(models.Model):
         return due_date_string  
 
 # submission models
-class FileSubmission(models.Model):
+class Submission(models.Model):
+    score = models.PositiveIntegerField(null=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class FileSubmission(Submission):
     # file will save to MEDIA_ROOT/submissions/<assignment.id>/<student.id>/<filename>
     def get_submission_path(self, filename):
         return os.path.join(
@@ -110,13 +117,8 @@ class FileSubmission(models.Model):
             str(self.student.id),
             filename,
         )
-
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(upload_to=get_submission_path)
 
 
-class TextSubmission(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+class TextSubmission(Submission):
     text = models.TextField(max_length=30000)
