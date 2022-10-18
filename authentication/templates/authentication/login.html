@@ -1,11 +1,27 @@
-{% extends 'authentication/base.html' %}
-
-{% block body %}
-
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'main/shared_header.html' %}
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+</head>
+<body>
 <div class="container mt-3" style="width: 25rem">
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
             <h4>Log In</h4>
+            {% if form.errors %}
+            <ul class="list-group">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li class="list-group-item list-group-item-danger">{{error}}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         <div class="card-body">
             <form method="POST">
@@ -13,7 +29,7 @@
                 <div class="container" style="width: 70%">
                     {% for field in form %}
                     <div class="form-group mb-2">
-                        {{ field.name }}
+                        <label for="{{ field.name }}" class="form-label mt-0 mb-0">{{ field.label }}</label>
                         <br>
                         {{ field }}
                     </div>
@@ -25,5 +41,4 @@
         </div>
     </div>
 </div>
-
-{% endblock %}
+</body>

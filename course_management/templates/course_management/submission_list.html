@@ -7,9 +7,9 @@
             <li class="list-group-item">
                 <div class="row">
                     <div class="col d-flex justify-content-between">
-                        <span>{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
-                        <span>{{ submission.submitted_at }}</span>
-                        <span>
+                        <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
+                        <span class="col-4">{{ submission.submitted_at }}</span>
+                        <span class="col-2">
                             {% if submission.score %}
                                 {{ submission.score }}
                             {% else %}
@@ -18,7 +18,7 @@
                             /
                             {{ submission.assignment.points }}
                         </span>
-                        <a class="btn btn-primary">Grade</a>
+                        <a class="btn btn-primary col-2">Grade</a>
                     </div>
                 </div>
                 
