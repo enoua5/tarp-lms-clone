@@ -1,35 +1,108 @@
 {% extends 'course_management/course_base.html' %}
+
+{% block head %}
+    {% comment %} Contains mostly Google Chart functionality. {% endcomment %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+        var data = google.visualization.arrayToDataTable({{ grade_distrib_data|safe }});
+        var options = {
+            legend: { position: 'none' },
+            histogram: { bucketSize: 5,
+            min_value: 0,
+            max_value: {{assignment.points}}},
+            hAxis: {title: "Grade Received (0-{{ assignment.points }})"},
+            vAxis: {title: '# Students'}
+        };
+        var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 <h1 class="display-6 text-center">Submissions for "{{ assignment.title }}"</h1>
-{% if submissions %}
-    <ul class="list-group">
-        {% for submission in submissions %}
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col d-flex justify-content-between">
-                        <span>{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
-                        <span>{{ submission.submitted_at }}</span>
-                        <span>
-                            {% if submission.score %}
-                                {{ submission.score }}
-                            {% else %}
-                                --
-                            {% endif %}
-                            /
-                            {{ submission.assignment.points }}
-                        </span>
-                        <a class="btn btn-primary">Grade</a>
+
+<div class="accordion" id="submissionPanel">
+    {% comment %} Grade Breakdown Graph {% endcomment %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{{ assignment.id }}">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGraph{{ assignment.id }}" aria-expanded="true" aria-controls="#collapseGraph{{ assignment.id }}">
+                <h4 class="m-0">Grade Distribution</h4>
+            </button>
+        </h2>
+        <div id="collapseGraph{{ assignment.id }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ assignment.id }}">
+            <div class="accordion-body">
+                    <h4>Grade Distribution Chart</h4>
+                    <div id="chart_div"></div>
+                    {% if grade_distrib_data %}
+                    <h4>Grade Breakdown</h4>
+                    <ul class="list-group list-group-horizontal w-25">
+                        <li class="list-group-item w-50 text-center">Average Score</li>
+                        <li class="list-group-item w-25 text-center">{{mean}}</li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal w-25">
+                        <li class="list-group-item w-50 text-center">High Score</li>
+                        <li class="list-group-item w-25 text-center">{{high}}</li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal w-25">
+                        <li class="list-group-item w-50 text-center">Low Score</li>
+                        <li class="list-group-item w-25 text-center">{{low}}</li>
+                    </ul>
+                {% else %}
+                    <div class="alert alert-primary mt-2" role="alert" >
+                        Graph unavailable; not enough submissions graded.
                     </div>
-                </div>
-                
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-{# no submissions yet #}
-    <div class="alert alert-primary mt-2" role="alert" >
-        No one has submitted anything for this assignment yet!
+                {% endif %}
+            </div>
+        </div>
     </div>
-{% endif %}
+
+    {% comment %} Individual Submissions {% endcomment %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="submissionsHeading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#submissions" aria-expanded="true" aria-controls="#submissions">
+            <h4 class="m-0">Submissions</h4>
+          </button>
+        </h2>
+        <div id="submissions" class="accordion-collapse collapse show" aria-labelledby="submissionsHeading">
+          <div class="accordion-body">
+            {% if submissions %}
+                <ul class="list-group">
+                    {% for submission in submissions %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col d-flex justify-content-between">
+                                    <span>{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
+                                    <span>{{ submission.submitted_at }}</span>
+                                    <span>
+                                        {% if submission.score %}
+                                            {{ submission.score }}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                        /
+                                        {{ submission.assignment.points }}
+                                    </span>
+                                    <a class="btn btn-primary">Grade</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+        {% else %}
+            {# no submissions yet #}
+                <div class="alert alert-primary mt-2" role="alert" >
+                    No one has submitted anything for this assignment yet!
+                </div>
+        {% endif %}
+          </div>
+        </div>
+    </div>
+</div>
+
+
 
 {% endblock %}
