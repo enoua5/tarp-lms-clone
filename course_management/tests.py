@@ -51,6 +51,10 @@ class TestMakeCourse(TestCase):
         pass
 
 class StudentCanRegisterForCourseTest(TestCase):
+    # Set up for the run
+    user = None
+    c = Client()
+    def setUp(self):
         self.user = User.objects.create_user('registering_student', 'student@stu.dent', 'asdfasdfasdf')
         Tuition.objects.create(user=self.user)
         professor = User.objects.create_user('professor_test', 'test@pro.fessor', 'asdfasdfasdf')
@@ -75,8 +79,6 @@ class StudentCanRegisterForCourseTest(TestCase):
 
         # Status code should be 302 for redirect
         self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status. Instead returned '+str(response.status_code))
-
-        print(course in self.user.courses.all())
 
         # Check if the student is in the course
         self.assertTrue(course in self.user.courses.all(), msg='Error: Failed to register for course.')
