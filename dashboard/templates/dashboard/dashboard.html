@@ -40,7 +40,7 @@
         {% if assignments %}
         <ul id="to-do-assignment-group" class="list-group list-group-flush">
             {% for assignment in assignments %}
-                <a href="#" class="list-group-item flex-column align-items-start mt-1">
+                <a href="{% url 'course_management:assignmentSubmission' assignment.course.id assignment.id %}" class="list-group-item flex-column align-items-start mt-1">
                     <div class="d-flex w-80 justify-content-between">
                         <h5 class="mb-1">{{ assignment.title }}</h5>
                     </div>
