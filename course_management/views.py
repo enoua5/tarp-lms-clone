@@ -149,3 +149,10 @@ def submission_list(req, assignment_id):
     }
 
     return render(req, 'course_management/submission_list.html', ctx)
+
+
+def gradeSubmission(request, submission_id):
+    submission = Submission.objects.get(id=submission_id)
+    course = submission.assignment.course
+
+    return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission})

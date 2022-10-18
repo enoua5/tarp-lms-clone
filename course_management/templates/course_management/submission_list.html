@@ -18,7 +18,7 @@
                             /
                             {{ submission.assignment.points }}
                         </span>
-                        <a class="btn btn-primary">Grade</a>
+                        <a class="btn btn-primary" href="{% url 'course_management:gradeSubmission' submission.id %}">Grade</a>
                     </div>
                 </div>
                 
