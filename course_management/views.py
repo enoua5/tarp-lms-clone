@@ -148,7 +148,8 @@ def submission_list(req, assignment_id):
         'course': course,
         'submissions': submissions
     }
-    if len(grade_distrib_dataset['grade_distrib']) > 1:
+    # Don't generate graphs unless there's 2 or more graded submissions
+    if len(grade_distrib_dataset['grade_distrib']) > 2:
         ctx['grade_distrib_data'] = grade_distrib_dataset['grade_distrib']
         ctx['high'] = grade_distrib_dataset['high']
         ctx['low'] = grade_distrib_dataset['low']
