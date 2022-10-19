@@ -1,31 +1,62 @@
 {% extends 'main/base.html' %}
 {% block body %}
-{% comment %} Checks if current user has any courses. {% endcomment %}
-{% if course_list %}
-<div class="container text-center">
-    <div class="row row-cols-3">
-        {% for course in course_list %}
-                <div class="p-3 col">
-                    {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
-                    <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
-                        <div class="card btn" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                                <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
-                                                 <br>{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
-                                                 <br>{{ course.meeting_location }}</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
-        {% endfor %}
+{% comment %} Dashboard Container {% endcomment %}
+<div id="dashboard-container" class="container-fluid mt-3">
+<div class="row">
+
+    {% comment %} Course Card Display {% endcomment %}
+    <div id="course-card-container" class="container col-md-9" style="border-right: 1px solid lightgrey;">
+        <h3 class="text-center">Courses</h3>
+        {% if course_list %}
+            <div class="row row-cols-3">
+                {% for course in course_list %}
+                        <div class="p-3 col">
+                            {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
+                            <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
+                                <div class="card btn text-center" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
+                                        <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
+                                                            <br>{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
+                                                            <br>{{ course.meeting_location }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-primary mt-2" role="alert" >
+                You don't have any courses assigned to you.
+            </div>
+        {% endif %}
     </div>
+
+    {% comment %} Assignment To-Do List {% endcomment %}
+    <div id="to-do-container" class="container col">
+        <h3 class="text-center">To-Do List</h3>
+        {% if assignments %}
+        <ul id="to-do-assignment-group" class="list-group list-group-flush">
+            {% for assignment in assignments %}
+                <a href="{% url 'course_management:assignmentSubmission' assignment.course.id assignment.id %}" class="list-group-item flex-column align-items-start mt-1">
+                    <div class="d-flex w-80 justify-content-between">
+                        <h5 class="mb-1">{{ assignment.title }}</h5>
+                    </div>
+                    <p class="mb-1">{{ assignment.course.getShortCourseName }}</p>
+                    <small>{{ assignment.getUserFriendlyDueDate }}</small>
+                </a>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <div class="alert alert-primary mt-2" role="alert" >
+                Looks like there's nothing to do!
+            </div>
+        {% endif %}
+    </div>
+
 </div>
-{% else %}
-    <div class="alert alert-primary mt-2" role="alert" >
-        You don't have any courses assigned to you.
-    </div>
-{% endif %}
+</div>
+
 {% endblock %}

@@ -1,70 +1,45 @@
-{% extends 'main/base.html' %}
+{% extends 'course_management/course_base.html' %}
 {% load auth_utils %}
-{% block body %}
-    <div class="row mt-4">
-        {# display course information in left 1/4 of page #}
-        <div class="col-md-3" style="border-right: 1px solid lightgrey;">
-            <ul class="list-group list-group-flush">
+{% block content %}
+    <h1 class="display-6 text-center">Assignments</h1>
+        {% if assignment_list %}
+        <ul class="list-group">
+            {% for assignment in assignment_list %}
                 <li class="list-group-item">
-                    <h1 class="display-6 text-center">{{ course.department }} {{ course.course_num }}</h1>
-                    <p class="lead text-center">{{ course.course_name }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.instructor.first_name }} {{ course.instructor.last_name }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}</p>
-                </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.meeting_location }}</p>
-                </li>
-            </ul>
-        </div>
-        {# display list of all assignments in right 3/4 of page #}
-        <div class="col-md-9">
-            <h1 class="display-6 text-center">Assignments</h1>
-            {% if assignment_list %}
-            <ul class="list-group">
-                {% for assignment in assignment_list %}
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="mt-2 col-4"><div class="h5">{{ assignment.title }}</div></div>
-                            <div class="mt-2 col-4 text-center">Due {{ assignment.due_date }}</div>
-                            <div class="mt-1 col-4">
-                                <div class="text-center">
-                                    <div class="btn-group  btn-group-sm text-center">
+                    <div class="row">
+                        <div class="mt-2 col-4"><div class="h5">{{ assignment.title }}</div></div>
+                        <div class="mt-2 col-4 text-center">Due {{ assignment.due_date }}</div>
+                        <div class="mt-1 col-4">
+                            <div class="text-center">
+                                <div class="btn-group  btn-group-sm text-center">
 
-                                        {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
-                                        {% if request.user|has_group:"Instructor" %}
-                                                <a href="#" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
-                                                <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                                                <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
-                                        {% endif %}
-                                        {# student can start the assignment or edit their submission #}
-                                        {% if request.user|has_group:"Student" %}
-                                                <a href="#" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Start</a>
-                                                <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit Submission</a>
-                                        {% endif %}
-
-                                    </div>
+                                    {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
+                                    {% if request.user|has_group:"Instructor" %}
+                                        <a href="{% url 'course_management:submission_list' assignment.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
+                                        <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                                        <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                                    {% endif %}
+                                    {# student can start the assignment or edit their submission #}
+                                    {% if request.user|has_group:"Student" %}
+                                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-                    </li>
-                {% endfor %}
-            </ul>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
 
-            {# display if there are no assignments #}
-            {% else %}
-            <div class="alert alert-primary mt-2" role="alert" >
-                You don't have any assignments.
-            </div>
-            {% endif %}
-
-            {# only instructor can create assignments #}
-            {% if request.user|has_group:"Instructor" %}
-                <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
-            {% endif %}
+        {# display if there are no assignments #}
+        {% else %}
+        <div class="alert alert-primary mt-2" role="alert" >
+            You don't have any assignments.
         </div>
-    </div>
+        {% endif %}
+
+        {# only instructor can create assignments #}
+        {% if request.user|has_group:"Instructor" %}
+            <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
+        {% endif %}
 {% endblock %}
