@@ -188,6 +188,6 @@ def build_submission_data(submissions):
             working_avg += submission.score
             
         if num_submissions != 0:
-            dataset['mean'] = (working_avg) / num_submissions
+            dataset['mean'] = round(((working_avg) / num_submissions), 1)
             
     return dataset

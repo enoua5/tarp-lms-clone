@@ -13,10 +13,10 @@
                 legend: { position: 'none' },
                 histogram: {bucketSize: 5,
                             min_value: 0,
-                            baseline: 5,
                             max_value: {{assignment.points}}},
                 hAxis: {title: "Grade Received (0-{{ assignment.points }})"},
-                vAxis: {title: '# Students'}
+                vAxis: {title: '# Students',
+                        baseline: 5}
             };
             var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
             chart.draw(data, options);
@@ -49,8 +49,8 @@
                     </div>
                 </div>
                 {% comment %} Content Row {% endcomment %}
-                <div class="row">
-                    <div class="col-4" style="border-right: 1px solid lightgrey;"> 
+                <div class="row align-items-center">
+                    <div class="col-4" style="border-right: 1px solid lightgrey;">
                         <ul class="list-group list-group-horizontal justify-content-center">
                             <li class="list-group-item w-50 text-center">Average Score</li>
                             <li class="list-group-item w-25 text-center">{{ mean }}</li>
