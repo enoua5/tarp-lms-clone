@@ -161,5 +161,9 @@ def gradeSubmission(request, submission_id):
 
     course = submission.assignment.course
 
-    form = GradeSubmissionForm(instance=submission)
+    form = GradeSubmissionForm(request.POST or None, instance=submission)
+    if form.is_valid():
+        form.save()
+        return redirect('course_management:submission_list', submission.assignment.id)
+
     return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission, 'form': form})

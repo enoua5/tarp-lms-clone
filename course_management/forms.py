@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, ValidationError
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 
 # ------------------ COURSE MANAGEMENT ------------------
@@ -103,3 +103,14 @@ class GradeSubmissionForm(ModelForm):
     class Meta:
         model = Submission
         fields = ['score']
+
+    # validate score is under max score
+    # no need to validate score is positive because score is a positive integer field, validation is automatic
+    def clean(self):
+        cd = super().clean()
+        score_input = cd.get('score')
+
+        if score_input:
+            if not score_input <= self.instance.assignment.points:
+                raise ValidationError("Ensure this value is less than or equal to the maximum assignment points.")
+            return cd
