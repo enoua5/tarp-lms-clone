@@ -148,7 +148,7 @@ def submission_list(req, assignment_id):
         'course': course,
         'submissions': submissions
     }
-    if len(grade_distrib_dataset['grade_distrib']) != 0:
+    if len(grade_distrib_dataset['grade_distrib']) > 1:
         ctx['grade_distrib_data'] = grade_distrib_dataset['grade_distrib']
         ctx['high'] = grade_distrib_dataset['high']
         ctx['low'] = grade_distrib_dataset['low']
@@ -162,7 +162,7 @@ def submission_list(req, assignment_id):
     @return A 2D list. (e.g.: [[a,b], [c,d], [d,a]] )
 '''
 def build_submission_data(submissions):
-    dataset = {'grade_distrib': [],
+    dataset = {'grade_distrib': [['Student', 'Grade']],
                'high':   0,
                'low' :   9999,
                'mean':   0}
