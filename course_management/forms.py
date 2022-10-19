@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Course, Assignment, FileSubmission, TextSubmission
+from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 
 # ------------------ COURSE MANAGEMENT ------------------
 
@@ -95,3 +95,11 @@ class TextSubmissionForm(ModelForm):
     class Meta:
         model = TextSubmission
         exclude = ['assignment', 'student', 'score']
+
+
+class GradeSubmissionForm(ModelForm):
+    score = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+
+    class Meta:
+        model = Submission
+        fields = ['score']

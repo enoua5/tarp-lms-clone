@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 from payments.models import Tuition
-from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm
+from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm, GradeSubmissionForm
 
 # A view of courses for instructors
 def course_management(request):
@@ -153,6 +153,13 @@ def submission_list(req, assignment_id):
 
 def gradeSubmission(request, submission_id):
     submission = Submission.objects.get(id=submission_id)
+
+    if submission.assignment.type == 'f':
+        submission = FileSubmission.objects.get(id=submission_id)
+    else:
+        submission = TextSubmission.objects.get(id=submission_id)
+
     course = submission.assignment.course
 
-    return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission})
+    form = GradeSubmissionForm(instance=submission)
+    return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission, 'form': form})
