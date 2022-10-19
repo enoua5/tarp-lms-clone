@@ -87,33 +87,34 @@
         <div id="submissions" class="accordion-collapse collapse show" aria-labelledby="submissionsHeading">
           <div class="accordion-body">
             {% if submissions %}
-                <ul class="list-group">
-                    {% for submission in submissions %}
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col d-flex justify-content-between">
-                                    <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
-                                    <span class="col-4">{{ submission.submitted_at }}</span>
-                                    <span class="col-2">
-                                        {% if submission.score %}
-                                            {{ submission.score }}
-                                        {% else %}
-                                            --
-                                        {% endif %}
-                                        /
-                                        {{ submission.assignment.points }}
-                                    </span>
-                                    <a class="btn btn-primary col-2">Grade</a>
-                                </div>
+            <ul class="list-group">
+                {% for submission in submissions %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col d-flex justify-content-between">
+                                <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
+                                <span class="col-4">{{ submission.submitted_at }}</span>
+                                <span class="col-2">
+                                    {% if submission.score %}
+                                        {{ submission.score }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                    /
+                                    {{ submission.assignment.points }}
+                                </span>
+                                <a class="btn btn-primary col-2">Grade</a>
                             </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                        </div>
+                        
+                    </li>
+                {% endfor %}
+            </ul>
         {% else %}
-            {# no submissions yet #}
-                <div class="alert alert-primary mt-2" role="alert" >
-                    No one has submitted anything for this assignment yet!
-                </div>
+        {# no submissions yet #}
+            <div class="alert alert-primary mt-2" role="alert" >
+                No one has submitted anything for this assignment yet!
+            </div>
         {% endif %}
           </div>
         </div>
