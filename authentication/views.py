@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth
 from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import LoginForm, RegistrationForm
 from account.models import Profile
 from django.contrib.auth.models import Group, User
 from payments.models import Tuition
@@ -12,10 +12,10 @@ from django.contrib.auth import logout
 
 def login(request):
     if request.method == 'GET':
-        form = AuthenticationForm()
+        form = LoginForm()
         return render(request, 'authentication/login.html', {'form':form, 'page_title': "Login"})
     if request.method == 'POST':
-        form = AuthenticationForm(request=request, data=request.POST)
+        form = LoginForm(request=request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
