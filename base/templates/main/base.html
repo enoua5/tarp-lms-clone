@@ -3,11 +3,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="{% static 'main/style.css' %}">
         {% include 'main/shared_header.html' %}
         {% block head %}
-        
         {% endblock %}
+        <link rel="stylesheet" href="{% static 'main/style.css' %}" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -35,20 +34,21 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item dropstart">
+                        <img src="{% static 'BellIcon.png' %}" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        </img>
+                        <div class="DropDownMenu dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="WrapClass dropdown-item" href="#">X</a>
+                            <a class="WrapClass dropdown-item" href="#">X</a>
+                            <a class="WrapClass dropdown-item" href="#">X</a>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'authentication:logout' %}">Logout</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-tog>
-                            Bell
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Item 1</a>
-                            <a class="dropdown-item" href="#">Item 2</a>
-                            <a class="dropdown-item" href="#">Item 3</a>
-                        </div>
-                    </li>
+
                 </ul>
+
             </div>
         </nav>
         <div class="container-fluid">
