@@ -1,4 +1,3 @@
-from queue import Empty
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
@@ -159,8 +158,8 @@ def submission_list(req, assignment_id):
 
 '''!
     @brief Takes the list of submissions and constructs a dataset for the grade distribution of that assignment.
-    @details Gets the data points, the high, the low, the mean, and the median for the grades.
-    @return A 2D list. (e.g.: [[a,b], [c,d], [d,a]] )
+    @details Gets the data set, the high, the low, the mean, and the median for the assignment.
+    @return A dictionary with the grade distribution points (list) and the high, low, and mean (integer/double).
 '''
 def build_submission_data(submissions):
     dataset = {'grade_distrib': [['Student', 'Grade']],
