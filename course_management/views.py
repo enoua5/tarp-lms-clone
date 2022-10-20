@@ -140,12 +140,53 @@ def submission_list(req, assignment_id):
     assignment = Assignment.objects.get(id=assignment_id)
     course = assignment.course
     submissions = Submission.objects.filter(assignment=assignment)
-
+    grade_distrib_dataset = build_submission_data(submissions)
 
     ctx = {
         'assignment': assignment,
         'course': course,
         'submissions': submissions
     }
-
+    # Don't generate graphs unless there's 2 or more graded submissions
+    if len(grade_distrib_dataset['grade_distrib']) > 2:
+        ctx['grade_distrib_data'] = grade_distrib_dataset['grade_distrib']
+        ctx['high'] = grade_distrib_dataset['high']
+        ctx['low'] = grade_distrib_dataset['low']
+        ctx['mean'] = grade_distrib_dataset['mean']
+        
     return render(req, 'course_management/submission_list.html', ctx)
+
+'''!
+    @brief Takes the list of submissions and constructs a dataset for the grade distribution of that assignment.
+    @details Gets the data set, the high, the low, the mean, and the median for the assignment.
+    @return A dictionary with the grade distribution points (list) and the high, low, and mean (integer/double).
+'''
+def build_submission_data(submissions):
+    dataset = {'grade_distrib': [['Student', 'Grade']],
+               'high':   0,
+               'low' :   9999,
+               'mean':   0}
+    
+    num_submissions = 0
+    working_avg = 0.0
+    for submission in submissions:
+        if submission.score is not None:
+            # Build datapoints for graph
+            data_point = [f"{submission.student.first_name} {submission.student.last_name}",
+                          submission.score]
+            dataset['grade_distrib'].append(data_point)
+            
+            # Check for high & low
+            if submission.score > dataset['high']:
+                dataset['high'] = submission.score
+            if submission.score < dataset['low']:
+                dataset['low'] = submission.score
+            
+            # Keep calculating mean
+            num_submissions += 1
+            working_avg += submission.score
+            
+        if num_submissions != 0:
+            dataset['mean'] = round(((working_avg) / num_submissions), 1)
+            
+    return dataset
