@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 from payments.models import Tuition
-from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm
+from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm, GradeSubmissionForm
 
 # A view of courses for instructors
 def course_management(request):
@@ -147,6 +147,8 @@ def submission_list(req, assignment_id):
         'course': course,
         'submissions': submissions
     }
+
+
     # Don't generate graphs unless there's 2 or more graded submissions
     if len(grade_distrib_dataset['grade_distrib']) > 2:
         ctx['grade_distrib_data'] = grade_distrib_dataset['grade_distrib']
@@ -155,6 +157,25 @@ def submission_list(req, assignment_id):
         ctx['mean'] = grade_distrib_dataset['mean']
         
     return render(req, 'course_management/submission_list.html', ctx)
+
+
+def gradeSubmission(request, submission_id):
+    submission = Submission.objects.get(id=submission_id)
+
+    if submission.assignment.type == 'f':
+        submission = FileSubmission.objects.get(id=submission_id)
+    else:
+        submission = TextSubmission.objects.get(id=submission_id)
+
+    course = submission.assignment.course
+
+    form = GradeSubmissionForm(request.POST or None, instance=submission)
+    if form.is_valid():
+        form.save()
+        return redirect('course_management:submission_list', submission.assignment.id)
+
+    return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission, 'form': form})
+    
 
 '''!
     @brief Takes the list of submissions and constructs a dataset for the grade distribution of that assignment.
