@@ -6,7 +6,14 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
+          initialView: 'dayGridMonth',
+          eventClick: function(info) {
+            info.jsEvent.preventDefault();
+
+            if (info.event.url) {
+                window.location.assign(info.event.url);
+            }
+          }
         });
 
         // Parse the json into a Javascript object.
@@ -67,7 +74,8 @@
                 title: assignments.titles[i],
                 start: assignments.dates[i],
                 end: assignments.dates[i],
-                display: 'list-item'
+                display: 'list-item',
+                url: assignments.urls[i]
             };
             calendar.addEvent(e);
         }

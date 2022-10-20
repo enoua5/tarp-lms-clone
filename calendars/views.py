@@ -26,16 +26,23 @@ def displaycalendar(request):
 
         assignment_title = []
         assignment_due = []
+        sub_url = []
 
         c = 0
         for assignment in assignment_list:
             assignment_title.append(assignment_list[c].title)
             assignment_due.append(str(assignment_list[c].due_date.strftime("%Y-%m-%d %H:%M")))
+            if request.user.groups.filter(name='Instructor').exists():
+                sub_url.append("/courses/submissions/" + str(assignment_list[c].course_id))
+            else:
+                sub_url.append("/courses/" + str(assignment_list[c].course_id) + "/" +
+                               str(assignment_list[c].id))
             c = c + 1
 
         assignment_dict = {
             "titles": assignment_title,
-            "dates": assignment_due
+            "dates": assignment_due,
+            "urls": sub_url
         }
 
         json_assignment_list = dumps(assignment_dict)
