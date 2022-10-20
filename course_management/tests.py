@@ -164,7 +164,6 @@ class CreateAssignmentTest(TestCase):
         # get objects created in setup
         course = Course.objects.filter(course_num=4000).first()
 
-        print(course.id)
         # create url for submission post
         url = '/courses/' + str(course.id) + '/addAssignment'
 
