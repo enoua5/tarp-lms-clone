@@ -1,0 +1,57 @@
+{% extends 'course_management/course_base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1 class="display-6 text-center">{{ assignment.title }}</h1>
+                <p class="text-center small">Due {{ assignment.due_date }}</p>
+                {% if not submission %}
+                    <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary mb-3" role="button">Start Assignment</a>
+                {% else %}
+                    <p class="text-center">Grade: {{ submission.score }}/{{assignment.points}}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="accordion" id="studentAssignmentPanel">
+        <!-- Assignment Details Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="assignmentHeader">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAssignment" aria-expanded="true" aria-controls="#collapseAssignment">
+                    <h4 class="m-0">Assignment Details</h4>
+                </button>
+            </h2>
+            <div id="collapseAssignment" class="accordion-collapse show" aria-labelledby="assignmentHeader">
+                <div class="accordion-body m-1">
+                    {{ assignment.description }}
+                </div>
+            </div>
+        </div>
+        <!-- Student Submission Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="gradeHeader">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGrade" aria-expanded="true" aria-controls="#collapseGrade">
+                    <h4 class="m-0">Submission</h4>
+                </button>
+            </h2>
+            <div id="collapseGrade" class="accordion-collapse collapse" aria-labelledby="gradeHeader">
+                <div class="accordion-body m-1">
+                    asdf
+                </div>
+            </div>
+        </div>
+        <!-- Student Grade Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="submissionHeader">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSubmission" aria-expanded="true" aria-controls="#collapseSubmission">
+                    <h4 class="m-0">Grade & Performance</h4>
+                </button>
+            </h2>
+            <div id="collapseSubmission" class="accordion-collapse collapse" aria-labelledby="submissionHeader">
+                <div class="accordion-body m-1">
+                    asdf
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

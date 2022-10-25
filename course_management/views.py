@@ -1,3 +1,4 @@
+from re import template
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
@@ -104,6 +105,26 @@ def addAssignment(request, id):
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
 
+# Student Assignment View
+def assignmentView(request, course_id, assignment_id):
+    # Get assignment and check if the student has already submitted something.
+    course = Course.objects.get(id=course_id)
+    assignment = Assignment.objects.get(id=assignment_id)
+    context = {'course': course,
+               'assignment' : assignment}
+    
+    if assignment.type == 'f':
+        submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+    else:
+        submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        
+    if submission:
+        context['submission'] = submission
+        
+    return render(request=request,
+                  template_name='course_management/assignment_view.html',
+                  context=context) 
+        
 
 # assignment submission view - distinguishes between file and text submission
 def assignmentSubmission(request, course_id, assignment_id):
