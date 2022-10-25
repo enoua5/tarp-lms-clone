@@ -7,21 +7,29 @@
             {% for assignment in assignment_list %}
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="mt-2 col-4"><div class="h5">{{ assignment.title }}</div></div>
-                        <div class="mt-2 col-4 text-center">Due {{ assignment.due_date }}</div>
-                        <div class="mt-1 col-4">
+                        <div class="mt-2 col-4"><div class="h5">{{ assignment.info.title }}</div></div>
+                        <div class="mt-2 col-4 text-center">Due {{ assignment.info.due_date }}</div>
+                        <div class="mt-2 col-2">
+                            {% if assignment.meta.submitted %}
+                                <span class="badge bg-success">Submitted</span>
+                            {% endif %}
+                            {% if assignment.meta.late %}
+                                <span class="badge bg-danger">Late!</span>
+                            {% endif %}
+                        </div>
+                        <div class="mt-1 col-2">
                             <div class="text-center">
                                 <div class="btn-group  btn-group-sm text-center">
 
                                     {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
                                     {% if request.user|has_group:"Instructor" %}
-                                        <a href="{% url 'course_management:submission_list' assignment.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
+                                        <a href="{% url 'course_management:submission_list' assignment.info.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
                                         <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
                                         <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
                                     {% endif %}
                                     {# student can start the assignment or edit their submission #}
                                     {% if request.user|has_group:"Student" %}
-                                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
+                                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
                                     {% endif %}
                                 </div>
                             </div>
