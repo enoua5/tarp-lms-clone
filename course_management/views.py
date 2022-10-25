@@ -89,7 +89,6 @@ def drop(request, id):
 def coursePage(request, id):
     course = Course.objects.get(id=id)
     assignment_list = Assignment.objects.filter(course=course)
-    scale = course.grade_scale
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
         # We need to grab only the submissions that are assignments in the assignment_list
@@ -98,6 +97,7 @@ def coursePage(request, id):
         scored_points = 0
         possible_points = 0
         a = 0
+        # Note: This may have to be changed later to account for multiple graded submissions.
         for assignment in assignment_list:
             temp_list = Submission.objects.filter(assignment_id=assignment_list[a].id, student_id=uid)
             sub_list = sub_list | temp_list
@@ -106,7 +106,7 @@ def coursePage(request, id):
                 possible_points = possible_points + Assignment.objects.get(id=sub_list[a].assignment_id).points
             a = a + 1
         percent = (scored_points / possible_points) * 100
-        Grade = calcGrade(course.grade_scale, percent)
+        Grade = calcGrade(course.a_thresh, course.increment, percent)
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': assignment_list,
                                                                       'letterGrade': ('Grade: ' + Grade),
@@ -118,11 +118,11 @@ def coursePage(request, id):
                                                                   'percentGrade': ''})
 
 # Calculate the letter grade based on the scale and the percentage
-def calcGrade(scale, p):
+def calcGrade(athresh, increment, p):
     # Cut out the A threshold
-    Ascore = int(scale[3:5])
+    Ascore = athresh
     # Cut out the increment value
-    inc = scale[9:10]
+    inc = increment
     letterGrade = None
 
     if (p >= Ascore):
