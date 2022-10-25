@@ -5,10 +5,10 @@ from django.test import LiveServerTestCase
 # Selenium Imports
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+
+# Webdriver Imports
+from webdriver_manager.chrome import ChromeDriverManager
 
 '''!
     @brief Test suite for the Login form.
@@ -38,6 +38,5 @@ class LoginFormTest(LiveServerTestCase):
         # Click login
         login_btn.click()
 
-        # Check that we were redirected to the dashboard and we see "Professor Bean"
-        assert 'Professor Bean' in selenium.page_source
-        assert 
+        # Check that we were redirected to the dashboard
+        assert 'dashboard' in selenium.current_url
