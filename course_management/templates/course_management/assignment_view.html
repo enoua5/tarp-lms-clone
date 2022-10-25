@@ -25,7 +25,7 @@
                     <h4 class="m-0">Assignment Details</h4>
                 </button>
             </h2>
-            <div id="collapseAssignment" class="accordion-collapse show" aria-labelledby="assignmentHeader">
+            <div id="collapseAssignment" class="accordion-collapse {% if submission %}collapse{% endif %}" aria-labelledby="assignmentHeader">
                 <div class="accordion-body m-1">
                     {{ assignment.description }}
                 </div>
@@ -38,24 +38,31 @@
                     <h4 class="m-0">Submission</h4>
                 </button>
             </h2>
-            <div id="collapseGrade" class="accordion-collapse show" aria-labelledby="gradeHeader">
+            <div id="collapseGrade" class="accordion-collapse {% if not submission %}collapse{% endif %}" aria-labelledby="gradeHeader">
                 <div class="accordion-body m-1">
-                    <p class="small ms-1">Submitted {{ submission.submitted_at }}</p>
-                    <div class="container border p-2">
-                        {% if type == 'text' %}
-                            {{ submission.text }}
-                        {% else %}
-                            <a href="{{ submission.file.url }}" style="text-decoration: none;" download>
-                                Download Submission
-                                {# download icon from https://icons.getbootstrap.com/icons/download/ #}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-                    </div>
-                    <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary my-3 text-center" role="button">Resubmit Assignment</a>
+                    {% if submission %}
+                        <p class="small ms-1">Submitted {{ submission.submitted_at }}</p>
+                        <div class="container border p-2">
+                                {% if type == 'text' %}
+                                    {{ submission.text }}
+                                {% else %}
+                                    <a href="{{ submission.file.url }}" style="text-decoration: none;" download>
+                                        Download Submission
+                                        {# download icon from https://icons.getbootstrap.com/icons/download/ #}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                        </svg>
+                                    </a>
+                                {% endif %}
+                        </div>
+                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary my-3 text-center" role="button">Resubmit Assignment</a>
+                    {% else %}
+                        <div class="alert alert-primary mt-2" role="alert">
+                            You haven't submitted this assignment yet.
+                        </div>
+                        <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary my-1 text-center" role="button">Start Assignment</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -63,12 +70,18 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="submissionHeader">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSubmission" aria-expanded="true" aria-controls="#collapseSubmission">
-                    <h4 class="m-0">Grade & Performance</h4>
+                    <h4 class="m-0">Grade</h4>
                 </button>
             </h2>
-            <div id="collapseSubmission" class="accordion-collapse show" aria-labelledby="submissionHeader">
+            <div id="collapseSubmission" class="accordion-collapse {% if not submission %}collapse{% endif %}" aria-labelledby="submissionHeader">
                 <div class="accordion-body m-1">
-                    TODO
+                    {% if not submission.score %}
+                        <div class="alert alert-primary mt-2" role="alert">
+                            Your submission has not been graded yet.
+                        </div>
+                    {% else %}
+                        123
+                    {% endif %}
                 </div>
             </div>
         </div>
