@@ -10,11 +10,18 @@
                         <div class="mt-2 col-4"><div class="h5">{{ assignment.info.title }}</div></div>
                         <div class="mt-2 col-4 text-center">Due {{ assignment.info.due_date }}</div>
                         <div class="mt-2 col-2">
-                            {% if assignment.meta.submitted %}
-                                <span class="badge bg-success">Submitted</span>
-                            {% endif %}
-                            {% if assignment.meta.late %}
-                                <span class="badge bg-danger">Late!</span>
+                            {% if request.user|has_group:"Student" %}
+                                {% if assignment.meta.submitted %}
+                                    <span class="badge bg-success">Submitted</span>
+                                    {% if assignment.meta.score is None %}
+                                        <span class="badge bg-secondary">Pending grade</span>
+                                    {% else %}
+                                        <span class="badge bg-info">Graded: {{assignment.meta.score}}/{{assignment.info.points}}</span>
+                                    {% endif %}
+                                {% endif %}
+                                {% if assignment.meta.late %}
+                                    <span class="badge bg-danger">Late!</span>
+                                {% endif %}
                             {% endif %}
                         </div>
                         <div class="mt-1 col-2">
