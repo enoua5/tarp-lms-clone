@@ -101,12 +101,21 @@ def coursePage(request, id):
         for assignment in assignment_list:
             temp_list = Submission.objects.filter(assignment_id=assignment_list[a].id, student_id=uid)
             sub_list = sub_list | temp_list
+            # If we didn't get any submissions, don't increment a and continue
+            if len(temp_list) == 0:
+                continue
+            # No score indicates not graded so don't add them
             if sub_list[a].score is not None:
                 scored_points = scored_points + int(sub_list[a].score or 0)
                 possible_points = possible_points + Assignment.objects.get(id=sub_list[a].assignment_id).points
             a = a + 1
-        percent = (scored_points / possible_points) * 100
-        Grade = calcGrade(course.a_thresh, course.increment, percent)
+        if possible_points == 0:
+            Grade = "N/A"
+            percent = 0
+        else:
+            percent = (scored_points / possible_points) * 100
+            Grade = calcGrade(course.a_thresh, course.increment, percent)
+
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': assignment_list,
                                                                       'letterGrade': ('Grade: ' + Grade),
