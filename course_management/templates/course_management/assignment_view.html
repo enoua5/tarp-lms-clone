@@ -8,7 +8,11 @@
                 {% if not submission %}
                     <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary mb-3" role="button">Start Assignment</a>
                 {% else %}
-                    <p class="text-center">Grade: {{ submission.score }}/{{assignment.points}}</p>
+                    {% if submission.score %}
+                        <p class="text-center">Grade: {{ submission.score }}/{{assignment.points}}</p>
+                    {% else %}
+                        <p class="text-center">Submitted</p>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -34,7 +38,7 @@
                     <h4 class="m-0">Submission</h4>
                 </button>
             </h2>
-            <div id="collapseGrade" class="accordion-collapse collapse" aria-labelledby="gradeHeader">
+            <div id="collapseGrade" class="accordion-collapse show" aria-labelledby="gradeHeader">
                 <div class="accordion-body m-1">
                     <p class="small ms-1">Submitted {{ submission.submitted_at }}</p>
                     <div class="container border p-2">
@@ -62,9 +66,9 @@
                     <h4 class="m-0">Grade & Performance</h4>
                 </button>
             </h2>
-            <div id="collapseSubmission" class="accordion-collapse collapse" aria-labelledby="submissionHeader">
+            <div id="collapseSubmission" class="accordion-collapse show" aria-labelledby="submissionHeader">
                 <div class="accordion-body m-1">
-                    asdf
+                    TODO
                 </div>
             </div>
         </div>
