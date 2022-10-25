@@ -115,8 +115,12 @@ def assignmentView(request, course_id, assignment_id):
     
     if assignment.type == 'f':
         submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if submission:
+            context['type'] = 'file'
     else:
         submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if submission:
+            context['type'] = 'text'
         
     if submission:
         context['submission'] = submission
