@@ -124,11 +124,13 @@ def assignmentView(request, course_id, assignment_id):
         
     if submission:
         context['submission'] = submission
+        context['grade_list'] = list(map(lambda x:x.score, getGradedSubmissions(assignment)))
         
     return render(request=request,
                   template_name='course_management/assignment_view.html',
                   context=context) 
         
+
 
 # assignment submission view - distinguishes between file and text submission
 def assignmentSubmission(request, course_id, assignment_id):
@@ -236,3 +238,14 @@ def build_submission_data(submissions):
             dataset['mean'] = round(((working_avg) / num_submissions), 1)
             
     return dataset
+
+
+'''!
+    @brief Gets a list of the given assignment's graded submissions.
+    @param assignment The assignment object.
+    @return A list of submission objects for that assignment.
+'''
+def getGradedSubmissions(assignment):
+    allSubmissions = Submission.objects.filter(assignment=assignment)
+    gradedSubmissions = filter(lambda grade: grade is not None, allSubmissions)
+    return gradedSubmissions

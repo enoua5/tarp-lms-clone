@@ -1,4 +1,12 @@
 {% extends 'course_management/course_base.html' %}
+
+{% block head %}
+    {% if submission.score %}
+    <!-- Plotly Import -->
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <div class="row">
@@ -80,10 +88,36 @@
                             Your submission has not been graded yet.
                         </div>
                     {% else %}
-                        123
+                        <div id="boxplot"></div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Plotly Script -->
+    <script type="text/javascript">
+        var assignmentGrades = {
+            x: {{ grade_list|safe }},
+            type: 'box',
+            name: 'Grade'
+        };
+
+        var myGrade = {
+            x: [{{ submission.score }}],
+            y: ['Grade'],
+            name: 'My Score',
+            marker: {
+                size: 20
+            }
+        };
+
+        var data = [assignmentGrades, myGrade];
+        var layout = {
+            title: '"{{ assignment.title }}" Grades'
+            };
+
+        var graphDiv = document.getElementById('boxplot')
+        Plotly.newPlot(graphDiv, data, layout);
+    </script>
 {% endblock %}
