@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
-from django.utils import timezone
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
 from payments.models import Tuition
 from course_management.forms import CourseForm, AssignmentForm, FileSubmissionForm, TextSubmissionForm, GradeSubmissionForm
@@ -104,7 +103,7 @@ def coursePage(request, id):
         if submitted:
             assignment_meta['score'] = submission.score
         else:
-            if timezone.now() > assignment.due_date:
+            if assignment.overdue():
                 assignment_meta['late'] = True
 
         assignment_obj = {'info': assignment, 'meta': assignment_meta}
