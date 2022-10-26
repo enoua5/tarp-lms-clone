@@ -1,4 +1,3 @@
-from re import template
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from .models import Course, Assignment, Submission, FileSubmission, TextSubmission
