@@ -88,6 +88,8 @@
                             Your submission has not been graded yet.
                         </div>
                     {% else %}
+                        <h5 class="text-center">Grade Received:</h5>
+                        <h3 class="text-center">{{ submission.score }}/{{ assignment.points }}</h3>
                         <div id="boxplot"></div>
                     {% endif %}
                 </div>
@@ -100,12 +102,12 @@
         var assignmentGrades = {
             x: {{ grade_list|safe }},
             type: 'box',
-            name: 'Grade'
+            name: 'Class Scores'
         };
 
         var myGrade = {
             x: [{{ submission.score }}],
-            y: ['Grade'],
+            y: ['Class Scores'],
             name: 'My Score',
             marker: {
                 size: 20
@@ -114,7 +116,7 @@
 
         var data = [assignmentGrades, myGrade];
         var layout = {
-            title: '"{{ assignment.title }}" Grades'
+            title: ''
             };
 
         var graphDiv = document.getElementById('boxplot')
