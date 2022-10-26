@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+    {% block body %}
+    <div>
+      <br><br>
+      <h2> Checkout </h2>
+      <br><br>
+      <table style="width:100%">
+        <tr style=" font-size: 20px">
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+          
+        {% for c in cart.all %}
+        <tr>
+          <td>{{ c.product_name }}</td>
+          <td>${{ c.product_price }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr>
+          <td style="padding-top:30px">Total</td>
+          <td>${{ total }}</td>
+        </tr>
+      </table>
+    </div>
+
+    {% endblock %}
