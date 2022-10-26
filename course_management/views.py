@@ -124,7 +124,9 @@ def assignmentView(request, course_id, assignment_id):
         
     if submission:
         context['submission'] = submission
-        context['grade_list'] = list(map(lambda x:x.score, getGradedSubmissions(assignment)))
+        classGrades = list(map(lambda x:x.score, getGradedSubmissions(assignment)))
+        if len(classGrades) >= 2:
+            context['grade_list'] = classGrades
         
     return render(request=request,
                   template_name='course_management/assignment_view.html',
