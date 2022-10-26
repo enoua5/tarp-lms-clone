@@ -13,7 +13,6 @@
 
     // Disable the button until we have Stripe set up on the page
     // document.getElementById("submit").disabled = True;
-
     fetch("./create-payment-intent/", {
       method: "POST",
       headers: {
@@ -80,7 +79,7 @@
         .confirmCardPayment(clientSecret, {
           payment_method: {
             card: card
-          }
+          },
         })
         .then(function(result) {
           if (result.error) {
@@ -192,7 +191,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
+                <h5 class="text-center">Please enter your card information:</h5>
       <div class="card mx-5">
         <div class="card-body">
           <div class="sr-root">
@@ -205,7 +204,6 @@
                   <div class="sr-field-error" id="card-errors" role="alert"></div>
                   <button id="submit" class="btn">
                     <div class="spinner-border  spinner-border-sm text-light hidden" id="spinner" role="status">
-                      <span class="sr-only">Loading...</span>
                     </div>
                     <span id="button-text">Pay</span><span id="order-amount"></span>
                   </button>
@@ -220,28 +218,18 @@
           </div>
         </div>
       </div>
-          
+      <!-- Not sure what this is, but it redirects me to the success view -->
       <form id="payload" class="hidden" action="success/" method="post">
         {% csrf_token %}
         <input id ="data-payload" type="hidden" name="payload"/>
       </form>
-
-    </div>
-
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="#" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#payModal">Confirm</a>
-            </div>
+        </div>
         </div>
     </div>
 </div>
 
 <style>
-    /**
-   * The CSS shown here will not be introduced in the Quickstart guide, but shows
-   * how you can use CSS to style your Element's container.
-   */
   .StripeElement {
     box-sizing: border-box;
 
@@ -281,8 +269,8 @@
   #submit {
     font-feature-settings: "pnum";
     --body-color: #f7fafc;
-    --button-color: #556cd6;
-    --accent-color: #556cd6;
+    --button-color: #198754;
+    --accent-color: #136941;
     --gray-border: #e3e8ee;
     --link-color: #fff;
     --font-color: #697386;

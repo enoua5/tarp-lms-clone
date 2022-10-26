@@ -8,6 +8,7 @@ from django.conf import settings
 import json
 from django.http import JsonResponse
 
+# A landing page for tuition
 def tuition(request):
     # A precaution, in case student/course relationship does not exist
     try:        
@@ -18,6 +19,7 @@ def tuition(request):
     except:  
         return render(request, 'payments/tuition_page.html', {'course_list' : {}})
 
+# Stripe nonsence 
 @csrf_exempt
 def createpayment(request):
   if request.user.is_authenticated:
@@ -25,7 +27,6 @@ def createpayment(request):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     if request.method=="POST":
-      
       data = json.loads(request.body)
       # Create a PaymentIntent with the order amount and currency
       intent = stripe.PaymentIntent.create(
@@ -34,6 +35,7 @@ def createpayment(request):
         currency=data['currency'],
         metadata={'integration_check': 'accept_a_payment'},
         )
+      # print(intent.client_secret)
       try:
         return JsonResponse({'publishableKey':  
           settings.STRIPE_PUBLIC_KEY, 'clientSecret': intent.client_secret})
@@ -43,6 +45,8 @@ def createpayment(request):
 def paymentcomplete(request):
   if request.method=="POST":
     data = json.loads(request.POST.get("payload"))
+    print(data)
+    # This actually does not endup running, so we don't need to worry about it 
     if data["status"] == "succeeded":
       # save purchase here/ setup email confirmation
       return render(request, "main/payment-complete.html")
