@@ -94,32 +94,34 @@ def coursePage(request, id):
         # We need to grab only the submissions that are assignments in the assignment_list
         uid = User.objects.get(username=request.user).id
         sub_list = Submission.objects.none()
+
         scored_points = 0
         possible_points = 0
-        a = 0
+
+        # Add together the points for submissions that have been graded
         # Note: This may have to be changed later to account for multiple graded submissions.
+        a = 0
         for assignment in assignment_list:
             temp_list = Submission.objects.filter(assignment_id=assignment_list[a].id, student_id=uid)
             sub_list = sub_list | temp_list
-            # If we didn't get any submissions, don't increment a and continue
-            if len(temp_list) == 0:
-                continue
-            # No score indicates not graded so don't add them
-            if sub_list[a].score is not None:
-                scored_points = scored_points + int(sub_list[a].score or 0)
-                possible_points = possible_points + Assignment.objects.get(id=sub_list[a].assignment_id).points
+            if (len(temp_list) != 0) and (temp_list[0].score is not None):
+                scored_points = scored_points + temp_list[0].score
+                possible_points = possible_points + assignment_list[a].points
             a = a + 1
+
+        alist = Assignment.objects.none
+
         if possible_points == 0:
             Grade = "N/A"
             percent = 0
         else:
             percent = (scored_points / possible_points) * 100
-            Grade = calcGrade(course.a_thresh, course.increment, percent)
+            Grade = calcGrade(course.a_threshold, course.increment, percent)
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': assignment_list,
                                                                       'letterGrade': ('Grade: ' + Grade),
-                                                                      'percentGrade': ('Percent Grade: ' + str(percent) + '%')})
+                                                                      'percentGrade': ('Percent Grade: ' + str(round(percent, 2)) + '%')})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                   'assignment_list': assignment_list,
