@@ -92,7 +92,7 @@ def coursePage(request, id):
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
         # We need to grab only the submissions that are assignments in the assignment_list
-        uid = User.objects.get(username=request.user).id
+        uid = request.user.id
         sub_list = Submission.objects.none()
 
         scored_points = 0
@@ -113,7 +113,7 @@ def coursePage(request, id):
 
         if possible_points == 0:
             Grade = "N/A"
-            percent = 0
+            percent = 100
         else:
             percent = (scored_points / possible_points) * 100
             Grade = calcGrade(course.a_threshold, course.increment, percent)
