@@ -56,7 +56,8 @@
             You don't have any assignments.
         </div>
         {% endif %}
-
+        <div>{{ letterGrade }}</div>
+        <div>{{ percentGrade }}</div>
         {# only instructor can create assignments #}
         {% if request.user|has_group:"Instructor" %}
             <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>

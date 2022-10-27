@@ -32,7 +32,9 @@ class CourseForm(ModelForm):
             "meeting_start_time": forms.TimeInput(attrs={'id':"meeting_start_time",'type': 'time', 'class': 'form-control'}),
             "meeting_end_time": forms.TimeInput(attrs={'id':"meeting_end_time",'type': 'time', 'class': 'form-control'}),
             "meeting_location": forms.TextInput(attrs={'id':"meeting_location",'placeholder': 'TBA', 'class': 'form-control'}),
-            "credit_hours":forms.NumberInput(attrs={'id':"credit_hours",'class': 'form-control'})
+            "credit_hours":forms.NumberInput(attrs={'id':"credit_hours",'class': 'form-control'}),
+            "a_threshold":forms.NumberInput(attrs={'id':"a_threshold", 'class': 'form-control'}),
+            "increment":forms.NumberInput(attrs={'id':"increment", 'class': 'form-control'})
         }
 
         error_messages = {
