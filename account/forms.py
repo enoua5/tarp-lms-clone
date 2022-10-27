@@ -17,7 +17,11 @@ class UpdateProfileForm(forms.ModelForm):
     #  while some profile items have defaults, none but birthdate are required
     image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control', 'type': 'file'}), required=False)
     bio = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=False)
-    address = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    address_line1 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    address_line2 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    city = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    state = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    zip = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     birthdate = forms.DateField(required=True)
     link1 = forms.URLField(max_length=200, widget=forms.URLInput(attrs={'class': 'form-control'}), required=False)
     link2 = forms.URLField(max_length=200, widget=forms.URLInput(attrs={'class': 'form-control'}), required=False)
@@ -25,4 +29,4 @@ class UpdateProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['image', 'bio', 'birthdate', 'address', 'link1', 'link2', 'link3']
+        exclude = ['user']

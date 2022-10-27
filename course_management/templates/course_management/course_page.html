@@ -3,34 +3,56 @@
 {% block content %}
     <h1 class="display-6 text-center">Assignments</h1>
         {% if assignment_list %}
-        <ul class="list-group">
-            {% for assignment in assignment_list %}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="mt-2 col-4"><div class="h5">{{ assignment.title }}</div></div>
-                        <div class="mt-2 col-4 text-center">Due {{ assignment.due_date }}</div>
-                        <div class="mt-1 col-4">
-                            <div class="text-center">
-                                <div class="btn-group  btn-group-sm text-center">
+            <ul class="list-group">
+                {% for assignment in assignment_list %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="mt-2 col-4"><div class="h5">{{ assignment.info.title }}</div></div>
+                            <div class="mt-2 col-4 text-center">Due {{ assignment.info.due_date }}</div>
 
-                                    {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
-                                    {% if request.user|has_group:"Instructor" %}
-                                        <a href="{% url 'course_management:submission_list' assignment.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
-                                        <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                                        <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                            {# student can start the assignment or edit their submission #}
+                            {% if request.user|has_group:"Student" %}
+                                <div class="mt-2 col-2">
+                                    {% if assignment.meta.submitted %}
+                                        <span class="badge bg-success">Submitted</span>
+                                        {% if assignment.meta.score is None %}
+                                            <span class="badge bg-secondary">Pending grade</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Graded: {{assignment.meta.score}}/{{assignment.info.points}}</span>
+                                        {% endif %}
                                     {% endif %}
                                     {# student can start the assignment or edit their submission #}
                                     {% if request.user|has_group:"Student" %}
+                                        {% if assignment.meta.late %}
+                                            <span class="badge bg-danger">Late!</span>
+                                        {% endif %}
                                         <a href="{% url 'course_management:assignmentView' course.id assignment.id %}" class="btn btn-outline-primary" role="button">View</a>
                                     {% endif %}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+                                <div class="mt-1 col-2">
+                                    <div class="text-center">
+                                        <div class="btn-group  btn-group-sm text-center">
+                                            <a href="{% url 'course_management:assignmentSubmission' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
+                                        </div>
+                                    </div>
+                                </div>
 
+                            {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
+                            {% else %}
+                                <div class="mt-1 col-4">
+                                    <div class="text-center">
+                                        <div class="btn-group  btn-group-sm text-center">
+                                            <a href="{% url 'course_management:submission_list' assignment.info.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
+                                            <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
         {# display if there are no assignments #}
         {% else %}
         <div class="alert alert-primary mt-2" role="alert" >
