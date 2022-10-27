@@ -3,5 +3,3 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Tuition)
-admin.site.register(TempProfile)
-admin.site.register(Product)

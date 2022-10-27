@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from course_management.models import Course
 from django.contrib.auth.models import Group
-from .models import Tuition, TempProfile, Product
+from .models import Tuition
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.conf import settings 
@@ -41,15 +41,6 @@ def createpayment(request):
           settings.STRIPE_PUBLIC_KEY, 'clientSecret': intent.client_secret})
       except Exception as e:
         return JsonResponse({'error':str(e)},status= 403)
-
-def paymentcomplete(request):
-  if request.method=="POST":
-    data = json.loads(request.POST.get("payload"))
-    print(data)
-    # This actually does not endup running, so we don't need to worry about it 
-    if data["status"] == "succeeded":
-      # save purchase here/ setup email confirmation
-      return render(request, "main/payment-complete.html")
 
 def success(request):
     # Alright. I am not going to check if transaction was successful
