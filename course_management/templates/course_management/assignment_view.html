@@ -16,7 +16,7 @@
                 {% if not submission %}
                     <a href="{% url 'course_management:assignmentSubmission' course.id assignment.id %}" class="btn btn-outline-primary mb-3" role="button">Start Assignment</a>
                 {% else %}
-                    {% if submission.score %}
+                    {% if submission.score is not None %}
                         <p class="text-center">Grade: {{ submission.score }}/{{assignment.points}}</p>
                     {% else %}
                         <p class="text-center">Submitted</p>
@@ -33,7 +33,7 @@
                     <h4 class="m-0">Assignment Details</h4>
                 </button>
             </h2>
-            <div id="collapseAssignment" class="accordion-collapse {% if submission %}collapse{% endif %}" aria-labelledby="assignmentHeader">
+            <div id="collapseAssignment" class="accordion-collapse collapse show" aria-labelledby="assignmentHeader">
                 <div class="accordion-body m-1">
                     {{ assignment.description }}
                 </div>
@@ -46,7 +46,7 @@
                     <h4 class="m-0">Submission</h4>
                 </button>
             </h2>
-            <div id="collapseGrade" class="accordion-collapse {% if not submission %}collapse{% endif %}" aria-labelledby="gradeHeader">
+            <div id="collapseGrade" class="accordion-collapse collapse show" aria-labelledby="gradeHeader">
                 <div class="accordion-body m-1">
                     {% if submission %}
                         <p class="small ms-1">Submitted {{ submission.submitted_at }}</p>
@@ -81,9 +81,9 @@
                     <h4 class="m-0">Grade</h4>
                 </button>
             </h2>
-            <div id="collapseSubmission" class="accordion-collapse {% if not submission %}collapse{% endif %}" aria-labelledby="submissionHeader">
+            <div id="collapseSubmission" class="accordion-collapse collapse show" aria-labelledby="submissionHeader">
                 <div class="accordion-body m-1">
-                    {% if not submission.score %}
+                    {% if submission.score is None %}
                         <div class="alert alert-primary mt-2" role="alert">
                             Your submission has not been graded yet.
                         </div>
