@@ -11,3 +11,4 @@ stripe==4.2.0
 urllib3==1.26.12
 selenium==4.5.0
 webdriver-manager==3.8.4
+packaging==20.3
