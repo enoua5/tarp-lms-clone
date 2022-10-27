@@ -1,26 +1,180 @@
 {% extends 'main/base.html' %}
-{% block body %}
 
-<div class="container-fluid mt-3" style="width: 80%">
-    {% if course_list %}
+{% block head %}
+{% if balance > 0 %}
+<script src="https://js.stripe.com/v3/"></script>
+
+<!-- God forgive me -->
+<script type="text/javascript">
+    var orderData = {
+      items: [{ id: "products" }],
+      currency: "usd",
+    };
+
+    // Disable the button until we have Stripe set up on the page
+    // document.getElementById("submit").disabled = True;
+    fetch("./create-payment-intent/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData)
+    })
+      .then(function(result) {
+        return result.json();
+      })
+      .then(function(data) {
+        return setupElements(data);
+      })
+      .then(function({ stripe, card, clientSecret }) {
+        // Handle form submission.
+        var form = document.getElementById("payment-form");
+        form.addEventListener("submit", function(event) {
+          event.preventDefault();
+          // Initiate payment when the submit button is clicked
+          pay(stripe, card, clientSecret);
+        });
+      });
+
+    // Set up Stripe.js and Elements to use in checkout form
+    var setupElements = function(data) {
+      stripe = Stripe(data.publishableKey);
+      var elements = stripe.elements();
+      var style = {
+        base: {
+          color: "#32325d",
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: "antialiased",
+          fontSize: "16px",
+          "::placeholder": {
+            color: "#aab7c4"
+          }
+        },
+        invalid: {
+          color: "#fa755a",
+          iconColor: "#fa755a"
+        }
+      };
+
+      var card = elements.create("card", { style: style });
+      card.mount("#card-element");
+
+      return {
+        stripe: stripe,
+        card: card,
+        clientSecret: data.clientSecret
+      };
+    };
+
+    /*
+     * Calls stripe.confirmCardPayment which creates a pop-up modal to
+     * prompt the user to enter extra authentication details without leaving your page
+     */
+    var pay = function(stripe, card, clientSecret) {
+      changeLoadingState(true);
+
+      // Initiate the payment.
+      // If authentication is required, confirmCardPayment will automatically display a modal
+      stripe
+        .confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card
+          },
+        })
+        .then(function(result) {
+          if (result.error) {
+            // Show error to your customer
+            showError(result.error.message);
+          } else {
+            // The payment has been processed!
+            orderComplete(clientSecret);
+          }
+        });
+    };
+
+    /* ------- Post-payment helpers ------- */
+
+    /* Shows a success / error message when the payment is complete */
+    var orderComplete = function(clientSecret) {
+      // Just for the purpose of the sample, show the PaymentIntent response object
+      stripe.retrievePaymentIntent(clientSecret).then(function(result) {
+        var paymentIntent = result.paymentIntent;
+        var paymentIntentJson = JSON.stringify(paymentIntent, NaN, 2);
+        
+        // post data and show new page
+        var form2 =document.getElementById("payload");
+        var input = document.getElementById("data-payload")
+        input.value = paymentIntentJson;
+        form2.submit();
+        changeLoadingState(false);
+      });
+    };
+
+    var showError = function(errorMsgText) {
+      changeLoadingState(false);
+      var errorMsg = document.querySelector(".sr-field-error");
+      errorMsg.textContent = errorMsgText;
+      setTimeout(function() {
+        errorMsg.textContent = "";
+      }, 4000);
+    };
+
+    // Show a spinner on payment submission
+    var changeLoadingState = function(isLoading) {
+      if (isLoading) {
+        document.getElementById("submit").disabled = true;
+        document.querySelector("#spinner").classList.remove("hidden");
+        document.querySelector("#button-text").classList.add("hidden");
+      } else {
+        document.getElementById("submit").disabled = false;
+        document.querySelector("#spinner").classList.add("hidden");
+        document.querySelector("#button-text").classList.remove("hidden");
+      }
+    };
+</script>
+{% endif %}
+
+{% endblock %}
+{% block body %}
+<div class="container-fluid mt-3" style="width: 70%">
+    <!-- This is in case the student dropped all their courses -->
+    {% if balance < 0 %}
+        <div class="alert alert-warning" role="alert">
+            <h4>You will be refunded: ${{balance}}</h4>
+        </div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-warning" role="alert">
+            <h4>Your payment was processed.</h4>
+        </div>
+    {% endif %}
+
+    {% if balance >= 0 %}
     <div class="alert alert-success" role="alert">
         <div class="d-flex justify-content-between">
-            <h1>Your balance: ${{balance}}</h1>
+            <h3 class="mt-0 mb-0">Your balance: ${{balance}}</h3>
+            {% if balance > 0 %}
             <a href="#" class="btn btn-success btn-lg" style="width: 20%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
+            {% endif %}
         </div>
     </div>
-    <div class="container-fluid mt-3" style="width: 95%">
-        <ul class="list-group">
-        {% for course in course_list %}
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="mt-2 col-10">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
-                    <div class="mt-2 col-1">${{ course.credit_hours }}00</div>
-                </div>   
-            </li>
-        {% endfor %}
-        </ul>
+    {% endif %}
+
+    {% if course_list %}
+    <div class="container-fluid mt-3" style="width: 90%">
+        <table class="table">
+        <tbody>
+            {% for course in course_list %}
+            <tr>
+                <td>{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</td>
+                <td>${{ course.credit_hours }}00</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
     </div>
+
     {% else %}
     <div class="alert alert-primary mt-2" role="alert" >
         You are not enrolled in any courses.
@@ -33,17 +187,124 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h1 class="modal-title fs-3" id="modalLabel">Pay</h1>
+            <h1 class="modal-title fs-3" id="modalLabel">Billing</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                This is where you will pay for stuff
+                <h5 class="text-center">Please enter your card information:</h5>
+      <div class="card mx-5">
+        <div class="card-body">
+          <div class="sr-root">
+            <div class="sr-main">
+              <form id="payment-form" class="sr-payment-form">
+                {% csrf_token %}
+                  <div class="sr-combo-inputs-row">
+                    <div class="sr-input sr-card-element" id="card-element"></div>
+                  </div>
+                  <div class="sr-field-error" id="card-errors" role="alert"></div>
+                  <button id="submit" class="btn">
+                    <div class="spinner-border  spinner-border-sm text-light hidden" id="spinner" role="status">
+                    </div>
+                    <span id="button-text">Pay</span><span id="order-amount"></span>
+                  </button>
+              </form>
+              <div class="sr-result hidden">
+                <p>Payment completed<br></p>
+                <pre>
+                  <code></code>
+                </pre>
+              </div>
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="#" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#payModal">Confirm</a>
+          </div>
+        </div>
+      </div>
+      <!-- Not sure what this is, but it redirects me to the success view -->
+      <form id="payload" class="hidden" action="success/" method="post">
+        {% csrf_token %}
+        <input id ="data-payload" type="hidden" name="payload"/>
+      </form>
             </div>
+        </div>
         </div>
     </div>
 </div>
+
+<style>
+  .StripeElement {
+    box-sizing: border-box;
+
+    height: 40px;
+
+    padding: 10px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+  }
+
+  .StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+  }
+
+  .StripeElement--invalid {
+    border-color: #fa755a;
+  }
+
+  .StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
+  .hidden {
+      display: none;
+  }
+
+
+  #submit:hover {
+    filter: contrast(120%);
+  }
+
+  #submit {
+    font-feature-settings: "pnum";
+    --body-color: #f7fafc;
+    --button-color: #198754;
+    --accent-color: #136941;
+    --gray-border: #e3e8ee;
+    --link-color: #fff;
+    --font-color: #697386;
+    --body-font-family: -apple-system,BlinkMacSystemFont,sans-serif;
+    --radius: 4px;
+    --form-width: 400px;
+    -webkit-box-direction: normal;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    font: inherit;
+    overflow: visible;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 16px;
+    padding: 0 12px;
+    line-height: 32px;
+    outline: none;
+    text-decoration: none;
+    text-transform: none;
+    margin-right: 8px;
+    height: 36px;
+    border-radius: var(--radius);
+    color: #fff;
+    border: 0;
+    margin-top: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+    display: block;
+    box-shadow: 0 4px 5.5px 0 rgba(0,0,0,.07);
+    width: 100%;
+    background: var(--button-color);
+  }
+  </style>
 {% endblock %}
