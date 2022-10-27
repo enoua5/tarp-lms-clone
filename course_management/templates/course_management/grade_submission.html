@@ -1,0 +1,67 @@
+{% extends 'course_management/course_base.html' %}
+{% block content %}
+    <h1 class="display-6 text-center">Grade Submission by {{ submission.student.first_name }} {{ submission.student.last_name }}</h1>
+
+    <div class="card mt-4">
+        <h5 class="card-header text-center">Submission for "{{ submission.assignment.title }}"</h5>
+                <div class="card-body">
+                    {% if submission.assignment.type == 'f' %}
+                        <h5 class="card-title">File submitted {{ submission.submitted_at }}</h5>
+                        <div class="card-text">
+                            <a href="{{ submission.file.url }}" style="text-decoration: none;" download>
+                                Download Submission
+                                {# download icon from https://icons.getbootstrap.com/icons/download/ #}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    {% else %}
+                        <h5 class="card-title">Text submitted {{ submission.submitted_at }}</h5>
+                        <div class="card-text">{{ submission.text }}</div>
+                    {% endif %}
+                </div>
+
+
+                {% if form.errors %}
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li class="list-group-item list-group-item-danger">{{error}}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row my-4">
+                        <div class="col-5 offset-2">
+                            <div class="input-group">
+                                <span class="input-group-text">Grade Assignment: </span>
+                                {{ form.score }}
+                                <span class="input-group-text">/ {{ submission.assignment.points }}</span>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-primary">Submit grade</button>
+                                <button type="reset" class="btn btn-dark">Reset</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+        <div class="card-body text-center">
+            <a href="{% url 'course_management:submission_list' submission.assignment.id %}">Back to submissions list</a>
+        </div>
+        <div class="card-footer text-muted text-center">Due {{ submission.assignment.due_date }}</div>
+    </div>
+
+{% endblock %}

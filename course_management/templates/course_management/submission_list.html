@@ -1,35 +1,124 @@
 {% extends 'course_management/course_base.html' %}
+
+{% block head %}
+{% if grade_distrib_data %}
+    {% comment %} Contains mostly Google Chart functionality. {% endcomment %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable({{ grade_distrib_data|safe }});
+            var options = {
+                legend: { position: 'none' },
+                histogram: {bucketSize: 5,
+                            min_value: 0,
+                            max_value: {{assignment.points}}},
+                hAxis: {title: "Grade Received (0-{{ assignment.points }})"},
+                vAxis: {title: '# Students',
+                        baseline: 5}
+            };
+            var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <h1 class="display-6 text-center">Submissions for "{{ assignment.title }}"</h1>
-{% if submissions %}
-    <ul class="list-group">
-        {% for submission in submissions %}
-            <li class="list-group-item">
+
+<div class="accordion" id="submissionPanel">
+    {% comment %} Grade Breakdown Graph {% endcomment %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{{ assignment.id }}">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGraph{{ assignment.id }}" aria-expanded="true" aria-controls="#collapseGraph{{ assignment.id }}">
+                <h4 class="m-0">Grade Distribution</h4>
+            </button>
+        </h2>
+        <div id="collapseGraph{{ assignment.id }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ assignment.id }}">
+            <div class="accordion-body">
+                {% if grade_distrib_data %}
+                {% comment %} Header Row {% endcomment %}
                 <div class="row">
-                    <div class="col d-flex justify-content-between">
-                        <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
-                        <span class="col-4">{{ submission.submitted_at }}</span>
-                        <span class="col-2">
-                            {% if submission.score %}
-                                {{ submission.score }}
-                            {% else %}
-                                --
-                            {% endif %}
-                            /
-                            {{ submission.assignment.points }}
-                        </span>
-                        <a class="btn btn-primary col-2">Grade</a>
+                    <div class="col-4" style="border-right: 1px solid lightgrey;">
+                        <h5 class="text-center">Grade Breakdown</h5>
+                    </div>
+                    <div class="col-8">
+                        <h5 class="text-center">Grade Distribution Chart</h5>
                     </div>
                 </div>
-                
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-{# no submissions yet #}
-    <div class="alert alert-primary mt-2" role="alert" >
-        No one has submitted anything for this assignment yet!
+                {% comment %} Content Row {% endcomment %}
+                <div class="row align-items-center">
+                    <div class="col-4" style="border-right: 1px solid lightgrey;">
+                        <ul class="list-group list-group-horizontal justify-content-center">
+                            <li class="list-group-item w-50 text-center">Average Score</li>
+                            <li class="list-group-item w-25 text-center">{{ mean }}</li>
+                        </ul>
+                        <ul class="list-group list-group-horizontal justify-content-center">
+                            <li class="list-group-item w-50 text-center">High Score</li>
+                            <li class="list-group-item w-25 text-center">{{ high }}</li>
+                        </ul>
+                        <ul class="list-group list-group-horizontal justify-content-center">
+                            <li class="list-group-item w-50 text-center">Low Score</li>
+                            <li class="list-group-item w-25 text-center">{{ low }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-8">
+                        <div id="chart_div"></div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-primary mt-2" role="alert" >
+                    Statistics unavailable; not enough submissions graded.
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
-{% endif %}
+
+    {% comment %} Individual Submissions {% endcomment %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="submissionsHeading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#submissions" aria-expanded="true" aria-controls="#submissions">
+            <h4 class="m-0">Submissions</h4>
+          </button>
+        </h2>
+        <div id="submissions" class="accordion-collapse collapse show" aria-labelledby="submissionsHeading">
+          <div class="accordion-body">
+            {% if submissions %}
+            <ul class="list-group">
+                {% for submission in submissions %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col d-flex justify-content-between">
+                                <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
+                                <span class="col-4">{{ submission.submitted_at }}</span>
+                                <span class="col-2">
+                                    {% if submission.score %}
+                                        {{ submission.score }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                    /
+                                    {{ submission.assignment.points }}
+                                </span>
+                                <a class="btn btn-primary col-2" href="{% url 'course_management:gradeSubmission' submission.id %}">Grade</a>
+                            </div>
+                        </div>
+                        
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+        {# no submissions yet #}
+            <div class="alert alert-primary mt-2" role="alert" >
+                No one has submitted anything for this assignment yet!
+            </div>
+        {% endif %}
+          </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
