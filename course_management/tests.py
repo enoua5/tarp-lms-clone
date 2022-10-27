@@ -4,6 +4,7 @@ from django.test import Client
 from account.models import Profile
 from course_management.models import Course, Assignment, TextSubmission
 import unittest
+import datetime
 
 from payments.models import Tuition
 
@@ -140,3 +141,58 @@ class StudentSubmitTextAssignmentTest(TestCase):
         
 if __name__ == '__main__':
     unittest.main()
+
+class CreateAssignmentTest(TestCase):
+    # Set up for the run
+    user = None
+    c = Client()
+    def setUp(self):
+        # Create a test user
+        user = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
+        course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
+                                        instructor=user, meeting_days='T,Th', meeting_start_time='12:00',
+                                        meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4)
+        Profile.user = user
+
+        # Login the user
+        success = self.c.login(username='testprofessor', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+
+    # Test add class
+    def test_create_assignment(self):
+        # get objects created in setup
+        course = Course.objects.filter(course_num=4000).first()
+
+        # create url for submission post
+        url = '/courses/' + str(course.id) + '/addAssignment'
+
+        # Create the course
+        response = self.c.post('/courses/addCourse/', {'department': 'CS',
+                                                  'course_num': 4000,
+                                                  'course_name': 'Test course',
+                                                  'meeting_days': 'T,Th',
+                                                  'meeting_start_time': '12:00',
+                                                  'meeting_end_time': '12:30',
+                                                  'meeting_location': 'Building 100',
+                                                  'credit_hours': 4})
+        # Create the submission
+        response = self.c.post(url, {'title': 'UnitTestAssign', 
+                                    'description': 'Test Description',
+                                    'due_date': '2022-05-05T23:50',
+                                    'points': 100,
+                                    'type': 't'})
+
+        # Status code should be 302 for redirect
+        self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
+
+        assignments_list = Assignment.objects.filter(title='UnitTestAssign')
+
+        # Check if the course was created
+        self.assertEqual(assignments_list[0].title, 'UnitTestAssign', msg='Error: Failed to create an assignment.')
+
+    # Clean up after the test
+    def tearDown(selfself):
+        # Place code here you want to run after the test
+        pass
