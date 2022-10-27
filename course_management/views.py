@@ -130,6 +130,34 @@ def addAssignment(request, id):
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
 
+# Student Assignment View
+def assignmentView(request, course_id, assignment_id):
+    # Get assignment and check if the student has already submitted something.
+    course = Course.objects.get(id=course_id)
+    assignment = Assignment.objects.get(id=assignment_id)
+    context = {'course': course,
+               'assignment' : assignment}
+    
+    if assignment.type == 'f':
+        submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if submission:
+            context['type'] = 'file'
+    else:
+        submission = TextSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
+        if submission:
+            context['type'] = 'text'
+        
+    if submission:
+        context['submission'] = submission
+        classGrades = list(map(lambda x:x.score, getGradedSubmissions(assignment)))
+        if len(classGrades) >= 2:
+            context['grade_list'] = classGrades
+        
+    return render(request=request,
+                  template_name='course_management/assignment_view.html',
+                  context=context) 
+        
+
 
 # assignment submission view - distinguishes between file and text submission
 def assignmentSubmission(request, course_id, assignment_id):
@@ -176,7 +204,7 @@ def submission_list(req, assignment_id):
 
 
     # Don't generate graphs unless there's 2 or more graded submissions
-    if len(grade_distrib_dataset['grade_distrib']) > 2:
+    if len(grade_distrib_dataset['grade_distrib']) > 3:
         ctx['grade_distrib_data'] = grade_distrib_dataset['grade_distrib']
         ctx['high'] = grade_distrib_dataset['high']
         ctx['low'] = grade_distrib_dataset['low']
@@ -240,6 +268,16 @@ def build_submission_data(submissions):
 
     return dataset
 
+
+'''!
+    @brief Gets a list of the given assignment's graded submissions.
+    @param assignment The assignment object.
+    @return A list of submission objects for that assignment.
+'''
+def getGradedSubmissions(assignment):
+    allSubmissions = Submission.objects.filter(assignment=assignment)
+    gradedSubmissions = filter(lambda grade: grade is not None, allSubmissions)
+    return gradedSubmissions
 
 '''!
     @brief Takes an assignment, grabs all graded submissions for the assignment, and returns a list of students in the "danger zone"

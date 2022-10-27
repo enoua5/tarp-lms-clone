@@ -21,6 +21,7 @@
                                             <span class="badge bg-info">Graded: {{assignment.meta.score}}/{{assignment.info.points}}</span>
                                         {% endif %}
                                     {% endif %}
+                                    {# student can start the assignment or edit their submission #}
                                     {% if assignment.meta.late %}
                                         <span class="badge bg-danger">Late!</span>
                                     {% endif %}
@@ -28,7 +29,7 @@
                                 <div class="mt-1 col-2">
                                     <div class="text-center">
                                         <div class="btn-group  btn-group-sm text-center">
-                                            <a href="{% url 'course_management:assignmentSubmission' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">Start assignment</a>
+                                            <a href="{% url 'course_management:assignmentView' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">View</a>
                                         </div>
                                     </div>
                                 </div>
