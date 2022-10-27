@@ -6,7 +6,7 @@ from course_management.forms import CourseForm, AssignmentForm, FileSubmissionFo
 
 # A view of courses for instructors
 def course_management(request):
-    try:        
+    try:
         course_list = Course.objects.filter(instructor=request.user)
         return render(request, 'course_management/course_management.html', {'course_list' : course_list})
     except:
@@ -51,7 +51,7 @@ def updateCourse(request, id):
 # A view of courses for students
 def studentCourses(request):
         # A precaution, if the student/course relationship does not exist
-        try:        
+        try:
             my_course_list = request.user.courses.all()
             all_course_list = Course.objects.all().exclude(students=request.user)
             all_instructors_list = User.objects.filter(groups__name='Instructor')
@@ -89,6 +89,35 @@ def drop(request, id):
 def coursePage(request, id):
     course = Course.objects.get(id=id)
     assignment_list = Assignment.objects.filter(course=course)
+
+    assignments = Assignment.objects.filter(course=course).order_by('due_date')
+    late_list = []
+    upcoming_list = []
+    submitted_list = []
+    for assignment in assignments:
+        assignment_meta = {}
+        try:
+            submission = Submission.objects.get(assignment=assignment, student=request.user)
+        except(Submission.DoesNotExist):
+            submission = None
+        submitted = submission != None
+        assignment_meta['submitted'] = submitted
+        if submitted:
+            assignment_meta['score'] = submission.score
+        else:
+            if assignment.overdue():
+                assignment_meta['late'] = True
+
+        assignment_obj = {'info': assignment, 'meta': assignment_meta}
+        if assignment_meta.get('late'):
+            late_list.append(assignment_obj)
+        elif assignment_meta.get('submitted'):
+            submitted_list.append(assignment_obj)
+        else:
+            upcoming_list.append(assignment_obj)
+
+
+
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
         # We need to grab only the submissions that are assignments in the assignment_list
@@ -119,12 +148,12 @@ def coursePage(request, id):
             Grade = calcGrade(course.a_threshold, course.increment, percent)
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                      'assignment_list': assignment_list,
+                                                                      'assignment_list': late_list + upcoming_list + submitted_list,
                                                                       'letterGrade': ('Grade: ' + Grade),
                                                                       'percentGrade': ('Percent Grade: ' + str(round(percent, 2)) + '%')})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                  'assignment_list': assignment_list,
+                                                                  'assignment_list': late_list + upcoming_list + submitted_list,
                                                                   'letterGrade': '',
                                                                   'percentGrade': ''})
 
@@ -227,7 +256,9 @@ def submission_list(req, assignment_id):
         ctx['high'] = grade_distrib_dataset['high']
         ctx['low'] = grade_distrib_dataset['low']
         ctx['mean'] = grade_distrib_dataset['mean']
-        
+        ctx['danger_students'] = get_danger_students(assignment)
+        ctx['succeeding_students'] = get_succeeding_students(assignment)
+
     return render(req, 'course_management/submission_list.html', ctx)
 
 
@@ -247,7 +278,7 @@ def gradeSubmission(request, submission_id):
         return redirect('course_management:submission_list', submission.assignment.id)
 
     return render(request, 'course_management/grade_submission.html', {'course': course, 'submission': submission, 'form': form})
-    
+
 
 '''!
     @brief Takes the list of submissions and constructs a dataset for the grade distribution of that assignment.
@@ -259,7 +290,7 @@ def build_submission_data(submissions):
                'high':   0,
                'low' :   9999,
                'mean':   0}
-    
+
     num_submissions = 0
     working_avg = 0.0
     for submission in submissions:
@@ -268,18 +299,52 @@ def build_submission_data(submissions):
             data_point = [f"{submission.student.first_name} {submission.student.last_name}",
                           submission.score]
             dataset['grade_distrib'].append(data_point)
-            
+
             # Check for high & low
             if submission.score > dataset['high']:
                 dataset['high'] = submission.score
             if submission.score < dataset['low']:
                 dataset['low'] = submission.score
-            
+
             # Keep calculating mean
             num_submissions += 1
             working_avg += submission.score
-            
+
         if num_submissions != 0:
             dataset['mean'] = round(((working_avg) / num_submissions), 1)
-            
+
     return dataset
+
+
+'''!
+    @brief Takes an assignment, grabs all graded submissions for the assignment, and returns a list of students in the "danger zone"
+    @details Students with grades in the bottom 20% of possible points for this assignment are in the danger zone
+    @return A list of student objects in the "danger zone" for the associated assignment
+'''
+def get_danger_students(assignment):
+    submissions = Submission.objects.filter(assignment=assignment)
+    danger_students = []
+
+    if submissions:
+        for submission in submissions:
+            if submission.score and submission.score < (assignment.points * 0.2):
+                danger_students.append(submission.student)
+
+    return danger_students
+
+
+'''!
+    @brief Takes an assignment, grabs all graded submissions for the assignment, and returns a list of students in the "high score zone"
+    @details Students with grades in the top 20% of possible points for this assignment are in the high score zone
+    @return A list of student objects in the "high score zone" for the associated assignment
+'''
+def get_succeeding_students(assignment):
+    submissions = Submission.objects.filter(assignment=assignment)
+    succeeding_students = []
+
+    if submissions:
+        for submission in submissions:
+            if submission.score and submission.score > (assignment.points * 0.8):
+                succeeding_students.append(submission.student)
+
+    return succeeding_students
