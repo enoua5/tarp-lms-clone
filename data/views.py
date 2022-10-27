@@ -114,7 +114,7 @@ def get_mine(req, query_dict):
     return HttpResponse(dumps(data, cls=DatabaseEncoder))
 
 def brew_coffee():
-    return HttpResponse("Tip me over and pour me out", status=HTTPStatus.IM_A_TEAPOT)
+    return HttpResponse('{"message": "Tip me over and pour me out!"}', status=HTTPStatus.IM_A_TEAPOT)
 
 QUERY_COMMANDS = {
     'get_all': get_all,
