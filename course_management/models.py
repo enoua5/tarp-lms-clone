@@ -20,6 +20,8 @@ class Course(models.Model):
     meeting_location = models.CharField(max_length=25)
     credit_hours = models.PositiveSmallIntegerField(default=3)
     students = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="courses")
+    a_threshold = models.PositiveSmallIntegerField(default=93)
+    increment = models.PositiveSmallIntegerField(default=4)
     
     def __str__(self):
         return self.department + " " + str(self.course_num) + " " + self.course_name

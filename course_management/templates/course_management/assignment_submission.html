@@ -1,7 +1,6 @@
 {% extends 'course_management/course_base.html' %}
 {% block content %}
     <h1 class="display-6 text-center">Assignment Submission</h1>
-
     <div class="card mt-4">
         <h5 class="card-header text-center">{{ assignment.title }}</h5>
         <div class="card-body">{{ assignment.description }}</div>
@@ -20,7 +19,7 @@
             </div>
         </form>
         <div class="card-body text-center">
-            <a href="{% url 'course_management:coursePage' course.id %}">Back to assignment page</a>
+            <a href="{% url 'course_management:assignmentView' course.id assignment.id %}">Back to assignment page</a>
         </div>
         <div class="card-footer text-muted text-center">Due {{ assignment.due_date }}</div>
     </div>

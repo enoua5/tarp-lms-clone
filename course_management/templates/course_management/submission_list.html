@@ -9,6 +9,9 @@
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             var data = google.visualization.arrayToDataTable({{ grade_distrib_data|safe }});
+
+            data.sort([{column: 1}]);
+
             var options = {
                 legend: { position: 'none' },
                 histogram: {bucketSize: 5,
@@ -16,9 +19,76 @@
                             max_value: {{assignment.points}}},
                 hAxis: {title: "Grade Received (0-{{ assignment.points }})"},
                 vAxis: {title: '# Students',
-                        baseline: 5}
+                        baseline: 5},
+
+                colors: ['#3366cc', '#dc3912', '#4CBB17']
             };
+            var container = document.getElementById('chart_div');
             var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+
+            {# This is the code to color all the danger students red #}
+            {# the code for this functionality has been adapted from https://stackoverflow.com/questions/51177959/changing-the-colour-of-a-single-data-item-in-a-google-charts-histogram #}
+            {% if danger_students %}
+                var dangerHighlightRows = [];
+                {% for danger_student in danger_students %}
+                    dangerHighlightRows.push(data.getFilteredRows([{
+                        column: 0,
+                        value: '{{ danger_student.first_name }} {{ danger_student.last_name }}'
+                    }])[0]);
+                {% endfor %}
+
+
+                {# https://developers.google.com/chart/interactive/docs/events #}
+                google.visualization.events.addListener(chart, 'ready', function () {
+                    var observer = new MutationObserver(function () {
+                      var index = 0;
+                      Array.prototype.forEach.call(container.getElementsByTagName('rect'), function (rect) {
+                        if (options.colors.indexOf(rect.getAttribute('fill')) > -1) {
+                          if (dangerHighlightRows.indexOf(index) > -1) {
+                            rect.setAttribute('fill', options.colors[1]);
+                          }
+                          index++;
+                        }
+                      });
+                    });
+                    observer.observe(container, {
+                      childList: true,
+                      subtree: true
+                    });
+                 });
+            {% endif %}
+
+            {# This is the code to color all the high scoring students green #}
+            {# the code for this functionality has been adapted from https://stackoverflow.com/questions/51177959/changing-the-colour-of-a-single-data-item-in-a-google-charts-histogram #}
+            {% if succeeding_students %}
+                var succeedHighlightRows = [];
+                {% for succeeding_student in succeeding_students %}
+                    succeedHighlightRows.push(data.getFilteredRows([{
+                        column: 0,
+                        value: '{{ succeeding_student.first_name }} {{ succeeding_student.last_name }}'
+                    }])[0]);
+                {% endfor %}
+
+                {# https://developers.google.com/chart/interactive/docs/events #}
+                google.visualization.events.addListener(chart, 'ready', function () {
+                    var observer = new MutationObserver(function () {
+                      index = 0;
+                      Array.prototype.forEach.call(container.getElementsByTagName('rect'), function (rect) {
+                        if (options.colors.indexOf(rect.getAttribute('fill')) > -1) {
+                          if (succeedHighlightRows.indexOf(index) > -1) {
+                            rect.setAttribute('fill', options.colors[2]);
+                          }
+                          index++;
+                        }
+                      });
+                    });
+                    observer.observe(container, {
+                      childList: true,
+                      subtree: true
+                    });
+                });
+            {% endif %}
+
             chart.draw(data, options);
         }
     </script>
@@ -95,7 +165,7 @@
                                 <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
                                 <span class="col-4">{{ submission.submitted_at }}</span>
                                 <span class="col-2">
-                                    {% if submission.score %}
+                                    {% if submission.score is not None %}
                                         {{ submission.score }}
                                     {% else %}
                                         --
