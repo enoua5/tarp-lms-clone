@@ -88,9 +88,35 @@ def drop(request, id):
 # course page view
 def coursePage(request, id):
     course = Course.objects.get(id=id)
-    assignment_list = Assignment.objects.filter(course=course)
-    return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course), 'assignment_list': assignment_list})
 
+    assignments = Assignment.objects.filter(course=course).order_by('due_date')
+    late_list = []
+    upcoming_list = []
+    submitted_list = []
+    for assignment in assignments:
+        assignment_meta = {}
+        try:
+            submission = Submission.objects.get(assignment=assignment, student=request.user)
+        except(Submission.DoesNotExist):
+            submission = None
+        submitted = submission != None
+        assignment_meta['submitted'] = submitted
+        if submitted:
+            assignment_meta['score'] = submission.score
+        else:
+            if assignment.overdue():
+                assignment_meta['late'] = True
+
+        assignment_obj = {'info': assignment, 'meta': assignment_meta}
+        if assignment_meta.get('late'):
+            late_list.append(assignment_obj)
+        elif assignment_meta.get('submitted'):
+            submitted_list.append(assignment_obj)
+        else:
+            upcoming_list.append(assignment_obj)
+    return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course), 'assignment_list': late_list+upcoming_list+submitted_list})
+    
+    
 def addAssignment(request, id):
     course = Course.objects.get(id=id)
 

@@ -165,7 +165,7 @@
                                 <span class="col-4">{{ submission.student.first_name }} {{ submission.student.last_name }}</span>
                                 <span class="col-4">{{ submission.submitted_at }}</span>
                                 <span class="col-2">
-                                    {% if submission.score %}
+                                    {% if submission.score is not None %}
                                         {{ submission.score }}
                                     {% else %}
                                         --
