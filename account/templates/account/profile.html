@@ -16,10 +16,14 @@
                 <h5 class="card-title">Name</h5>
                 <p class="card-text">{{ user.first_name }} {{ user.last_name }}</p>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">Bio</h5>
-                <p class="card-text">{{ user.profile.bio }}</p>
-            </div>
+
+            {% if user.profile.bio != None and user.profile.bio != "" %}
+                <div class="card-body">
+                    <h5 class="card-title">Bio</h5>
+                    <p class="card-text">{{ user.profile.bio }}</p>
+                </div>
+            {% endif %}
+
             <div class="card-body">
                 <h5 class="card-title">Email</h5>
                 <p class="card-text">{{ user.email }}</p>
@@ -28,18 +32,36 @@
                 <h5 class="card-title">Birthdate</h5>
                 <p class="card-text">{{ user.profile.birthdate }}</p>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">Address</h5>
-                <p class="card-text">{{ user.profile.address }}</p>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Links</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="{{ user.profile.link1 }}" target="_blank">{{ user.profile.link1 }}</a></li>
-                    <li class="list-group-item"><a href="{{ user.profile.link2 }}" target="_blank">{{ user.profile.link2 }}</a></li>
-                    <li class="list-group-item"><a href="{{ user.profile.link3 }}" target="_blank">{{ user.profile.link3 }}</a></li>
-                </ul>
-            </div>
+
+            {% if user.profile.address_line1 != None and user.profile.address_line1 != "" and user.profile.city != None and user.profile.city != "" and user.profile.state != None and user.profile.state != "" and user.profile.zip != None and user.profile.zip != "" %}
+                <div class="card-body">
+                    <h5 class="card-title">Address</h5>
+                    <p class="card-text">
+                        {{ user.profile.address_line1 }}
+                        {% if user.profile.address_line2 != "" %}
+                            <br>{{ user.profile.address_line2 }}
+                        {% endif %}
+                        <br>{{ user.profile.city }}, {{ user.profile.state }} {{ user.profile.zip }}
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if user.profile.link1 != None and user.profile.link1 != "" or user.profile.link2 != None and user.profile.link2 != "" or user.profile.link3 != None and user.profile.link3 != "" %}
+                <div class="card-body">
+                    <h5 class="card-title">Links</h5>
+                    <ul class="list-group list-group-flush">
+                        {% if user.profile.link1 != None and user.profile.link1 != "" %}
+                            <li class="list-group-item"><a href="{{ user.profile.link1 }}" target="_blank">{{ user.profile.link1 }}</a></li>
+                        {% endif %}
+                        {% if user.profile.link2 != None and user.profile.link2 != "" %}
+                            <li class="list-group-item"><a href="{{ user.profile.link2 }}" target="_blank">{{ user.profile.link2 }}</a></li>
+                        {% endif %}
+                        {% if user.profile.link3 != None and user.profile.link3 != "" %}
+                            <li class="list-group-item"><a href="{{ user.profile.link3 }}" target="_blank">{{ user.profile.link3 }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         </div>
         <a class="btn btn-primary my-4" href="{% url 'account:editprofile' %}" role="button">Edit profile</a>
     </div>
