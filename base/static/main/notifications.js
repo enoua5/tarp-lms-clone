@@ -1,3 +1,4 @@
+(()=>{
 var UPDATING_NOTIFICATIONS = true;
 const NOTIFICATION_REQ_PERIOD = 10000; // 10 seconds
 const NOTIF_MAX_CONSEQ_FAILS = 3;
@@ -149,3 +150,4 @@ function clearNotif()
 
     notification_count=0;
 }
+})();
