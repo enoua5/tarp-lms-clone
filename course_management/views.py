@@ -119,16 +119,17 @@ def coursePage(request, id):
     grade_list = []
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
-        # We need to grab only the submissions that are assignments in the assignment_list
         uid = request.user.id
         percent = calcPercentGrade(course.id, uid)
 
+        # if percent is -1 it is not applicable, don't get letter grade
         if percent == -1:
-            Grade = "N/A"
+            grade = "N/A"
             percent = 100
         else:
-            Grade = calcLetterGrade(course.a_threshold, course.increment, percent)
+            grade = calcLetterGrade(course.a_threshold, course.increment, percent)
 
+            # calculate all student grades
             for student in course.students.all():
                 student_percent = calcPercentGrade(course.id, student.id)
                 if student_percent != -1:
@@ -136,9 +137,9 @@ def coursePage(request, id):
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                      'letterGrade': Grade,
+                                                                      'letterGrade': grade,
                                                                       'percentGrade': round(percent, 2),
-                                                                      'grade_list': grade_list })
+                                                                      'grade_list': grade_list})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                   'assignment_list': late_list + upcoming_list + submitted_list})
@@ -180,7 +181,7 @@ def calcLetterGrade(athresh, increment, p):
 
 '''!
     @brief Calculates the percentage grade of a student for a particular course
-    @details Calculates percentage grade based on assignments that have already been graded
+    @details Only percentage grade based on assignments that have already been graded
     @return -1 if there are no possible points in the course, otherwise returns percentage grade as a float
 '''
 def calcPercentGrade(course_id, student_id):
