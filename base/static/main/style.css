@@ -1,9 +1,18 @@
-.DropDownMenu {
-    max-width: 8rem;
-    min-width: 8rem;
-    margin-top: 20rem;
+.dropdown-menu
+{
+    min-width: 40em !important;
 }
 
 .dropdown-item {
     white-space: pre-wrap;
+}
+
+.no-notif
+{
+    filter: grayscale(1);
+}
+
+.yes-notif
+{
+    /**/
 }
