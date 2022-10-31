@@ -1,5 +1,13 @@
 {% extends 'course_management/course_base.html' %}
 {% load auth_utils %}
+
+{% block head %}
+    {% if grade_list %}
+    <!-- Plotly Import -->
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     {% if request.user|has_group:"Student" %}
         <div class="accordion" id="studentCoursePanel">
@@ -13,7 +21,7 @@
               <div class="accordion-body">
 
                   {% if assignment_list %}
-                    <ul class="list-group">
+                    <ul class="list-group list-group-flush">
                         {% for assignment in assignment_list %}
                             <li class="list-group-item">
                                 <div class="row">
@@ -63,19 +71,23 @@
               </button>
             </h2>
             <div id="collapseStudentGraph" class="accordion-collapse collapse" aria-labelledby="studentGraphHeader">
-              <div class="accordion-body">
-                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+              <div class="accordion-body m-1">
+                  {# this will be the graph #}
+                  <h5 class="text-center">Grade: {{ percentGrade }}% ({{ letterGrade }})</h5>
+                  {% if grade_list|length > 2 %}
+                      <div id="boxplot"></div>
+                  {% else %}
+                      <div class="alert alert-primary mt-3" role="alert">
+                          Not enough information to display course performance graph.
+                      </div>
+                  {% endif %}
+
               </div>
             </div>
           </div>
         </div>
     {% else %}
-
-
-
-
-
-    <h1 class="display-6 text-center">Assignments</h1>
+        <h1 class="display-6 text-center">Assignments</h1>
         {% if assignment_list %}
             <ul class="list-group">
                 {% for assignment in assignment_list %}
@@ -103,11 +115,34 @@
             You don't have any assignments.
         </div>
         {% endif %}
-        <div>{{ letterGrade }}</div>
-        <div>{{ percentGrade }}</div>
         {# only instructor can create assignments #}
-        {% if request.user|has_group:"Instructor" %}
-            <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
-        {% endif %}
+        <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
     {% endif %}
+
+    <!-- Plotly Script -->
+    <script type="text/javascript">
+        var classGrades = {
+            x: {{ grade_list|safe }},
+            type: 'box',
+            name: 'Class Grades'
+        };
+
+        var myGrade = {
+            x: [{{ percentGrade }}],
+            y: ['Class Grades'],
+            name: 'My Grade',
+            marker: {
+                size: 20
+            }
+        };
+
+        var data = [classGrades, myGrade];
+        var layout = {
+            title: '',
+            autosize: true
+            };
+
+        var graphDiv = document.getElementById('boxplot')
+        Plotly.newPlot(graphDiv, data, layout);
+    </script>
 {% endblock %}
