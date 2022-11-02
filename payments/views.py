@@ -47,10 +47,13 @@ def success(request):
     # Just trusting that it is
     currTuition = Tuition.objects.get(user=request.user)
 
+    # Variables needed for receipt
+    paid = currTuition.balance
+
     currTuition.balance = 0
     currTuition.save()
 
     course_list = request.user.courses.all()
     balance = Tuition.objects.get(user=request.user).balance
 
-    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True}) 
+    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True, 'paid':paid}) 
