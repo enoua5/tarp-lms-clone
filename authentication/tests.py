@@ -91,11 +91,11 @@ class SignupFormTest(LiveServerTestCase):
         self.selenium.implicitly_wait(100)
 
         # Click signup
-        #signup_btn.click()
+        signup_btn.click()
 
         # Check that we were redirected to the dashboard
-        #assert 'dashboard' in selenium.current_url
+        assert 'dashboard' in selenium.current_url
 
         # Check that the user was created
-        #new_user = User.objects.filter(username='testuser').first()
-        a#ssert new_user.username == 'testuser'
+        new_user = User.objects.filter(username='testuser').first()
+        assert new_user.username == 'testuser'
