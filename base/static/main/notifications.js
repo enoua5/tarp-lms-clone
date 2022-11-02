@@ -73,16 +73,17 @@ function get_notifications()
                 dropdown_item.appendChild(div)
                 
                 let class_name = notice.course_department + " " + notice.course_num;
-                let cn_box = document.createElement('div');
-                cn_box.innerText = class_name;
-                cn_box.classList.add("col-sm-2");
-                div.append(cn_box);
+                //let cn_box = document.createElement('div');
+                //cn_box.innerText = class_name;
+                //cn_box.classList.add("col-sm-2");
+                //div.append(cn_box);
 
-                let an_box = document.createElement('div');
-                an_box.innerText = `Assignment "${notice.assignment_name}" ${notice.event_note}`;
-                an_box.classList.add("col-sm-9");
-                div.append(an_box);
-                an_box.onclick = (e)=>{
+                let text_box = document.createElement('div');
+                let notification_text = `Assignment "${notice.assignment_name}" ${notice.event_note}`;
+                text_box.innerText = `${class_name}: ${notification_text}`;
+                text_box.classList.add("col-sm-11");
+                div.append(text_box);
+                text_box.onclick = (e)=>{
                     navigateToAssignmentID(notice.course_id, notice.assignment_id);
                 }
 
