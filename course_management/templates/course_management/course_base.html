@@ -5,7 +5,7 @@
         {# display course information in leftmost 1/4th of page #}
         <div class="col-md-3" style="border-right: 1px solid lightgrey;">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <li class="list-group-item" id="courseTitle">
                     <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
                         <h1 class="display-6 text-center">{{ course.department }} {{ course.course_num }}</h1>
                         <p class="lead text-center">{{ course.course_name }}</p>

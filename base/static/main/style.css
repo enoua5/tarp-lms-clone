@@ -7,3 +7,161 @@
 .dropdown-item {
     white-space: pre-wrap;
 }
+
+/* Global Font Options */
+h1,h2,h3
+{
+    font-weight: 350;
+}
+
+h4, h5
+{
+    font-weight: 375;
+}
+
+a.list-group-item:hover
+{
+    color: #2359AF;
+}
+
+.card.btn:hover
+{
+    color: #2359AF;
+    --bs-card-border-width: 1px;
+    --bs-card-border-color: var(--bs-border-color-translucent);
+}
+
+/********* Course Cards *********/
+
+.course-card
+{
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.course-card:hover
+{
+    background-color: rgba(53, 139, 230, 0.10) !important;
+}
+
+.course-card h4
+{
+    color: #2359AF;
+}
+
+/********* Dashboard To-Do List ***********/
+.to-do-item:hover
+{
+    background-color: rgba(53, 139, 230, 0.10) !important;
+    border-radius: 5px;
+}
+
+.to-do-item h5
+{
+    color: #2359AF !important;
+}
+
+/*********** Course Page Styling **********/
+#courseTitle a
+{
+    color: #2359AF;
+}
+
+/********* Global Button Styling **********/
+
+.btn-success
+{
+    background-color: #358CE6;
+}
+
+.btn-outline-primary
+{
+    border-color: #2359AF;
+    color: #2359AF;
+}
+
+/********* Global Accordion Styling *********/
+
+.accordion-button:focus
+{
+    box-shadow: none;
+}
+
+.accordion-button:not(.collapsed)
+{
+    color: #2359AF;
+    background-color: rgba(53, 139, 230, 0.10);
+}
+
+.accordion-button.collapsed
+{
+    background-color: rgba(53, 139, 230, 0.05);
+}
+
+/********* Assignment Tags ************/
+
+.bg-danger
+{
+    background-color: #E84855 !important;
+}
+
+.bg-info
+{
+    background-color: #2359AF !important;
+}
+
+/********* Calendar ************/
+
+/* Course Events */
+.fc-event-title-container
+{
+    background-color: #2359AF;
+}
+
+/* Assignments */
+.fc-daygrid-dot-event
+{
+    color: #358CE6;
+}
+
+/* Today Box Color */
+.fc-day-today
+{
+    background-color: rgba(53, 139, 230, 0.10) !important;
+}
+
+/* Today Button */
+.fc-today-button
+{
+    background-color: #2359AF !important;
+}
+
+.fc-today-button:focus
+{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Month Controls */
+.fc-prev-button, .fc-next-button
+{
+    background-color: #2359af !important;
+}
+
+.fc-prev-button:focus, .fc-next-button:focus
+{
+    box-shadow: 0px 0px 5px rgba(35, 89, 175, 1.0) !important;
+}
+
+/* Day Labels */
+.fc-col-header-cell-cushion
+{
+    color: #2359AF !important;
+    text-decoration: none;
+}
+
+/* Day Label Boxes */
+.fc-col-header-cell
+{
+    background-color: rgba(53, 139, 230, 0.25) !important;
+}
