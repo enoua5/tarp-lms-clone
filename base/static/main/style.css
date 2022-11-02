@@ -8,16 +8,46 @@
     white-space: pre-wrap;
 }
 
-/* Global Font Options */
+/*********** Navbar Styling  ************/
+.navbar
+{
+    background-color: #2057B0 !important;
+}
+
+.nav-link
+{
+    color: #FFFFFF;
+}
+
+.nav-link:not(.active), .navbar-brand
+{
+    font-weight: 300;
+}
+
+.nav-link.active
+{
+    font-weight: 500;
+}
+
+/*********** Global Font Options ***********/
 h1,h2,h3
 {
     font-weight: 350;
+    color: #1C1D1F;
 }
 
 h4, h5
 {
+    color: #1C1D1F;
     font-weight: 375;
 }
+
+p, .small
+{
+    color: #1C1D1F;
+}
+
+.text-muted
 
 a.list-group-item:hover
 {
@@ -29,13 +59,12 @@ a.list-group-item:hover
 .course-card
 {
     box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
-    background-color: rgba(53, 140, 230, 0.15);
     border: none;
 }
 
 .course-card:hover
 {
-    background-color: rgba(53, 139, 230, 0.2) !important;
+    background-color: rgba(53, 139, 230, 0.1) !important;
 }
 
 .course-card h4
@@ -86,15 +115,10 @@ a.list-group-item:hover
     box-shadow: none;
 }
 
-.accordion-button:not(.collapsed)
+.accordion-button:not(.collapsed), .accordion-button.show
 {
     color: #2359AF;
     background-color: rgba(53, 139, 230, 0.10);
-}
-
-.accordion-button.collapsed
-{
-    background-color: rgba(53, 139, 230, 0.05);
 }
 
 /********* Assignment Tags ************/
