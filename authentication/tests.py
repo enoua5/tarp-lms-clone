@@ -2,6 +2,7 @@ import os
 # Django Imports
 from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 # Selenium Imports
 from selenium import webdriver
@@ -21,11 +22,13 @@ class LoginFormTest(LiveServerTestCase):
             for our UI tests.
     '''
     service = Service(executable_path=ChromeDriverManager().install())
+    def setUp(self):
+        User.objects.create_user('testuser', password='asdfasdfasdf')
 
     def test_loginform(self):
         selenium = webdriver.Chrome(service=self.service)
         # Give Selenium the URL to go to.
-        selenium.get('http://localhost:8000/login/?next=/dashboard/')
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
 
         # Get the elements that we'll be interacting with.
         username_field = selenium.find_element(By.ID, 'username')
@@ -33,7 +36,7 @@ class LoginFormTest(LiveServerTestCase):
         login_btn = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
 
         # Populate the form with user input.
-        username_field.send_keys('professor')
+        username_field.send_keys('testuser')
         password_field.send_keys('asdfasdfasdf')
 
         # Click login
@@ -52,12 +55,13 @@ class SignupFormTest(LiveServerTestCase):
         @brief The below will install the correct browser driver (default to Chrome)
             for our UI tests.
     '''
-    service = Service(executable_path=ChromeDriverManager().install())
-
-
     def setUp(self):
-        self.selenium = webdriver.Chrome(service=self.service)
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
         self.selenium.implicitly_wait(10)
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
+
     #
     # def tearDown(self):
     #     self.selenium.quit()
@@ -65,7 +69,7 @@ class SignupFormTest(LiveServerTestCase):
     def test_signupform(self):
         selenium = self.selenium
         # Give Selenium the URL to go to.
-        selenium.get('%s%s' % (self.live_server_url, '/login/signup/'))
+        selenium.get(os.path.join(self.live_server_url, 'login/signup/'))
 
         # Get the elements that we'll be interacting with.
         username_field = selenium.find_element(By.ID, 'username')
@@ -88,7 +92,7 @@ class SignupFormTest(LiveServerTestCase):
         password1_field.send_keys('asdfasdfasdf')
         password2_field.send_keys('asdfasdfasdf')
 
-        self.selenium.implicitly_wait(100)
+        selenium.implicitly_wait(100)
 
         # Click signup
         signup_btn.click()
