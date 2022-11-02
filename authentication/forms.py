@@ -11,7 +11,7 @@ ACCOUNT_TYPES = [
 
 
 class RegistrationForm(UserCreationForm):
-    birthdate = forms.DateField(required=True, widget=forms.NumberInput(attrs={'type': 'date'}))
+    birthdate = forms.DateField(required=True, widget=forms.NumberInput(attrs={'type': 'date', 'id': 'birthdate'}))
     account_type = forms.CharField(label='Choose the account type', widget=forms.Select(choices=ACCOUNT_TYPES))
 
     # Loops through fields and adds a bootsrap form-control class
