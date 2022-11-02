@@ -24,24 +24,18 @@ a.list-group-item:hover
     color: #2359AF;
 }
 
-.card.btn:hover
-{
-    color: #2359AF;
-    --bs-card-border-width: 1px;
-    --bs-card-border-color: var(--bs-border-color-translucent);
-}
-
 /********* Course Cards *********/
 
 .course-card
 {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
+    background-color: rgba(53, 140, 230, 0.15);
     border: none;
 }
 
 .course-card:hover
 {
-    background-color: rgba(53, 139, 230, 0.10) !important;
+    background-color: rgba(53, 139, 230, 0.2) !important;
 }
 
 .course-card h4
@@ -68,6 +62,11 @@ a.list-group-item:hover
 }
 
 /********* Global Button Styling **********/
+
+.btn-primary
+{
+    background-color: #358CE6;
+}
 
 .btn-success
 {
@@ -127,7 +126,7 @@ a.list-group-item:hover
 /* Today Box Color */
 .fc-day-today
 {
-    background-color: rgba(53, 139, 230, 0.10) !important;
+    background-color: rgba(53, 139, 230, 0.05) !important;
 }
 
 /* Today Button */
@@ -164,4 +163,17 @@ a.list-group-item:hover
 .fc-col-header-cell
 {
     background-color: rgba(53, 139, 230, 0.25) !important;
+}
+
+/* Day Number */
+.fc-daygrid-day-number
+{
+    color: #2359AF !important;
+    text-decoration: none;
+}
+
+/************ Profile *************/
+.profile-header
+{
+    background-color: rgba(53, 139, 230, 0.1);
 }

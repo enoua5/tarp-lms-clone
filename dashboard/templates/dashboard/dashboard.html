@@ -7,7 +7,7 @@
 
     {% comment %} Course Card Display {% endcomment %}
     <div id="course-card-container" class="container col-md-9" style="border-right: 1px solid lightgrey;">
-        <h3 class="text-center">Courses</h3>
+        <h3 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">Courses</h3>
         {% if course_list %}
             <div class="row">
                 {% for course in course_list %}
@@ -36,7 +36,7 @@
 
     {% comment %} Assignment To-Do List {% endcomment %}
     <div id="to-do-container" class="container col">
-        <h3 class="text-center">To-Do List</h3>
+        <h3 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">To-Do List</h3>
         {% if assignments %}
         <ul id="to-do-assignment-group" class="list-group list-group-flush">
             {% for assignment in assignments %}
