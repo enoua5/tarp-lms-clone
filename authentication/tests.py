@@ -28,6 +28,8 @@ class LoginFormTest(LiveServerTestCase):
         # create groups to avoid crash
         Group.objects.create(name='Student')
         Group.objects.create(name='Instructor')
+        self.selenium.maximize_window()
+
 
     def test_loginform(self):
         selenium = self.selenium
@@ -67,6 +69,7 @@ class SignupFormSuccessTest(LiveServerTestCase):
         # create groups to avoid crash
         Group.objects.create(name='Student')
         Group.objects.create(name='Instructor')
+        self.selenium.maximize_window()
 
     def test_signupsuccessform(self):
         selenium = self.selenium
