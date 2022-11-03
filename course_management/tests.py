@@ -281,6 +281,7 @@ class SubmitAssignmentTest(LiveServerTestCase):
         # Finding the necessary objects
         course = Course.objects.filter(course_name='Test course')[0]
         assignment = Assignment.objects.filter(title='Test Assignment')[0]
+        user = User.objects.filter(username='teststudent')[0]
 
         # Get the elements that we'll be interacting with.
         username_field = selenium.find_element(By.ID, 'username')
@@ -307,7 +308,15 @@ class SubmitAssignmentTest(LiveServerTestCase):
         button = selenium.find_element(By.XPATH, "//button[contains(text(),'Submit')]")
 
         # Put the data into a form
-        input_field.send_keys('Test submission')
+        input_field.send_keys('Seleium test submission')
         button.click()
         
         assert 'courses/' + str(course.id) in selenium.current_url
+
+        # Making sure the submission is there
+        submission = TextSubmission.objects.filter(text='Seleium test submission')
+        assert submission.count() > 0
+
+        # Making sure the submission is connected with a right user
+        submission = Submission.objects.filter(student=user.id)
+        assert submission.count() > 0
