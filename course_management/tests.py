@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from account.models import Profile
-from course_management.models import Course, Assignment, TextSubmission
+from course_management.models import Course, Assignment, Submission, TextSubmission, Assignment
 import unittest
 import datetime
 
@@ -36,7 +36,10 @@ class TestMakeCourse(TestCase):
                                                   'meeting_start_time': '12:00',
                                                   'meeting_end_time': '12:30',
                                                   'meeting_location': 'Building 100',
-                                                  'credit_hours': 4})
+                                                  'credit_hours': 4,
+                                                  # Had to add those since the model has changed
+                                                  'a_threshold':93,
+                                                  'increment':4})
 
         # Status code should be 302 for redirect
         self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
@@ -61,7 +64,7 @@ class StudentCanRegisterForCourseTest(TestCase):
         professor = User.objects.create_user('professor_test', 'test@pro.fessor', 'asdfasdfasdf')
         Course.objects.create(department='THING', course_num=2210, course_name='Testing things',
                               instructor=professor, meeting_days='M,T,W', meeting_start_time='12:00',
-                              meeting_end_time='1:00', meeting_location='where ever, lol', credit_hours=3)
+                              meeting_end_time='1:00', meeting_location='where ever, lol', credit_hours=3, a_threshold=93, increment=4)
 
         Profile.user = self.user
 
@@ -99,7 +102,7 @@ class StudentSubmitTextAssignmentTest(TestCase):
         professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
         course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
                                        instructor=professor, meeting_days='T,Th', meeting_start_time='12:00',
-                                       meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4)
+                                       meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4, a_threshold=93, increment=4)
         assignment = Assignment.objects.create(course=course, title='Test Assignment',
                                                description='This is the test assignment',
                                                due_date='2022-12-31 23:59:00', points=100, type='t')
@@ -121,11 +124,10 @@ class StudentSubmitTextAssignmentTest(TestCase):
         assignment = Assignment.objects.filter(title='Test Assignment').first()
 
         # create url for submission post
-        url = '/courses/' + str(course.id) + '/' + str(assignment.id)
+        url = '/courses/' + str(course.id) + '/' + str(assignment.id) + '/submit'
 
         # Create the submission
         response = self.c.post(url, {'text': 'This is the test text submission'})
-
         # Status code should be 302 for redirect
         self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
 
@@ -151,7 +153,7 @@ class CreateAssignmentTest(TestCase):
         user = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
         course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
                                         instructor=user, meeting_days='T,Th', meeting_start_time='12:00',
-                                        meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4)
+                                        meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4, a_threshold=93, increment=4)
         Profile.user = user
 
         # Login the user
@@ -191,6 +193,57 @@ class CreateAssignmentTest(TestCase):
 
         # Check if the course was created
         self.assertEqual(assignments_list[0].title, 'UnitTestAssign', msg='Error: Failed to create an assignment.')
+
+    # Clean up after the test
+    def tearDown(selfself):
+        # Place code here you want to run after the test
+        pass
+
+
+class GradeAssignmentTest(TestCase):
+    # Set up for the run
+    user = None
+    c = Client()
+    def setUp(self):
+        # Create test objects
+        student = User.objects.create_user('teststudent', 'student@gmail.com', 'asdfasdfasdf')
+        professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
+        course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
+                                       instructor=professor, meeting_days='T,Th', meeting_start_time='12:00',
+                                       meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4, a_threshold=93, increment=4)
+        assignment = Assignment.objects.create(course=course, title='UnitTestAssign',
+                                               description='This is the test assignment',
+                                               due_date='2022-12-31 23:59:00', points=100, type='t')
+        submission = TextSubmission.objects.create(text='Unit test', assignment_id=assignment.id, student_id=student.id)
+        # Login the user
+        success = self.c.login(username='testprofessor', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+
+    # Test add class
+    def test_grade_assignment(self):
+        # get objects created in setup
+        course = Course.objects.filter(course_num=4000).first()
+        assignment = Assignment.objects.filter(title='UnitTestAssign')[0]
+        submission = TextSubmission.objects.filter(text='Unit test')[0]
+
+        assignments_list = Assignment.objects.filter(title='UnitTestAssign')
+        # Check if the assignment was created
+        self.assertEqual(assignments_list[0].title, 'UnitTestAssign', msg='Error: Failed to create an assignment.')
+
+        # create url for submission post
+        url = '/courses/grade/' + str(submission.id)
+
+        # # Create the submission
+        response = self.c.post(url, {'score':30})
+
+        # # Status code should be 302 for redirect
+        self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')
+
+        # Testing if the grade applied
+        full_submission = Submission.objects.get(id=submission.id)
+        self.assertTrue(full_submission.score == 30, msg='Error: Submission failed to be graded.')
 
     # Clean up after the test
     def tearDown(selfself):

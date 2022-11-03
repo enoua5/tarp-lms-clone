@@ -138,6 +138,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # url that will serve the media files
 MEDIA_URL = '/media/'
 
@@ -149,3 +151,9 @@ LOGIN_REDIRECT_URL = 'dashboard'
 
 # tells login_required decorator where to go
 LOGIN_URL = 'authentication:login'
+
+# Necessary for stripe
+STRIPE_PUBLIC_KEY = 'pk_test_51Lk9SKGRnCdqrN57MZSq4NIjoJSEs6DYNUASJ8MGUl1RyZ7oqLyT8UoZWMcBVzKouM8t7W4vzPh0bd8NChOZdiaB00uZfXPDSN'
+STRIPE_SECRET_KEY = 'sk_test_51Lk9SKGRnCdqrN57tAzvnOOuVp7AvRqER2lUktwZ4CL9u7XkQ0CSgQZ75Jbzcuh5Cb3lSs5GJgI5cAtVHBex67Wa00ryZsVpLL'
+
+BASE_URL = 'http://localhost:8000/'

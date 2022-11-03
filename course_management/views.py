@@ -116,49 +116,36 @@ def coursePage(request, id):
         else:
             upcoming_list.append(assignment_obj)
 
-
-
+    grade_list = []
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
-        # We need to grab only the submissions that are assignments in the assignment_list
         uid = request.user.id
-        sub_list = Submission.objects.none()
+        percent = calcPercentGrade(course.id, uid)
 
-        scored_points = 0
-        possible_points = 0
-
-        # Add together the points for submissions that have been graded
-        # Note: This may have to be changed later to account for multiple graded submissions.
-        a = 0
-        for assignment in assignment_list:
-            temp_list = Submission.objects.filter(assignment_id=assignment_list[a].id, student_id=uid)
-            sub_list = sub_list | temp_list
-            if (len(temp_list) != 0) and (temp_list[0].score is not None):
-                scored_points = scored_points + temp_list[0].score
-                possible_points = possible_points + assignment_list[a].points
-            a = a + 1
-
-        alist = Assignment.objects.none
-
-        if possible_points == 0:
-            Grade = "N/A"
+        # if percent is -1 it is not applicable, don't get letter grade
+        if percent == -1:
+            grade = "N/A"
             percent = 100
         else:
-            percent = (scored_points / possible_points) * 100
-            Grade = calcGrade(course.a_threshold, course.increment, percent)
+            grade = calcLetterGrade(course.a_threshold, course.increment, percent)
+
+            # calculate all student grades
+            for student in course.students.all():
+                student_percent = calcPercentGrade(course.id, student.id)
+                if student_percent != -1:
+                    grade_list.append(student_percent)
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                      'letterGrade': ('Grade: ' + Grade),
-                                                                      'percentGrade': ('Percent Grade: ' + str(round(percent, 2)) + '%')})
+                                                                      'letterGrade': grade,
+                                                                      'percentGrade': round(percent, 2),
+                                                                      'grade_list': grade_list})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                  'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                  'letterGrade': '',
-                                                                  'percentGrade': ''})
+                                                                  'assignment_list': late_list + upcoming_list + submitted_list})
 
 # Calculate the letter grade based on the scale and the percentage
-def calcGrade(athresh, increment, p):
+def calcLetterGrade(athresh, increment, p):
     # Cut out the A threshold
     Ascore = athresh
     # Cut out the increment value
@@ -191,6 +178,36 @@ def calcGrade(athresh, increment, p):
         letterGrade = 'E'
 
     return letterGrade
+
+'''!
+    @brief Calculates the percentage grade of a student for a particular course
+    @details Only percentage grade based on assignments that have already been graded
+    @return -1 if there are no possible points in the course, otherwise returns percentage grade as a float
+'''
+def calcPercentGrade(course_id, student_id):
+    assignment_list = Assignment.objects.filter(course=Course.objects.get(id=course_id))
+    # We need to grab only the submissions that are assignments in the assignment_list
+    sub_list = Submission.objects.none()
+
+    scored_points = 0
+    possible_points = 0
+
+    # Add together the points for submissions that have been graded
+    # Note: This may have to be changed later to account for multiple graded submissions.
+    a = 0
+    for assignment in assignment_list:
+        temp_list = Submission.objects.filter(assignment_id=assignment_list[a].id, student_id=student_id)
+        sub_list = sub_list | temp_list
+        if (len(temp_list) != 0) and (temp_list[0].score is not None):
+            scored_points = scored_points + temp_list[0].score
+            possible_points = possible_points + assignment_list[a].points
+        a = a + 1
+
+    if possible_points == 0:
+        return -1
+    else:
+        return (scored_points / possible_points) * 100
+
 
 def addAssignment(request, id):
     course = Course.objects.get(id=id)
