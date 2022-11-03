@@ -112,11 +112,13 @@ def get_mine(req, query_dict):
         
     items = item_model.objects.filter(search_params).distinct().annotate(**item_query_desc['annotations']).values()
 
-    data = {
-        'items': serializers.serialize('json', items)
-    }
+    print(items)
 
-    return JsonResponse(data, encoder=DatabaseEncoder)
+    # data = {
+    #     'items': serializers.serialize('json', items)
+    # }
+
+    return JsonResponse({'items': list(items)}, encoder=DatabaseEncoder)
 
 def delete_by_id(req, query_dict):
     if not req.user.is_authenticated:
