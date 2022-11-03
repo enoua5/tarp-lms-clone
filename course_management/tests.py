@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 from django.test import Client
 from account.models import Profile
@@ -199,6 +199,79 @@ class CreateAssignmentTest(TestCase):
         # Place code here you want to run after the test
         pass
 
+class PollCourseListTest(TestCase):
+    user = None
+    c = Client()
+    def setUp(self):
+        # Create a test user
+        user = User.objects.create_user('testprofessor1', 'prof1@gmail.com', 'asdfasdfasdf')
+        Profile.user = user
+
+        # Login the user
+        success = self.c.login(username='testprofessor1', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+
+        # Create a course
+        Course(
+            department= 'CS',
+            course_num= 4000,
+            course_name= 'Test course',
+            meeting_days= 'T,Th',
+            meeting_start_time= '12:00',
+            meeting_end_time= '12:30',
+            meeting_location= 'Building 100',
+            credit_hours= 4,
+            instructor = user
+        ).save()
+        # Create another test user
+        user = User.objects.create_user('testprofessor2', 'prof2@gmail.com', 'asdfasdfasdf')
+        Profile.user = user
+
+        # Login the user
+        success = self.c.login(username='testprofessor2', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+        # Create another course
+        Course(
+            department= 'CS',
+            course_num= 4001,
+            course_name= 'Another test course',
+            meeting_days= 'T,Th',
+            meeting_start_time= '12:00',
+            meeting_end_time= '12:30',
+            meeting_location= 'Building 101',
+            credit_hours= 4,
+            instructor = user
+        ).save()
+
+        # Create yet another test user
+        user = User.objects.create_user('teststudent1', 'stud1@gmail.com', 'asdfasdfasdf')
+        Profile.user = user
+        user.user_permissions.add(Permission.objects.get(name="Can view course"))
+
+        # Login the user
+        success = self.c.login(username='teststudent1', password='asdfasdfasdf')
+
+        # Check if login was successful
+        self.assertTrue(success, msg='Error: Login failed.')
+
+        
+    def test_poll_courses(self):
+        response = self.c.get('/data/?command=get_all&item_type=course')
+        courses = response.json()['items']
+
+        self.assertEqual(len(courses), 2)
+        self.assertTrue(
+            courses[0]['course_num'] == 4000 and courses[1]['course_num'] == 4001
+            or
+            courses[0]['course_num'] == 4001 and courses[1]['course_num'] == 4000
+        )
+
+    def tearDown(self):
+        pass
 
 class GradeAssignmentTest(TestCase):
     # Set up for the run
@@ -217,7 +290,7 @@ class GradeAssignmentTest(TestCase):
         submission = TextSubmission.objects.create(text='Unit test', assignment_id=assignment.id, student_id=student.id)
         # Login the user
         success = self.c.login(username='testprofessor', password='asdfasdfasdf')
-
+        
         # Check if login was successful
         self.assertTrue(success, msg='Error: Login failed.')
 
