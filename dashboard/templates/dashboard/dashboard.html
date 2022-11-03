@@ -2,7 +2,7 @@
 {% block body %}
 
 {% comment %} Dashboard Container {% endcomment %}
-<div id="dashboard-container" class="container-fluid mt-3">
+<div id="dashboard-container page-bg" class="container-fluid mt-3">
 <div class="row">
 
     {% comment %} Course Card Display {% endcomment %}
@@ -14,7 +14,7 @@
                         <div class="p-3 col-auto">
                             {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
                             <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
-                                <div class="card btn text-center course-card" style="width: 17rem;">
+                                <div class="card btn text-center course-card" style="width: 15rem;">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ course.department }} {{course.course_num }}</h5>
                                         <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>

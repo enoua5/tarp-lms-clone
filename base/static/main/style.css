@@ -1,16 +1,16 @@
 /********** Root Styling ************/
-/* :root {
-    --bs-blue: #0d6efd;
+:root {
+    --bs-blue: #2359AF;
     --bs-indigo: #6610f2;
     --bs-purple: #6f42c1;
     --bs-pink: #d63384;
-    --bs-red: #dc3545;
+    --bs-red: #E84855;
     --bs-orange: #fd7e14;
-    --bs-yellow: #ffc107;
+    --bs-yellow: #F6AE2D;
     --bs-green: #198754;
     --bs-teal: #20c997;
     --bs-cyan: #0dcaf0;
-    --bs-black: #000;
+    --bs-black: #212529;
     --bs-white: #fff;
     --bs-gray: #6c757d;
     --bs-gray-dark: #343a40;
@@ -23,12 +23,12 @@
     --bs-gray-700: #495057;
     --bs-gray-800: #343a40;
     --bs-gray-900: #212529;
-    --bs-primary: #0d6efd;
+    --bs-primary: #358CE6;
     --bs-secondary: #6c757d;
-    --bs-success: #198754;
+    --bs-success: #358CE6;
     --bs-info: #0dcaf0;
-    --bs-warning: #ffc107;
-    --bs-danger: #dc3545;
+    --bs-warning: #F6AE2D;
+    --bs-danger: #E84855;
     --bs-light: #f8f9fa;
     --bs-dark: #212529;
     --bs-primary-rgb: 13, 110, 253;
@@ -66,7 +66,7 @@
     --bs-link-hover-color: #0a58ca;
     --bs-code-color: #d63384;
     --bs-highlight-bg: #fff3cd;
-} */
+}
   
 .DropDownMenu {
     max-width: 8rem;
@@ -80,11 +80,6 @@
 /*********** Body Styling ***************/
 
 /*********** Navbar Styling  ************/
-.navbar
-{
-    /* background-color: #1C1D1F !important; */
-}
-
 .nav-link
 {
     color: #FFFFFF;
@@ -98,6 +93,7 @@
 .nav-link.active
 {
     font-weight: 500;
+    color: #358CE6 !important;
 }
 
 /*********** Global Font Options ***********/
@@ -136,13 +132,14 @@ a.list-group-item:hover
 .course-card
 {
     box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
-    background-color: rgba(53, 139, 230, 0.05) !important;
+    background-color: rgba(57, 133, 255, 0.25) !important;
+    background-image: var(--bs-gradient) !important;
     border: none;
 }
 
-.course-card:hover
+.course-card .card-text
 {
-    background-color: rgba(53, 139, 230, 0.15) !important;
+    color: #2c3034; 
 }
 
 .course-card h4
@@ -150,10 +147,18 @@ a.list-group-item:hover
     color: #2359AF;
 }
 
+.course-card:hover
+{
+    background-color: rgba(57, 133, 255, 0.50) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+
 /********* Dashboard To-Do List ***********/
 .to-do-item:hover
 {
-    background-color: rgba(53, 139, 230, 0.10) !important;
+    background-color: rgba(53, 139, 230, 0.05) !important;
+    color: 2359AF !important;
     border-radius: 5px;
 }
 
@@ -200,14 +205,14 @@ a.list-group-item:hover
 
 .accordion-button:not(.collapsed), .accordion-button.show
 {
-    color: #FFFFFF;
-    background-color: #2359AF;
+    color: var(--bs-black);
+    background-image: var(--bs-gradient) !important;
 }
 
 .accordion-button.collapsed
 {
-    background-color: #2359AF;
-    color: #FFFFFF;
+    background-image: var(--bs-gradient) !important;
+    color: var(--bs-black);
 }
 
 .accordion-body
@@ -233,6 +238,7 @@ a.list-group-item:hover
 .fc-event-title-container
 {
     background-color: #2359AF;
+    background-image: var(--bs-gradient) !important;
 }
 
 /* Assignments */
@@ -251,6 +257,8 @@ a.list-group-item:hover
 .fc-today-button
 {
     background-color: #2359AF !important;
+    background-image: var(--bs-gradient) !important;
+    border: none !important;
 }
 
 .fc-today-button:focus
@@ -263,6 +271,8 @@ a.list-group-item:hover
 .fc-prev-button, .fc-next-button
 {
     background-color: #2359af !important;
+    background-image: var(--bs-gradient) !important;
+    border: none !important;
 }
 
 .fc-prev-button:focus, .fc-next-button:focus

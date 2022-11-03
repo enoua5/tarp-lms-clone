@@ -142,7 +142,7 @@
             {% if my_course_list %}
                 <div class="accordion pt-3" id="courseAccordion">
                     {% for course in my_course_list %}
-                    <div class="accordion-item mb-1 rounded-2">
+                    <div class="accordion-item mb-1">
                         <h2 class="accordion-header" id="heading{{course.id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{course.id}}" aria-expanded="true" aria-controls="collapse{{course.id}}">
                             {{ course.department }} {{ course.course_num }}  {{ course.course_name }}
@@ -186,44 +186,47 @@
             <h2 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">Courses Offered</h2>
             {% if all_course_list %}
     
-            <div class="accordion pt-3" id="search-accordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-search">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-search" aria-expanded="true" aria-controls="collapse-search">Search Courses</button>
-                    </h2>
-                    <div id="collapse-search" class="accordion-collapse collapse show" aria-labelledby="heading-search">
-                        <div class="accordion-body">
-                            <div id="courses-loading-alert" class="alert alert-warning">
-                                Please wait while the search functionality initializes...
+            <div id="courses-loading-alert" class="alert alert-warning">
+                Please wait while the search functionality initializes...
+            </div>
+            <div id="courses-failed-alert" class="alert alert-danger hidden">
+                <p>Course search failed to initialize!</p>
+                <p id="init-fail-info"></p>
+            </div>
+            <div id="course-search-controls">
+                <h4 class="pb-2">Search Courses</h4>
+                <form class="row align-items-center">
+                    <div class="col-4">
+                        <label for="search-desc">Course Name: </label><input class="form-control" placeholder="Software Engineering" id="search-course-name">
+                    </div>
+                    <div class="col-2">
+                        <label for="search-dep-code">Department Code: </label><input class="form-control w-20" placeholder="CS" id="search-dep-code">
+                    </div>
+                    <div class="col-2">
+                        <label for="search-instructor">Taught By: </label>
+                        <select class="form-select" id="search-instructor">
+                            <option value="-1">Any</option>
+                            {% for instructor in all_instructors_list %}
+                            <option value="{{instructor.id}}">{{instructor.first_name}} {{instructor.last_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="m-0 p-0">Credit Hours: </label>
+                        <div class="row justify-content-start">
+                            <div class="col-4">
+                                <input class="form-control" id="search-hours-min" type="number" min="0" max="120" value="0"> 
                             </div>
-                            <div id="courses-failed-alert" class="alert alert-danger hidden">
-                                <p>Course search failed to initialize!</p>
-                                <p id="init-fail-info"></p>
-                            </div>
-                            <div id="course-search-controls">
-                                <label for="search-desc">Course Name</label> <input id="search-course-name">
-                                <br>
-                                <label for="search-dep-code">Department Code</label> <input id="search-dep-code">
-                                <br>
-                                <label for="search-instructor">Taught By</label>
-                                <select id="search-instructor">
-                                    <option value="-1">Any</option>
-                                    {% for instructor in all_instructors_list %}
-                                    <option value="{{instructor.id}}">{{instructor.first_name}} {{instructor.last_name}}</option>
-                                    {% endfor %}
-                                </select>
-                                <br>
-                                <label>Credit Hours</label>
-                                <label for="search-hours-min">from</label>
-                                <input id="search-hours-min" type="number" min="0" max="120" value="0"> 
+                            <div class="col-1 align-items-center">
                                 <label for="search-hours-max">to</label>
-                                <input id="search-hours-max" type="number" min="0" max="120" value="120"> 
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" id="search-hours-max" type="number" min="0" max="120" value="120">
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-    
             <hr>
     
             <div class="accordion" id="courseAccordion">
