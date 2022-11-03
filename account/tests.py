@@ -7,7 +7,7 @@ from .models import Profile
 
 
 # Create your tests here.
-class UserEditProfileTest(TestCase):
+class UserEditProfileSuccessTest(TestCase):
     # Set up for the run
     user = None
     c = Client()
