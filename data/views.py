@@ -112,8 +112,6 @@ def get_mine(req, query_dict):
         
     items = item_model.objects.filter(search_params).distinct().annotate(**item_query_desc['annotations']).values()
 
-    print(items)
-
     # data = {
     #     'items': serializers.serialize('json', items)
     # }
