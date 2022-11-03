@@ -19,10 +19,11 @@ class EditProfile(TestCase):
                           link2='https://memory-alpha.fandom.com/wiki/Locutus_of_Borg',
                           link3='https://memory-alpha.fandom.com/wiki/Locutus_of_Borg')
         profile.save()
-        self.c.login(username='Locutus', password='asdfasdfasdf')
+        response = self.c.login(username='Locutus', password='asdfasdfasdf')
+        self.assertTrue(response)
 
     # Test that a user can edit their profile
-    def test_editprofile(self):
+    def test_badprofile(self):
         # Check that user can get to the profile page.
         response = self.c.get('/account/profile/')
 
@@ -35,11 +36,15 @@ class EditProfile(TestCase):
         # Test that response is success
         self.assertTrue(response.status_code == 200, msg='Error: Failed to retrieve edit page.')
 
-        # Edit the profile
-        response = self.c.post('/account/editprofile/', {'bio': 'New Biography'})
+        # Edit the profile with bad values
+        response = self.c.post('/account/editprofile/', {'birthdate': '46254.7',
+                                                         'zip': '1234567891011',
+                                                         'link1': 'A Bad URL',
+                                                         'link2': 'Another Bad URL',
+                                                         'link3': 'A Third Bad URL'})
 
-        # Test that response is success
-        self.assertTrue(response.status_code == 200, msg='Error: Failed to update profile.')
+        # It shouldn't redirect but it should stay on the same page.
+        self.assertTrue(response.status_code == 200, msg='Error: The post accepted bad values.')
 
 
     def tearDown(self):
