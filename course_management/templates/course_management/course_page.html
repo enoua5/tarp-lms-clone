@@ -1,7 +1,91 @@
 {% extends 'course_management/course_base.html' %}
 {% load auth_utils %}
+
+{% block head %}
+    {% if grade_list %}
+        <!-- Plotly Import -->
+        <script type="text/javascript" src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-    <h1 class="display-6 text-center">Assignments</h1>
+    {% if request.user|has_group:"Student" %}
+        <div class="accordion" id="studentCoursePanel">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="assignmentListHeader">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAssignmentList" aria-expanded="true" aria-controls="collapseAssignmentList">
+                        <h4 class="mt-0">Assignments</h4>
+                    </button>
+                </h2>
+                <div id="collapseAssignmentList" class="accordion-collapse collapse show" aria-labelledby="assignmentListHeader">
+                    <div class="accordion-body">
+
+                        {% if assignment_list %}
+                            <ul class="list-group list-group-flush">
+                                {% for assignment in assignment_list %}
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="mt-2 col-4"><div class="h5">{{ assignment.info.title }}</div></div>
+                                            <div class="mt-2 col-4 text-center">Due {{ assignment.info.due_date }}</div>
+
+                                            {# student can start the assignment or edit their submission #}
+                                            <div class="mt-2 col-2">
+                                                {% if assignment.meta.submitted %}
+                                                    <span class="badge bg-success">Submitted</span>
+                                                    {% if assignment.meta.score is None %}
+                                                        <span class="badge bg-secondary">Pending grade</span>
+                                                    {% else %}
+                                                        <span class="badge bg-info">Graded: {{assignment.meta.score}}/{{assignment.info.points}}</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if assignment.meta.late %}
+                                                    <span class="badge bg-danger">Late!</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="mt-1 col-2">
+                                                <div class="text-center">
+                                                    <div class="btn-group  btn-group-sm text-center">
+                                                        <a href="{% url 'course_management:assignmentView' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">View</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {# display if there are no assignments #}
+                        {% else %}
+                            <div class="alert alert-primary mt-2" role="alert" >
+                                You don't have any assignments.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="studentGraphHeader">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStudentGraph" aria-expanded="true" aria-controls="collapseStudentGraph">
+                        <h4 mt="0">Student Course Performance</h4>
+                    </button>
+                </h2>
+                <div id="collapseStudentGraph" class="accordion-collapse collapse show" aria-labelledby="studentGraphHeader">
+                    <div class="accordion-body m-1">
+                        {# this will be the graph #}
+                        <h5 class="text-center">Grade: {{ percentGrade }}% ({{ letterGrade }})</h5>
+                        {% if grade_list|length > 2 %}
+                            <div id="boxplot"></div>
+                        {% else %}
+                            <div class="alert alert-primary mt-3" role="alert">
+                                Not enough information to display course performance graph.
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="display-6 text-center">Assignments</h1>
         {% if assignment_list %}
             <ul class="list-group">
                 {% for assignment in assignment_list %}
@@ -9,57 +93,54 @@
                         <div class="row">
                             <div class="mt-2 col-4"><div class="h5">{{ assignment.info.title }}</div></div>
                             <div class="mt-2 col-4 text-center">Due {{ assignment.info.due_date }}</div>
-
-                            {# student can start the assignment or edit their submission #}
-                            {% if request.user|has_group:"Student" %}
-                                <div class="mt-2 col-2">
-                                    {% if assignment.meta.submitted %}
-                                        <span class="badge bg-success">Submitted</span>
-                                        {% if assignment.meta.score is None %}
-                                            <span class="badge bg-secondary">Pending grade</span>
-                                        {% else %}
-                                            <span class="badge bg-info">Graded: {{assignment.meta.score}}/{{assignment.info.points}}</span>
-                                        {% endif %}
-                                    {% endif %}
-                                    {# student can start the assignment or edit their submission #}
-                                    {% if assignment.meta.late %}
-                                        <span class="badge bg-danger">Late!</span>
-                                    {% endif %}
-                                </div>
-                                <div class="mt-1 col-2">
-                                    <div class="text-center">
-                                        <div class="btn-group  btn-group-sm text-center">
-                                            <a href="{% url 'course_management:assignmentView' course.id assignment.info.id %}" class="btn btn-outline-primary" role="button">View</a>
-                                        </div>
-                                    </div>
-                                </div>
-
                             {# instructor can view all assignment submissions, edit assignment itself, and delete assignment #}
-                            {% else %}
-                                <div class="mt-1 col-4">
-                                    <div class="text-center">
-                                        <div class="btn-group  btn-group-sm text-center">
-                                            <a href="{% url 'course_management:submission_list' assignment.info.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
-                                            <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                                            <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
-                                        </div>
+                            <div class="mt-1 col-4">
+                                <div class="text-center">
+                                    <div class="btn-group  btn-group-sm text-center">
+                                        <a href="{% url 'course_management:submission_list' assignment.info.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
+                                        <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                                        <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
                                     </div>
                                 </div>
-                            {% endif %}
+                            </div>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
-        {# display if there are no assignments #}
+            {# display if there are no assignments #}
         {% else %}
-        <div class="alert alert-primary mt-2" role="alert" >
-            You don't have any assignments.
-        </div>
+            <div class="alert alert-primary mt-2" role="alert" >
+                You don't have any assignments.
+            </div>
         {% endif %}
-        <div>{{ letterGrade }}</div>
-        <div>{{ percentGrade }}</div>
         {# only instructor can create assignments #}
-        {% if request.user|has_group:"Instructor" %}
-            <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
-        {% endif %}
+        <div class="text-center"><a class="btn btn-dark mt-2" href="{% url 'course_management:addAssignment' course.id %}" role="button">Add Assignment</a></div>
+    {% endif %}
+
+    <!-- Plotly Script -->
+    <script type="text/javascript">
+        var classGrades = {
+            x: {{ grade_list|safe }},
+            type: 'box',
+            name: 'Class Grades'
+        };
+
+        var myGrade = {
+            x: [{{ percentGrade }}],
+            y: ['Class Grades'],
+            name: 'My Grade',
+            marker: {
+                size: 20
+            }
+        };
+
+        var data = [classGrades, myGrade];
+        var layout = {
+            title: '',
+            autosize: true
+        };
+
+        var graphDiv = document.getElementById('boxplot')
+        Plotly.newPlot(graphDiv, data, layout);
+    </script>
 {% endblock %}
