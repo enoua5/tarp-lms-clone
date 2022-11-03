@@ -1,4 +1,3 @@
-import os
 # Django Imports
 from django.test import LiveServerTestCase
 from django.contrib.auth.models import User
@@ -21,12 +20,19 @@ class LoginFormTest(LiveServerTestCase):
         @brief The below will install the correct browser driver (default to Chrome)
             for our UI tests.
     '''
-    service = Service(executable_path=ChromeDriverManager().install())
     def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        # create test user to log in with
         User.objects.create_user('testuser', password='asdfasdfasdf')
+        # create groups to avoid crash
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
+        self.selenium.maximize_window()
+
 
     def test_loginform(self):
-        selenium = webdriver.Chrome(service=self.service)
+        selenium = self.selenium
         # Give Selenium the URL to go to.
         selenium.get('%s%s' % (self.live_server_url, '/login/'))
 
@@ -39,6 +45,7 @@ class LoginFormTest(LiveServerTestCase):
         username_field.send_keys('testuser')
         password_field.send_keys('asdfasdfasdf')
 
+        self.selenium.implicitly_wait(1000)
         # Click login
         login_btn.click()
 
@@ -50,7 +57,7 @@ class LoginFormTest(LiveServerTestCase):
     @brief Test suite for the Signup form.
     @details Allows the developer to verify that a user is able to create an account.
 '''
-class SignupFormTest(LiveServerTestCase):
+class SignupFormSuccessTest(LiveServerTestCase):
     '''!
         @brief The below will install the correct browser driver (default to Chrome)
             for our UI tests.
@@ -59,17 +66,15 @@ class SignupFormTest(LiveServerTestCase):
         service = Service(executable_path=ChromeDriverManager().install())
         self.selenium = webdriver.Chrome(service=service)
         self.selenium.implicitly_wait(10)
+        # create groups to avoid crash
         Group.objects.create(name='Student')
         Group.objects.create(name='Instructor')
+        self.selenium.maximize_window()
 
-    #
-    # def tearDown(self):
-    #     self.selenium.quit()
-
-    def test_signupform(self):
+    def test_signupsuccessform(self):
         selenium = self.selenium
         # Give Selenium the URL to go to.
-        selenium.get(os.path.join(self.live_server_url, 'login/signup/'))
+        selenium.get('%s%s' % (self.live_server_url, '/login/signup/'))
 
         # Get the elements that we'll be interacting with.
         username_field = selenium.find_element(By.ID, 'username')
@@ -92,8 +97,7 @@ class SignupFormTest(LiveServerTestCase):
         password1_field.send_keys('asdfasdfasdf')
         password2_field.send_keys('asdfasdfasdf')
 
-        selenium.implicitly_wait(100)
-
+        selenium.implicitly_wait(1000)
         # Click signup
         signup_btn.click()
 
