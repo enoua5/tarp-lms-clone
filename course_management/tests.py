@@ -273,7 +273,7 @@ class SubmitAssignmentTest(LiveServerTestCase):
         assignment = Assignment.objects.create(course=course, title='Test Assignment',
                                                description='This is the test assignment',
                                                due_date='2022-12-31 23:59:00', points=100, type='t')
-    def test_signupsuccessform(self):
+    def test_submitsuccessform(self):
         selenium = self.selenium
         # Give Selenium the URL to go to.
         selenium.get('%s%s' % (self.live_server_url, '/login/'))
