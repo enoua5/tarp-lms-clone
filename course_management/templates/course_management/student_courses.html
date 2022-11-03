@@ -142,7 +142,7 @@
             {% if my_course_list %}
                 <div class="accordion pt-3" id="courseAccordion">
                     {% for course in my_course_list %}
-                    <div class="accordion-item mb-1">
+                    <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{course.id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{course.id}}" aria-expanded="true" aria-controls="collapse{{course.id}}">
                             {{ course.department }} {{ course.course_num }}  {{ course.course_name }}
@@ -193,7 +193,7 @@
                 <p>Course search failed to initialize!</p>
                 <p id="init-fail-info"></p>
             </div>
-            <div id="course-search-controls">
+            <div id="course-search-controls" class="m-2">
                 <h4 class="pb-2">Search Courses</h4>
                 <form class="row align-items-center">
                     <div class="col-4">
@@ -231,7 +231,7 @@
     
             <div class="accordion" id="courseAccordion">
                 {% for course in all_course_list %}
-                <div class="accordion-item mb-1" data-course-id="{{course.id}}">
+                <div class="accordion-item" data-course-id="{{course.id}}">
                     <h2 class="accordion-header" id="heading{{course.id}}">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{course.id}}" aria-expanded="true" aria-controls="collapse{{course.id}}">
                         {{ course.department }} {{ course.course_num }}  {{ course.course_name }}

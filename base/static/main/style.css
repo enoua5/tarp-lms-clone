@@ -77,8 +77,6 @@
 .dropdown-item {
     white-space: pre-wrap;
 }
-/*********** Body Styling ***************/
-
 /*********** Navbar Styling  ************/
 .nav-link
 {
@@ -95,6 +93,8 @@
     font-weight: 500;
     color: #358CE6 !important;
 }
+
+/*********** Footer Styling *************/
 
 /*********** Global Font Options ***********/
 h1,h2,h3
@@ -168,7 +168,7 @@ a.list-group-item:hover
 }
 
 /*********** Course Page Styling **********/
-#courseTitle a
+#courseTitle a h1
 {
     color: #2359AF !important;
 }
@@ -193,31 +193,21 @@ a.list-group-item:hover
 
 /********* Global Accordion Styling *********/
 
+.accordion-button:not(.collapsed)
+{
+    box-shadow: none;
+    background-color: rgba(57, 133, 255, 0.50) !important;
+}
+
 .accordion-button:focus
 {
     box-shadow: none;
 }
 
-.accordion-button:after
+.accordion-button
 {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-}
-
-.accordion-button:not(.collapsed), .accordion-button.show
-{
-    color: var(--bs-black);
+    background-color: rgba(57, 133, 255, 0.25) !important;
     background-image: var(--bs-gradient) !important;
-}
-
-.accordion-button.collapsed
-{
-    background-image: var(--bs-gradient) !important;
-    color: var(--bs-black);
-}
-
-.accordion-body
-{
-    background-color: rgba(53, 139, 230, 0.05);
 }
 
 /********* Assignment Tags ************/
@@ -237,7 +227,7 @@ a.list-group-item:hover
 /* Course Events */
 .fc-event-title-container
 {
-    background-color: #2359AF;
+    background-color: rgba(57, 133, 255, 0.25) !important;
     background-image: var(--bs-gradient) !important;
 }
 
@@ -256,7 +246,7 @@ a.list-group-item:hover
 /* Today Button */
 .fc-today-button
 {
-    background-color: #2359AF !important;
+    background-color: rgba(57, 133, 255, 1) !important;
     background-image: var(--bs-gradient) !important;
     border: none !important;
 }
@@ -270,7 +260,7 @@ a.list-group-item:hover
 /* Month Controls */
 .fc-prev-button, .fc-next-button
 {
-    background-color: #2359af !important;
+    background-color: rgba(57, 133, 255, 1) !important;
     background-image: var(--bs-gradient) !important;
     border: none !important;
 }
@@ -304,4 +294,10 @@ a.list-group-item:hover
 .profile-header
 {
     background-color: rgba(53, 139, 230, 0.1);
+}
+
+/************ Course Registration *************/
+#course-search-controls h4
+{
+    font-weight: 400;
 }
