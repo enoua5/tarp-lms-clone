@@ -142,10 +142,10 @@
             {% if my_course_list %}
                 <div class="accordion pt-3" id="courseAccordion">
                     {% for course in my_course_list %}
-                    <div class="accordion-item">
+                    <div class="accordion-item mb-1">
                         <h2 class="accordion-header" id="heading{{course.id}}">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{course.id}}" aria-expanded="true" aria-controls="collapse{{course.id}}">
-                            {{ course.department }} {{ course.course_num }}  {{ course.course_name }}
+                            <span class="course-lead lead me-2">{{ course.department }} {{ course.course_num }}</span><span class="small">{{ course.course_name }}</span>
                           </button>
                         </h2>
                         <div id="collapse{{course.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{course.id}}">
@@ -231,10 +231,10 @@
     
             <div class="accordion" id="courseAccordion">
                 {% for course in all_course_list %}
-                <div class="accordion-item" data-course-id="{{course.id}}">
+                <div class="accordion-item mb-1" data-course-id="{{course.id}}">
                     <h2 class="accordion-header" id="heading{{course.id}}">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{course.id}}" aria-expanded="true" aria-controls="collapse{{course.id}}">
-                        {{ course.department }} {{ course.course_num }}  {{ course.course_name }}
+                        <span class="course-lead lead me-2">{{ course.department }} {{ course.course_num }}</span><span class="small">{{ course.course_name }}</span>
                       </button>
                     </h2>
                     <div id="collapse{{course.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{course.id}}">
