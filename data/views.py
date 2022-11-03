@@ -6,7 +6,7 @@ from json import dumps, JSONEncoder
 from django.forms.models import model_to_dict
 from django.db.models import Model, Q
 from django.db.models.fields.files import ImageFieldFile
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -46,28 +46,27 @@ ITEM_MODELS = {
 
 }
 
-
 def get_all(req, query_dict):
     if not req.user.is_authenticated:
-        return HttpResponse('{"message": "You are not logged in"}', status=HTTPStatus.UNAUTHORIZED)
+        return JsonResponse({"message": "You are not logged in"}, status=HTTPStatus.UNAUTHORIZED)
 
     item_type = query_dict.get('item_type')
 
     if(item_type == None):
-        return HttpResponse('{"message": "Item type not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message": "Item type not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     item_query_desc = ITEM_MODELS.get(item_type)
 
     if(item_query_desc == None):
-        return HttpResponse('{"message":"Item type not recognized"}', status=HTTPStatus.NOT_FOUND)
+        return JsonResponse({"message":"Item type not recognized"}, status=HTTPStatus.NOT_FOUND)
 
     if item_query_desc["only_mine"]:
-        return HttpResponse('{"message": "You can only get your own data from this list"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You can only get your own data from this list"}, status=HTTPStatus.FORBIDDEN)
 
     item_model = item_query_desc['model']
 
     if not req.user.has_perm(ITEM_MODELS.get(item_type)['permission']):
-        return HttpResponse('{"message": "You do not have permission to view that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to view that item"}, status=HTTPStatus.FORBIDDEN)
 
 
     items = item_model.objects.all()
@@ -76,26 +75,26 @@ def get_all(req, query_dict):
         'items': queryset_to_list(items)
     }
 
-    return HttpResponse(dumps(data, cls=DatabaseEncoder))
+    return JsonResponse(data, encoder=DatabaseEncoder)
 
 def get_mine(req, query_dict):
     if not req.user.is_authenticated:
-        return HttpResponse('{"message": "You are not logged in"}', status=HTTPStatus.UNAUTHORIZED)
+        return JsonResponse({"message": "You are not logged in"}, status=HTTPStatus.UNAUTHORIZED)
 
     item_type = query_dict.get('item_type')
 
     if(item_type == None):
-        return HttpResponse('{"message": "Item type not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message": "Item type not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     item_query_desc = ITEM_MODELS.get(item_type)
 
     if(item_query_desc == None):
-        return HttpResponse('{"message":"Item type not recognized"}', status=HTTPStatus.NOT_FOUND)
+        return JsonResponse({"message":"Item type not recognized"}, status=HTTPStatus.NOT_FOUND)
 
     item_model = item_query_desc['model']
 
     if not req.user.has_perm(ITEM_MODELS.get(item_type)['permission']):
-        return HttpResponse('{"message": "You do not have permission to view that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to view that item"}, status=HTTPStatus.FORBIDDEN)
 
     search_params = Q()
 
@@ -111,10 +110,10 @@ def get_mine(req, query_dict):
         'items': queryset_to_list(items)
     }
 
-    return HttpResponse(dumps(data, cls=DatabaseEncoder))
+    return JsonResponse(data, encoder=DatabaseEncoder)
 
 def brew_coffee():
-    return HttpResponse('{"message": "Tip me over and pour me out!"}', status=HTTPStatus.IM_A_TEAPOT)
+    return JsonResponse({"message": "Tip me over and pour me out!"}, status=HTTPStatus.IM_A_TEAPOT)
 
 QUERY_COMMANDS = {
     'get_all': get_all,
@@ -132,12 +131,12 @@ def basic_query(req):
     command = query_dict.get('command')
 
     if(command == None):
-        return HttpResponse('{"message":"Command not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message":"Command not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     command_handler = QUERY_COMMANDS.get(command)
 
     if(command_handler == None):
-        return HttpResponse('{"message":"Unrecognized command"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message":"Unrecognized command"}, status=HTTPStatus.BAD_REQUEST)
 
     return command_handler(req, query_dict)
 
