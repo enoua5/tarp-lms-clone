@@ -255,6 +255,9 @@ class GradeAssignmentTest(TestCase):
         # Place code here you want to run after the test
         pass
 
+'''
+    Selenium tests
+'''
 class SubmitAssignmentTest(LiveServerTestCase):
     def setUp(self):
         service = Service(executable_path=ChromeDriverManager().install())
