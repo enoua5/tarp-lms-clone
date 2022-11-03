@@ -201,7 +201,7 @@ a.list-group-item:hover
 .accordion-button:not(.collapsed)
 {
     box-shadow: none;
-    background-color: rgba(57, 133, 255, 0.50) !important;
+    background-color: rgba(57, 133, 255, 0.30) !important;
 }
 
 .accordion-button:focus
