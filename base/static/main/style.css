@@ -7,3 +7,12 @@
 .dropdown-item {
     white-space: pre-wrap;
 }
+
+/* Used to hide the navbar when printing the page */
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}

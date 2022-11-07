@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from course_management.models import Course
 from django.contrib.auth.models import Group
-from .models import Tuition, TempProfile, Product
+from .models import Tuition
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 from django.conf import settings 
@@ -42,19 +42,13 @@ def createpayment(request):
       except Exception as e:
         return JsonResponse({'error':str(e)},status= 403)
 
-def paymentcomplete(request):
-  if request.method=="POST":
-    data = json.loads(request.POST.get("payload"))
-    print(data)
-    # This actually does not endup running, so we don't need to worry about it 
-    if data["status"] == "succeeded":
-      # save purchase here/ setup email confirmation
-      return render(request, "main/payment-complete.html")
-
 def success(request):
     # Alright. I am not going to check if transaction was successful
     # Just trusting that it is
     currTuition = Tuition.objects.get(user=request.user)
+
+    # Variables needed for receipt
+    paid = currTuition.balance
 
     currTuition.balance = 0
     currTuition.save()
@@ -62,4 +56,4 @@ def success(request):
     course_list = request.user.courses.all()
     balance = Tuition.objects.get(user=request.user).balance
 
-    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True}) 
+    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True, 'paid':paid}) 
