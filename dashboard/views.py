@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 
 # Our Imports
 from course_management.models import Course
-from course_management.views import getStudentGrade # Used to calculate the student's grade in a course.
 
 # Our Views
 @login_required

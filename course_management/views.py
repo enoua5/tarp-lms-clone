@@ -118,7 +118,7 @@ def coursePage(request, id):
 
     # Only calculate grade if user is a student
     if request.user.groups.filter(name='Student').exists():
-        grade = getStudentGrade(request.user, course)
+        grade = course.getStudentGrade(request.user)
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': late_list + upcoming_list + submitted_list,
@@ -129,70 +129,6 @@ def coursePage(request, id):
                                                                   'assignment_list': late_list + upcoming_list + submitted_list,
                                                                   'letterGrade': '',
                                                                   'percentGrade': ''})
-
-'''!
-    @brief Calculates the student's grade, letter and percent, for a given course.
-    @param in_student Student object (typically the user).
-    @param in_course The course of interest.
-    @return student_grade A Python dictionary of the format {'letter': str, 'percent': float}
-'''
-def getStudentGrade(in_student, in_course):
-    # Collect graded submissions for the student
-    assignment_list = Assignment.objects.filter(course=in_course)
-    student_grade = {'letter': 'N/A',
-                     'percent': 100.0}
-    scored_points = 0
-    total_points = 0
-    
-    for assignment in assignment_list:
-        studentSubmissions = Submission.objects.filter(assignment_id=assignment.id, student_id=in_student.id)
-        gradedSubmissions = list(filter(lambda submission: submission.score is not None, studentSubmissions))
-        if len(gradedSubmissions) != 0:
-            # Sorting to get only the last graded submission.
-            gradedSubmissions.sort(key=lambda submission: submission.submitted_at, reverse=True)
-            scored_points += gradedSubmissions[0].score
-            total_points += assignment.points
-            
-    if total_points != 0:
-        student_grade['percent'] = round((scored_points / total_points) * 100.0, 2)
-        student_grade['letter'] = calcGrade(in_course.a_threshold, in_course.increment, student_grade['percent'])
-        
-    return student_grade 
-
-# Calculate the letter grade based on the scale and the percentage
-def calcGrade(athresh, increment, p):
-    # Cut out the A threshold
-    Ascore = athresh
-    # Cut out the increment value
-    inc = increment
-    letterGrade = None
-
-    if (p >= Ascore):
-        letterGrade = 'A'
-    elif (p >= (Ascore - inc)):
-        letterGrade = 'A-'
-    elif (p >= (Ascore - (inc * 2))):
-        letterGrade = 'B+'
-    elif (p >= (Ascore - (inc * 3))):
-        letterGrade = 'B'
-    elif (p >= (Ascore - (inc * 4))):
-        letterGrade = 'B-'
-    elif (p >= (Ascore - (inc * 5))):
-        letterGrade = 'C+'
-    elif (p >= (Ascore - (inc * 6))):
-        letterGrade = 'C'
-    elif (p >= (Ascore - (inc * 7))):
-        letterGrade = 'C-'
-    elif (p >= (Ascore - (inc * 8))):
-        letterGrade = 'D+'
-    elif (p >= (Ascore - (inc * 9))):
-        letterGrade = 'D'
-    elif (p >= (Ascore - (inc * 10))):
-        letterGrade = 'D-'
-    else:
-        letterGrade = 'E'
-
-    return letterGrade
 
 def addAssignment(request, id):
     course = Course.objects.get(id=id)
