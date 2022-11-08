@@ -4,7 +4,7 @@ const NOTIFICATION_REQ_PERIOD = 10000; // 10 seconds
 const NOTIF_MAX_CONSEQ_FAILS = 3;
 var NOTIFICATION_FAIL_COUNT = 0;
 var notification_update_timeout = undefined;
-var notification_count = undefined;
+// var notification_count = undefined;
 
 function get_notifications()
 {
@@ -29,10 +29,11 @@ function get_notifications()
             let dropdown = document.getElementById('notification-dropdown')
             dropdown.innerHTML = "";
 
-            let prev_notif_count = notification_count;
-            notification_count = data.items.length;
+            // let prev_notif_count = notification_count;
+            let notification_count = data.items.length;
 
             let bellIcon = document.getElementById('notification-icon')
+            /*
             if(prev_notif_count != undefined && notification_count > prev_notif_count)
             {
                 bellIcon.classList.remove('no-notif');
@@ -43,6 +44,7 @@ function get_notifications()
                 bellIcon.classList.remove('yes-notif');
                 bellIcon.classList.add('no-notif');
             }
+            */
 
             if(notification_count == 0)
             {
@@ -63,8 +65,11 @@ function get_notifications()
                 dropdown.append(dropdown_item)
             }
 
+            let any_unreads = false;
             for(let notice of data.items)
             {
+                if(!notice.seen)
+                    any_unreads = true;
                 let dropdown_item =  document.createElement('div');
                 dropdown_item.classList.add("dropdown-item");
 
@@ -103,6 +108,17 @@ function get_notifications()
                 dropdown.appendChild(dropdown_item);
             }
 
+            if(any_unreads)
+            {
+                bellIcon.classList.remove('no-notif');
+                bellIcon.classList.add('yes-notif');
+            }
+            else
+            {
+                bellIcon.classList.remove('yes-notif');
+                bellIcon.classList.add('no-notif');
+            }
+
             NOTIFICATION_FAIL_COUNT = 0;
 
             if(UPDATING_NOTIFICATIONS)
@@ -132,7 +148,7 @@ function delete_notification(id)
         }
     );
 
-    notification_count--;
+    // notification_count--;
 }
 
 function clearNotif()
@@ -149,6 +165,27 @@ function clearNotif()
         }
     );
 
-    notification_count=0;
+    // notification_count=0;
 }
+
+function mark_all_as_read()
+{
+    let REQUEST_URL = new URL('data', location.origin);
+    REQUEST_URL.search = new URLSearchParams({command: 'seen_notifs'});
+    fetch(REQUEST_URL).then(
+        resp=>{
+            if(resp.status == 200)
+            {
+                clearTimeout(notification_update_timeout);
+                setTimeout(get_notifications, 0);
+            }
+        }
+    );
+
+}
+
+registerLoadFunction(()=>{
+    document.getElementById('notification-icon').onclick = mark_all_as_read;
+});
+
 })();

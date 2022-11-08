@@ -1,4 +1,8 @@
-""" See `QUERY_COMMANDS` to find a list of accepted commands and the functions that handle them. """
+"""
+    See `QUERY_COMMANDS` to find a list of accepted commands and the functions that handle them.
+    (Sorry that it's at the bottom, the functions had to be defined first)
+
+"""
 
 from datetime import datetime, time, date
 from http import HTTPStatus
@@ -200,6 +204,15 @@ def delete_all(req, query_dict):
 
     return HttpResponse('{"message":"Deletion success"}', status=HTTPStatus.ACCEPTED)
 
+def seen_all_notifs(req, query_dict):
+    notifs = Notification.objects.filter(notified_user=req.user).all()
+
+    for notif in notifs:
+        notif.seen = True
+        notif.save()
+
+    return JsonResponse({'message': "Marked "+str(len(notifs))+" read"})
+
 def brew_coffee():
     return JsonResponse({"message": "Tip me over and pour me out!"}, status=HTTPStatus.IM_A_TEAPOT)
 
@@ -208,6 +221,7 @@ QUERY_COMMANDS = {
     'get_mine': get_mine,
     'delete': delete_by_id,
     'delete_all': delete_all,
+    'seen_notifs': seen_all_notifs,
 }
 
 # Create your views here.
