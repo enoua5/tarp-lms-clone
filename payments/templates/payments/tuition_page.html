@@ -100,7 +100,8 @@
       stripe.retrievePaymentIntent(clientSecret).then(function(result) {
         var paymentIntent = result.paymentIntent;
         var paymentIntentJson = JSON.stringify(paymentIntent, NaN, 2);
-        
+        //alert(JSON.stringify(paymentIntentJson))
+
         // post data and show new page
         var form2 =document.getElementById("payload");
         var input = document.getElementById("data-payload")
@@ -145,25 +146,11 @@
     {% endif %}
 
     {% if success %}
-        <div class="alert alert-secondary" role="alert">
+        <div class="alert alert-warning d-flex justify-content-between" role="alert">
             <h4>Thank you for your tuition payment.</h4>
-              <h4>Amount paid: ${{paid}}</h4>
-            <hr>
-            <h5>Your courses:</h5>
-            <table class="table">
-              <tbody>
-                  {% for course in course_list %}
-                  <tr>
-                      <td>{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</td>
-                      <td>${{ course.credit_hours }}00</td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-            </table>
-            <button type="button" class="btn btn-secondary" onclick="window.print();return false;">Print this page</button>
-            <a href="{% url 'payments:tuition' %}" class="btn btn-light" tabindex="-1" role="button" aria-disabled="true">Back to tuition</a>
+            <a class="btn btn-outline-secondary" href="{{receipt}}" target="_blank" rel="noopener noreferrer" role="button">See a receipt</a>
         </div>
-    {% else %}
+    {% endif %}
 
     {% if balance >= 0 %}
     <div class="alert alert-success" role="alert">
@@ -194,8 +181,6 @@
     <div class="alert alert-primary mt-2" role="alert" >
         You are not enrolled in any courses.
     </div>
-    {% endif %}
-    <!-- End if for success -->
     {% endif %}
 </div>
 
