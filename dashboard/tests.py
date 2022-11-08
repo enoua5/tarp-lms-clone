@@ -61,3 +61,55 @@ class NotificationRecievedTest(LiveServerTestCase):
         self.user.delete()
         self.instructor.delete()
 
+class NotificationDeleteTest(LiveServerTestCase):
+    def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        # create test user
+        self.user = User.objects.create_user('seleniumNotificationTestUser', password='asdfasdfasdf')
+        # create groups to avoid crash
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
+        self.client = Client()
+        self.client.login(username='seleniumNotificationTestUser', password='asdfasdfasdf')
+        self.instructor = User.objects.create_user('seleniumNotificationTestInstructpr', password='asdfasdfasdf')
+
+        self.course = Course.objects.create(department="TEST", course_num="2210", course_name="testing selenium", instructor=self.instructor, meeting_days="MWF", meeting_location="wherever")
+        self.course.students.set([self.user])
+        self.assignment = Assignment.objects.create(course=self.course, title="testing notifications", description="", due_date=datetime.now(), points=100, type='t')
+
+        # create the notification
+        self.notif = Notification.objects.create(notified_user = self.user, course=self.course, assignment=self.assignment)
+
+        self.selenium.maximize_window()
+
+    def test_notification_recieve(self):
+        # needs some fenagling to actually login without doing it on the forms
+        selenium = self.selenium
+        cookie = self.client.cookies['sessionid']
+        selenium.get(self.live_server_url)
+        selenium.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
+        selenium.refresh()
+        selenium.get(self.live_server_url)
+
+        selenium.implicitly_wait(1000)
+
+        # open notification tray
+        bell_icon = selenium.find_element(By.ID, 'notification-icon')
+        bell_icon.click()
+
+        # click "Clear all notifications"
+        selenium.find_element(By.CSS_SELECTOR, ".DropDownMenu .dropdown-item.btn-danger").click()
+
+        sleep(2)
+
+        assert "no-notif" in bell_icon.get_attribute("class")
+
+
+
+    def tearDown(self):
+        self.assignment.delete()
+        self.course.delete()
+        self.user.delete()
+        self.instructor.delete()
+
