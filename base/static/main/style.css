@@ -1,73 +1,4 @@
-/********** Root Styling ************/
-:root {
-    --bs-blue: #2359AF;
-    --bs-indigo: #6610f2;
-    --bs-purple: #6f42c1;
-    --bs-pink: #d63384;
-    --bs-red: #E84855;
-    --bs-orange: #fd7e14;
-    --bs-yellow: #F6AE2D;
-    --bs-green: #198754;
-    --bs-teal: #20c997;
-    --bs-cyan: #0dcaf0;
-    --bs-black: #212529;
-    --bs-white: #fff;
-    --bs-gray: #6c757d;
-    --bs-gray-dark: #343a40;
-    --bs-gray-100: #f8f9fa;
-    --bs-gray-200: #e9ecef;
-    --bs-gray-300: #dee2e6;
-    --bs-gray-400: #ced4da;
-    --bs-gray-500: #adb5bd;
-    --bs-gray-600: #6c757d;
-    --bs-gray-700: #495057;
-    --bs-gray-800: #343a40;
-    --bs-gray-900: #212529;
-    --bs-primary: #358CE6;
-    --bs-secondary: #6c757d;
-    --bs-success: #358CE6;
-    --bs-info: #0dcaf0;
-    --bs-warning: #F6AE2D;
-    --bs-danger: #E84855;
-    --bs-light: #f8f9fa;
-    --bs-dark: #212529;
-    --bs-primary-rgb: 13, 110, 253;
-    --bs-secondary-rgb: 108, 117, 125;
-    --bs-success-rgb: 25, 135, 84;
-    --bs-info-rgb: 13, 202, 240;
-    --bs-warning-rgb: 255, 193, 7;
-    --bs-danger-rgb: 220, 53, 69;
-    --bs-light-rgb: 248, 249, 250;
-    --bs-dark-rgb: 33, 37, 41;
-    --bs-white-rgb: 255, 255, 255;
-    --bs-black-rgb: 0, 0, 0;
-    --bs-body-color-rgb: 33, 37, 41;
-    --bs-body-bg-rgb: 255, 255, 255;
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    --bs-body-font-family: var(--bs-font-sans-serif);
-    --bs-body-font-size: 1rem;
-    --bs-body-font-weight: 400;
-    --bs-body-line-height: 1.5;
-    --bs-body-color: #212529;
-    --bs-body-bg: #fff;
-    --bs-border-width: 1px;
-    --bs-border-style: solid;
-    --bs-border-color: #dee2e6;
-    --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
-    --bs-border-radius: 0.375rem;
-    --bs-border-radius-sm: 0.25rem;
-    --bs-border-radius-lg: 0.5rem;
-    --bs-border-radius-xl: 1rem;
-    --bs-border-radius-2xl: 2rem;
-    --bs-border-radius-pill: 50rem;
-    --bs-link-color: #0d6efd;
-    --bs-link-hover-color: #0a58ca;
-    --bs-code-color: #d63384;
-    --bs-highlight-bg: #fff3cd;
-}
-  
+/*********** Notifications  ***********/
 .DropDownMenu {
     max-width: 8rem;
     min-width: 8rem;
@@ -78,20 +9,21 @@
     white-space: pre-wrap;
 }
 /*********** Navbar Styling  ************/
-.nav-link
+.navbar
 {
-    color: #FFFFFF;
+    background-image: url('../../../media/site_images/stacked-waves-haikei.svg');
+    background-position: center;
+    background-size: cover;
 }
 
-.nav-link:not(.active), .navbar-brand
+.nav-link
 {
-    font-weight: 300;
+    color: #e1e1e1;
 }
 
 .nav-link.active
 {
-    font-weight: 500;
-    color: #358CE6 !important;
+    color: #FFFFFF;
 }
 
 /*********** Footer Styling *************/
@@ -132,29 +64,19 @@ a.list-group-item:hover
 .course-card
 {
     box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
-    background-color: rgba(57, 133, 255, 0.15) !important;
+    background-color: rgba(59, 154, 255, 0.35) !important;
     background-image: var(--bs-gradient) !important;
     border: none;
 }
 
-.course-card .card-text
-{
-    color: #2c3034; 
-}
-
-.course-card .card-subtitle
-{
-    color: #3c5172 !important;
-}
-
-.course-card h4
+h4.card-title
 {
     color: #2359AF;
 }
 
 .course-card:hover
 {
-    background-color: rgba(57, 133, 255, 0.50) !important;
+    background-color: rgba(59, 154, 255, 0.50) !important;
     background-image: var(--bs-gradient) !important;
 }
 
