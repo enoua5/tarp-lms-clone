@@ -393,3 +393,64 @@ class SubmitAssignmentTest(LiveServerTestCase):
         # Making sure the submission is connected with a right user
         submission = Submission.objects.filter(student=user.id)
         assert submission.count() > 0
+
+class TestCalendarLink(LiveServerTestCase):
+    def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        self.selenium.maximize_window()
+        selenium = self.selenium
+
+        user = User.objects.create_user('NoonienSoong', 'NSoong@gmail.com', 'asdfasdfasdf')
+
+
+
+    def test_link(self):
+        selenium = self.selenium
+        # Give Selenium the URL to go to.
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+
+        # Login the user
+        uname = selenium.find_element(By.ID, 'username')
+        pword = selenium.find_element(By.ID, 'password')
+        login_btn = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
+
+        uname.send_keys('NoonienSoong')
+        pword.send_keys('asdfasdfasdf')
+
+        login_btn.click()
+
+        assert selenium.current_url == (self.live_server_url + '/dashboard/')
+
+        # Go to the calendar
+        calendar_btn = selenium.find_element(By.XPATH, "//a[contains(text(),'Calendar')]")
+        calendar_btn.click()
+
+        # Check that we made it to the calendar
+        assert selenium.current_url == (self.live_server_url + '/calendars/')
+
+        next_btn = selenium.find_element(By.XPATH, "//button[@title='Next month']")
+
+        # Make sure we can go through all the months
+        i = 0
+        while i < 12:
+            next_btn.click()
+            i = i + 1
+
+        # Go back to the dashboard
+        btn = selenium.find_element(By.XPATH, "//a[contains(text(),'Dashboard')]")
+        btn.click()
+
+        assert selenium.current_url == (self.live_server_url + '/dashboard/')
+
+        # Logout
+        btn = selenium.find_element(By.XPATH, "//a[contains(text(), 'Logout')]")
+        btn.click()
+
+        # Check that logout was successful
+        assert selenium.current_url == (self.live_server_url + '/login/')
+
+
+    def tearDown(self):
+        pass
