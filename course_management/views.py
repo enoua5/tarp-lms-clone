@@ -249,6 +249,13 @@ def editAssignment(request, assignment_id):
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
 
 
+def deleteAssignment(request, assignment_id):
+    assignment = Assignment.objects.get(id=assignment_id)
+    course = Course.objects.get(id=assignment.course.id)
+    assignment.delete()
+
+    return redirect('course_management:coursePage', course.id)
+
 
 # Student Assignment View
 def assignmentView(request, course_id, assignment_id):
