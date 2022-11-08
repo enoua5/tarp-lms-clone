@@ -98,7 +98,7 @@
                                 <div class="text-center">
                                     <div class="btn-group  btn-group-sm text-center">
                                         <a href="{% url 'course_management:submission_list' assignment.info.id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">Submissions</a>
-                                        <a href="#" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                                        <a href="{% url 'course_management:editAssignment' assignment.info.id %}" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
                                         <a href="#" class="btn btn-outline-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
                                     </div>
                                 </div>

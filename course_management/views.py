@@ -222,6 +222,34 @@ def addAssignment(request, id):
 
     return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
 
+
+def editAssignment(request, assignment_id):
+    # save old fields
+    instance = Assignment.objects.get(id=assignment_id)
+    course = Course.objects.get(id=instance.course.id)
+    prev_type = instance.type
+    prev_points = instance.points
+
+    form = AssignmentForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        assignment = form.save()
+        # if the type has changed, we need to delete all submissions :(
+        if assignment.type != prev_type:
+            submissions = Submission.objects.filter(assignment=assignment)
+            submissions.all().delete()
+        # if the new points are less than the old points, we need to ungrade all submissions
+        elif assignment.points < prev_points:
+            submissions = Submission.objects.filter(assignment=assignment)
+            for submission in submissions:
+                submission.score = None
+                submission.save()
+
+        return redirect('course_management:coursePage', course.id)
+
+    return render(request, 'course_management/assignment_form.html', {'course': course, 'page_title': str(course), 'form': form})
+
+
+
 # Student Assignment View
 def assignmentView(request, course_id, assignment_id):
     # Get assignment and check if the student has already submitted something.
