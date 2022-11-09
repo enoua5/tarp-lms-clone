@@ -10,15 +10,19 @@
                         <h1 class="display-6 text-center">{{ course.department }} {{ course.course_num }}</h1>
                         <p class="lead text-center">{{ course.course_name }}</p>
                     </a>
+                    {% if letterGrade is not None %}
+                        <h1 class="text-center display-6">{{ letterGrade }}</h1>
+                        <h1 class="small text-center">{{ percentGrade }}%</h1>
+                    {% endif %}
                 </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.instructor.first_name }} {{ course.instructor.last_name }}</p>
+                <li class="list-group-item pb-0">
+                    <p class="text-center">{{ course.instructor.first_name }} {{ course.instructor.last_name }}</p>
                 </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}</p>
+                <li class="list-group-item pb-0">
+                    <p class="text-center">{{ course.getFormattedCourseDays }}<br>{{ course.meeting_start_time }} - {{ course.meeting_end_time }}</p>
                 </li>
-                <li class="list-group-item">
-                    <p class="h6 text-center">{{ course.meeting_location }}</p>
+                <li class="list-group-item pb-0">
+                    <p class="text-center">{{ course.meeting_location }}</p>
                 </li>
             </ul>
         </div>

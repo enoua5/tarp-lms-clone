@@ -64,6 +64,13 @@ a.list-group-item:hover
     color: #1C1D1F;
 }
 
+.alert-primary
+{
+    background-color: rgba(53, 139, 230, 0.1) !important;
+    border: none;
+    color: #1C1D1F;
+}
+
 /********* Course Cards *********/
 
 .course-card
@@ -79,12 +86,7 @@ h4.card-title
     color: #2359AF;
 }
 
-h3.dashboard-grade
-{
-    font-weight: 350;
-}
-
-h6.card-subtitle.text-muted
+h6.card-subtitle.text-muted, #card-professor-name
 {
     color: #36527e !important;
 }
@@ -117,23 +119,53 @@ h6.card-subtitle.text-muted
 
 /********* Global Button Styling **********/
 
-.btn-primary
+.btn-primary, .btn-success
 {
     background-color: #358CE6;
+    border-color: #307dcf;
+}
+
+.btn-primary:hover, .btn-success:hover
+{
+    background-color: #2b73c0 !important;
+    border-color: #2661a1 !important;
+}
+
+.btn-danger
+{
+    background-color: #E84855 !important;
+    border-color: #e83f4d !important;
+}
+
+.btn-danger:hover
+{
+    background-color: #cf414d !important;
+    border-color: #c93743 !important;
 }
 
 .btn-outline-primary
 {
-    border-color: #2359AF;
-    color: #2359AF;
+    border-color: #2b73c0 !important;
+    color: #2b73c0 !important;
 }
 
+.btn-outline-primary:hover
+{
+    background-color: #2b73c0 !important;
+    color: #fff !important;
+}
+
+.btn-dark
+{
+    background-color: #0D2F66 !important;
+    border-color: #09234c !important;
+}
 /********* Global Accordion Styling *********/
 
 .accordion-button:not(.collapsed)
 {
     box-shadow: none;
-    background-color: rgba(59, 154, 255, 0.50) !important;
+    background-color: rgba(59, 154, 255, 0.45) !important;
 }
 
 .accordion-button:focus
@@ -242,4 +274,23 @@ h6.card-subtitle.text-muted
 .course-lead
 {
     font-weight: 400;
+}
+
+/************* Badge Styling ****************/
+.badge.bg-info
+{
+    background-color: #2359AF !important;
+}
+
+/************* Assignment Page Styling **********/
+#studentAssignmentPanel .accordion-button
+{
+    background-color: rgba(59, 154, 255, 0.20) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+#studentAssignmentPanel .accordion-button:not(.collapsed)
+{
+    background-color: rgba(59, 154, 255, 0.30) !important;
+    background-image: var(--bs-gradient) !important;
 }

@@ -122,13 +122,11 @@ def coursePage(request, id):
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                      'letterGrade': ('Grade: ' + grade['letter']),
-                                                                      'percentGrade': ('Percent Grade: ' + str(grade['percent']) + '%')})
+                                                                      'letterGrade': grade['letter'],
+                                                                      'percentGrade': str(grade['percent'])})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                  'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                  'letterGrade': '',
-                                                                  'percentGrade': ''})
+                                                                  'assignment_list': late_list + upcoming_list + submitted_list})
 
 def addAssignment(request, id):
     course = Course.objects.get(id=id)
@@ -150,6 +148,10 @@ def assignmentView(request, course_id, assignment_id):
     assignment = Assignment.objects.get(id=assignment_id)
     context = {'course': course,
                'assignment' : assignment}
+    # Add grade information to context here.
+    student_grade = course.getStudentGrade(request.user)
+    context['percentGrade'] = student_grade['percent']
+    context['letterGrade'] = student_grade['letter']
     
     if assignment.type == 'f':
         submission = FileSubmission.objects.filter(assignment=assignment).filter(student=request.user).first()
@@ -176,6 +178,7 @@ def assignmentView(request, course_id, assignment_id):
 def assignmentSubmission(request, course_id, assignment_id):
     course = Course.objects.get(id=course_id)
     assignment = Assignment.objects.get(id=assignment_id)
+    context = {}
 
     if assignment.type == 'f':
         # get current submission, pass it as an instance if it exists
@@ -200,8 +203,18 @@ def assignmentSubmission(request, course_id, assignment_id):
         submission.save()
         return redirect('course_management:coursePage', course_id)
 
-    return render(request, 'course_management/assignment_submission.html',
-                  {'course': course, 'assignment': assignment, 'path_title': str(assignment), 'form': form})
+    # Add grade information to context here.
+    student_grade = course.getStudentGrade(request.user)
+    context['percentGrade'] = student_grade['percent']
+    context['letterGrade'] = student_grade['letter']
+    
+    # Add other items here
+    context['course'] = course
+    context['assignment'] = assignment
+    context['path_title'] = str(assignment)
+    context['form'] = form
+    
+    return render(request, 'course_management/assignment_submission.html', context)
 
 def submission_list(req, assignment_id):
     assignment = Assignment.objects.get(id=assignment_id)
