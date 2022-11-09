@@ -12,7 +12,7 @@
 .navbar
 {
     background-image: url('../../../media/site_images/stacked-waves-haikei.svg');
-    background-position: center;
+    background-position: left;
     background-size: cover;
 }
 
@@ -24,6 +24,11 @@
 .nav-link.active
 {
     color: #FFFFFF;
+}
+
+#logout-link
+{
+    color: #1C1D1F !important;
 }
 
 /*********** Footer Styling *************/
@@ -74,6 +79,16 @@ h4.card-title
     color: #2359AF;
 }
 
+h3.dashboard-grade
+{
+    font-weight: 350;
+}
+
+h6.card-subtitle.text-muted
+{
+    color: #36527e !important;
+}
+
 .course-card:hover
 {
     background-color: rgba(59, 154, 255, 0.50) !important;
@@ -118,7 +133,7 @@ h4.card-title
 .accordion-button:not(.collapsed)
 {
     box-shadow: none;
-    background-color: rgba(57, 133, 255, 0.30) !important;
+    background-color: rgba(59, 154, 255, 0.50) !important;
 }
 
 .accordion-button:focus
@@ -128,7 +143,7 @@ h4.card-title
 
 .accordion-button
 {
-    background-color: rgba(57, 133, 255, 0.15) !important;
+    background-color: rgba(59, 154, 255, 0.35) !important;
     background-image: var(--bs-gradient) !important;
 }
 
