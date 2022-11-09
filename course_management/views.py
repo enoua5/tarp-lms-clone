@@ -88,7 +88,6 @@ def drop(request, id):
 # course page view
 def coursePage(request, id):
     course = Course.objects.get(id=id)
-    assignment_object_list = Assignment.objects.filter(course=course)
 
     assignments = Assignment.objects.filter(course=course).order_by('due_date')
     late_list = []
