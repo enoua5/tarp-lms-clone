@@ -1,8 +1,6 @@
-/*********** Notifications  ***********/
-.DropDownMenu {
-    max-width: 8rem;
-    min-width: 8rem;
-    margin-top: 20rem;
+.dropdown-menu
+{
+    min-width: 40em !important;
 }
 
 .dropdown-item {
@@ -293,4 +291,24 @@ h6.card-subtitle.text-muted, #card-professor-name
 {
     background-color: rgba(59, 154, 255, 0.30) !important;
     background-image: var(--bs-gradient) !important;
+}
+
+/*********** Misc Styling *************/
+.no-notif
+{
+    filter: grayscale(1);
+}
+
+.yes-notif
+{
+    /**/
+}
+
+/* Used to hide the navbar when printing the page */
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
 }
