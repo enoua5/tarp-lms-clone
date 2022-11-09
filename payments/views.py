@@ -35,7 +35,6 @@ def createpayment(request):
         currency=data['currency'],
         metadata={'integration_check': 'accept_a_payment'},
         )
-      # print(intent.client_secret)
       try:
         return JsonResponse({'publishableKey':  
           settings.STRIPE_PUBLIC_KEY, 'clientSecret': intent.client_secret})
@@ -43,6 +42,9 @@ def createpayment(request):
         return JsonResponse({'error':str(e)},status= 403)
 
 def success(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    receipt_link = stripe.Charge.list(limit=1)['data'][0]['receipt_url']
+
     # Alright. I am not going to check if transaction was successful
     # Just trusting that it is
     currTuition = Tuition.objects.get(user=request.user)
@@ -56,4 +58,4 @@ def success(request):
     course_list = request.user.courses.all()
     balance = Tuition.objects.get(user=request.user).balance
 
-    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True, 'paid':paid}) 
+    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True, 'paid':paid, 'receipt':receipt_link}) 
