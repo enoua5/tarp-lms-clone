@@ -1,17 +1,18 @@
 {% extends 'main/base.html' %}
 {% block body %}
 <div class="container-fluid mt-2" style="width: 80%">
+    <h1 class="text-center my-1">My Courses</h1>
     <a class="btn btn-dark mb-2" href="{% url 'course_management:addCourse' %}" role="button">Add Course</a>
     {% if course_list %}
     <ul class="list-group">
         {% for course in course_list %}
             <li class="list-group-item">
                 <div class="row">
-                    <div class="mt-2 col">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
-                    <div class="col d-flex justify-content-between" style="width: 25%">
-                        <a href="{% url 'course_management:coursePage' course.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
-                        <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                        <a href="{% url 'course_management:deleteCourse' course.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                    <div class="mt-2 col"><span class="course-lead lead me-2">{{ course.department }} {{ course.course_num }}</span><span>{{ course.course_name }}</span></div>
+                    <div class="col d-flex justify-content-end">
+                        <a href="{% url 'course_management:coursePage' course.id %}" class="btn btn-primary mx-1" tabindex="-1" role="button" aria-disabled="true">View</a>
+                        <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary mx-1" tabindex="-1" role="button" aria-disabled="true">Edit</a>
+                        <a href="{% url 'course_management:deleteCourse' course.id %}" class="btn btn-danger mx-1" tabindex="-1" role="button" aria-disabled="true">Delete</a>
                     </div>
                 </div>
                 

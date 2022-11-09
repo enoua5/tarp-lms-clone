@@ -74,7 +74,7 @@ a.list-group-item:hover
 .course-card
 {
     box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
-    background-color: rgba(59, 154, 255, 0.35) !important;
+    background-color: rgba(59, 154, 255, 0.25) !important;
     background-image: var(--bs-gradient) !important;
     border: none;
 }
@@ -91,7 +91,7 @@ h6.card-subtitle.text-muted, #card-professor-name
 
 .course-card:hover
 {
-    background-color: rgba(59, 154, 255, 0.50) !important;
+    background-color: rgba(59, 154, 255, 0.35) !important;
     background-image: var(--bs-gradient) !important;
 }
 
