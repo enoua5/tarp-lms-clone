@@ -88,7 +88,7 @@ def drop(request, id):
 # course page view
 def coursePage(request, id):
     course = Course.objects.get(id=id)
-    assignment_list = Assignment.objects.filter(course=course)
+    assignment_object_list = Assignment.objects.filter(course=course)
 
     assignments = Assignment.objects.filter(course=course).order_by('due_date')
     late_list = []
@@ -142,7 +142,7 @@ def coursePage(request, id):
                                                                       'grade_list': grade_list})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                  'assignment_list': late_list + upcoming_list + submitted_list})
+                                                                  'assignment_list': late_list + upcoming_list + submitted_list,})
 
 # Calculate the letter grade based on the scale and the percentage
 def calcLetterGrade(athresh, increment, p):

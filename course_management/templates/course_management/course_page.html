@@ -101,13 +101,13 @@
                                         <a href="{% url 'course_management:editAssignment' assignment.info.id %}" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
 
                                         {# button to open modal #}
-                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ forloop.counter0 }}">
                                             Delete
                                         </button>
                                      </div>
 
                                     {# modal for deleting assignment #}
-                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="deleteModal{{ forloop.counter0 }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
