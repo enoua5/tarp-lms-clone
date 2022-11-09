@@ -294,10 +294,10 @@ h6.card-subtitle.text-muted, #card-professor-name
     background-image: var(--bs-gradient) !important;
 }
 
-/*********** Misc Styling *************/
+/*********** Notification Styling *************/
 .no-notif
 {
-    filter: grayscale(1);
+    filter: saturate(0) brightness(2);
 }
 
 .yes-notif
@@ -305,13 +305,19 @@ h6.card-subtitle.text-muted, #card-professor-name
     /**/
 }
 
-/* Used to hide the navbar when printing the page */
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
+#notification-dropdown .dropdown-item
+{
+    background-color: rgba(59, 154, 255, 0.35) !important;
+    color: #27282d !important;
+    border: none !important;
+    background-image: var(--bs-gradient) !important;
+    width: 90%;
+}
+
+#notification-dropdown .dropdown-item:hover
+{
+    background-color: rgba(59, 154, 255, 0.45) !important;
+    background-image: var(--bs-gradient) !important;
 }
 
 /*********** Assignment Submission Styling ************/

@@ -1,10 +1,21 @@
 import datetime
+from .models import Profile
 
-from django.contrib.auth.models import User
+# Django Imports
 from django.test import TestCase
 from django.test import Client
-from .models import Profile
-import django
+from django.test import LiveServerTestCase
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+
+# Selenium Imports
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+# Webdriver Imports
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 # Create your tests here.
@@ -108,3 +119,83 @@ class EditProfile(TestCase):
 
     def tearDown(self):
         pass
+
+
+'''
+    Selenium tests
+'''
+class UserEditProfileSeleniumTest(LiveServerTestCase):
+    def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        self.selenium.implicitly_wait(10)
+        # create groups and required objects
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
+
+        user = User.objects.create_user(username='testuser',  first_name='Test', last_name='User', password='asdfasdfasdf')
+        Profile.objects.create(user=user, birthdate=datetime.date(2001, 1, 1))
+
+        self.selenium.maximize_window()
+
+    def test_edit_profile(self):
+        selenium = self.selenium
+        # first we need to log user in
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        # Get the elements to log in
+        username_field = selenium.find_element(By.ID, 'username')
+        password_field = selenium.find_element(By.ID, 'password')
+        login_btn = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
+
+        # Populate the form with user input.
+        username_field.send_keys('testuser')
+        password_field.send_keys('asdfasdfasdf')
+
+        # Click login
+        login_btn.click()
+
+        # go to profile url
+        selenium.get('%s%s' % (self.live_server_url, '/account/editprofile/'))
+
+        # get elements for form input
+        bio_field = selenium.find_element(By.ID, 'bio')
+        address1_field = selenium.find_element(By.ID, 'address_line1')
+        address2_field = selenium.find_element(By.ID, 'address_line2')
+        city_field = selenium.find_element(By.ID, 'city')
+        state_field = selenium.find_element(By.ID, 'state')
+        zip_field = selenium.find_element(By.ID, 'zip')
+        link1_field = selenium.find_element(By.ID, 'link1')
+
+        # populate form
+        bio_field.send_keys('This is the bio')
+        address1_field.send_keys('111 N 1111 E')
+        address2_field.send_keys('apt 1')
+        city_field.send_keys('Layton')
+        state_field.send_keys('UT')
+        zip_field.send_keys('84040')
+        link1_field.send_keys('https://google.com')
+
+        # scroll down, click button
+        selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        selenium.implicitly_wait(1000)
+        submit_btn = selenium.find_element(By.XPATH, "//button[@type='submit']")
+        # for some reason this click works while .click() doesn't???
+        selenium.execute_script("arguments[0].click();", submit_btn)
+
+        # run assertions
+        user = User.objects.filter(username='testuser')[0]
+        user_profile = Profile.objects.get(user=user)
+
+        assert user.first_name == 'Test'
+        assert user.last_name == 'User'
+        assert user_profile.bio == 'This is the bio'
+        assert user_profile.address_line1 == '111 N 1111 E'
+        assert user_profile.address_line2 == 'apt 1'
+        assert user_profile.city == 'Layton'
+        assert user_profile.state == 'UT'
+        assert user_profile.zip == '84040'
+        assert user_profile.birthdate == datetime.date(2001, 1, 1)
+        assert user_profile.link1, 'https://google.com'
+        assert user_profile.link2 == ''
+
