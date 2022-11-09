@@ -4,7 +4,7 @@
     <!-- A Header, that countains potential errors -->
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
-        <h4 class="mb-0">{% if form.instance %}Edit{% else %}Add{% endif %} an assignment</h4>
+        <h4 class="mb-0">{% if form.instance.id %}Edit{% else %}Add{% endif %} an assignment</h4>
         {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -28,6 +28,7 @@
                     </div>
                 {% endfor %}
                 <div class="mt-2 mb-2">
+                    {% if form.instance.id %}
                         {# confirmation modal #}
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
                             Submit
@@ -52,6 +53,10 @@
                                 </div>
                             </div>
                         </div>
+                    {% else %}
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    {% endif %}
+
                     <a class="btn btn-dark" href="{% url 'course_management:coursePage' course.id %}" role="button">Cancel</a>
                 </div>
             </div>
