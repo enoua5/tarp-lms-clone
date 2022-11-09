@@ -313,3 +313,10 @@ h6.card-subtitle.text-muted, #card-professor-name
         display: none !important;
     }
 }
+
+/*********** Assignment Submission Styling ************/
+.card-header
+{
+    background-color: rgba(59, 154, 255, 0.25) !important;
+    background-image: var(--bs-gradient) !important;
+}
