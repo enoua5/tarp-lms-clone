@@ -154,7 +154,7 @@ def assignmentView(request, course_id, assignment_id):
                'assignment' : assignment}
     # Add grade information to context here.
     student_grade = course.getStudentGrade(request.user)
-    context['percentGrade'] = student_grade['percent']
+    context['percentGrade'] = str(student_grade['percent']) if student_grade['percent'] >=0 else '--'
     context['letterGrade'] = student_grade['letter']
     
     if assignment.type == 'f':
@@ -209,7 +209,7 @@ def assignmentSubmission(request, course_id, assignment_id):
 
     # Add grade information to context here.
     student_grade = course.getStudentGrade(request.user)
-    context['percentGrade'] = student_grade['percent']
+    context['percentGrade'] = str(student_grade['percent']) if student_grade['percent'] >=0 else '--'
     context['letterGrade'] = student_grade['letter']
     
     # Add other items here
