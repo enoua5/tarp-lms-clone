@@ -21,15 +21,13 @@ def dashboard(request):
         else:
             # User is a student.
             course_list = request.user.courses.all()
-            grade_list = list(map(lambda course: course.getStudentGrade(request.user), course_list))
-            course_grade_list = zip(course_list, grade_list)
             assignments = []
             if course_list is not None:
                 assignments = getNextAssignments(request.user)
                 
             # Don't pass assignments if the user doesn't have any.
             if len(assignments) != 0:
-                return render(request, 'dashboard/dashboard.html', {'course_grade_list': course_grade_list,
+                return render(request, 'dashboard/dashboard.html', {'course_list': course_list,
                                                                     'page_title': "Dashboard",
                                                                     'assignments': assignments})
                 

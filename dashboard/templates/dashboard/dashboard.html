@@ -8,25 +8,7 @@
     {% comment %} Course Card Display {% endcomment %}
     <div id="course-card-container" class="container col-md-9" style="border-right: 1px solid lightgrey;">
         <h3 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">Courses</h3>
-        {% if course_grade_list %}
-            <div class="row">
-                {% for course, grade in course_grade_list %}
-                        <div class="p-3 col-auto">
-                            {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
-                            <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
-                                <div class="card btn text-center course-card" style="width: 15rem;">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ course.department }} {{course.course_num }}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                                        <h3 class="dashboard-grade">{{ grade.letter }}</h3>
-                                        <p class="small">{{ grade.percent }}%</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                {% endfor %}
-            </div>
-        {% elif course_list %}
+        {% if course_list %}
             <div class="row">
                 {% for course in course_list %}
                         <div class="p-3 col-auto">
