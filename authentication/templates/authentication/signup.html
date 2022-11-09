@@ -7,10 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% include 'main/shared_header.html' %}
     <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <style>
+        body
+        {
+            background-image: url('../../../media/wave.svg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: bottom;
+        }
+        .card
+        {
+            border: 3px solid #1165c4;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-2" style="width: 40rem">
-    <div class="card border-secondary">
+    <div class="card">
         <div class="card-header" style="text-align: center">
             <h4>Sign Up</h4>
     {% if form.errors %}
