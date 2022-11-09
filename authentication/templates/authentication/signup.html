@@ -15,17 +15,35 @@
             background-attachment: fixed;
             background-position: bottom;
         }
-        .card
+        .btn-primary
         {
-            border: 3px solid #1165c4;
+            background-color: #0591e9;
+            border-color: #0066a5;
+        }
+        .btn-primary:hover
+        {
+            background-color: #007ac6 !important;
+        }
+
+        .btn-secondary
+        {
+            background-color: #0253ae;
+        }
+        .btn-secondary:hover
+        {
+            background-color: #004594 !important;
+        }
+        h3
+        {
+            color: #001c3d !important;
         }
     </style>
 </head>
 <body>
 <div class="container mt-2" style="width: 40rem">
-    <div class="card">
+    <div class="card rounded-4 shadow mt-4">
         <div class="card-header" style="text-align: center">
-            <h4>Sign Up</h4>
+            <h3>Sign Up</h3>
     {% if form.errors %}
         <ul class="list-group">
             {% for field, errors in form.errors.items %}
@@ -36,7 +54,7 @@
         </ul>
     {% endif %}
         </div>
-        <div class="card-body mx-auto pb-2 pt-2">
+        <div class="card-body mx-auto pb-2 pt-2 w-50">
             <form method="POST">
                 {% csrf_token %}
                 <div class="container">
@@ -46,7 +64,7 @@
                         {{ field }}
                     </div>
                     {% endfor %}
-                    <div class="mt-3">
+                    <div class="mt-3 mb-2">
                         <input class="btn btn-primary" type="submit" value="Sign Up">
                         <a href="{% url 'authentication:login' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Back to log In</a>
                     </div>

@@ -25,9 +25,28 @@
             background-attachment: fixed;
             background-position: bottom;
         }
-        .card
+        .btn-primary
         {
-            border: 3px solid #1165c4;
+            background-color: #0591e9;
+            border-color: #0066a5;
+        }
+        .btn-primary:hover
+        {
+            background-color: #007ac6 !important;
+        }
+
+        .btn-secondary
+        {
+            background-color: #0253ae;
+        }
+        .btn-secondary:hover
+        {
+            background-color: #004594 !important;
+        }
+
+        h3
+        {
+            color: #001c3d !important;
         }
     </style>
 </head>
@@ -39,7 +58,7 @@
 
     <div class="card rounded-4 shadow">
         <div class="card-header" style="text-align: center">
-            <h4>Log In</h4>
+            <h3>Log In</h3>
             {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -61,8 +80,10 @@
                         {{ field }}
                     </div>
                     {% endfor %}
-                    <input class="btn btn-primary" type="submit" value="Log In">
-                    <a href="{% url 'authentication:signup' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Sign Up</a>
+                    <div class="text-center">
+                        <input class="btn btn-primary mt-2 me-2" type="submit" value="Log In">
+                        <a href="{% url 'authentication:signup' %}" class="btn btn-secondary mt-2" tabindex="-1" role="button" aria-disabled="true">Sign Up</a>
+                    </div>
                 </div> 
             </form>
         </div>
