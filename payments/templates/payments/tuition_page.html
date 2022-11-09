@@ -195,14 +195,16 @@
                 </tr>
                 <tr>
                     <td class="text-end"><b>Balance:</b></td>
-                    <td><b>${{ balance }}</b></td>
+                    <td><b>${{ balance }}0</b></td>
                 </tr>
             </tfoot>
         </table>
     </div>
+    {% if balance > 0 %}
     <div class="d-flex mt-3 justify-content-end" style="width: 95%;">
-        <a href="#" class="btn btn-success {% if balance <= 0.0 %}disabled{% endif %}" style="width: 15%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
+      <a href="#" class="btn btn-success" style="width: 30%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
     </div>
+    {% endif %}
 
     {% else %}
     <div class="alert alert-primary mt-2" role="alert" >

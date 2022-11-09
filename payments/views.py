@@ -18,7 +18,7 @@ def tuition(request):
         amt_paid = total - balance
 
         return render(request, 'payments/tuition_page.html', {'course_list': course_list,
-                                                              'balance': f"{balance:0.2f}",
+                                                              'balance': balance,
                                                               'total': f"{total:0.2f}",
                                                               'paid': f"{amt_paid:0.2f}"})
     except:  
