@@ -3,23 +3,41 @@
 
 <div class="container-fluid mt-3" style="width: 80%">
     {% if course_list %}
-    <div class="alert alert-success" role="alert">
-        <div class="d-flex justify-content-between">
-            <h1>Your balance: ${{balance}}</h1>
-            <a href="#" class="btn btn-success btn-lg" style="width: 20%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
-        </div>
-    </div>
     <div class="container-fluid mt-3" style="width: 95%">
-        <ul class="list-group">
-        {% for course in course_list %}
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="mt-2 col-10">{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</div>
-                    <div class="mt-2 col-1">${{ course.credit_hours }}00</div>
-                </div>   
-            </li>
-        {% endfor %}
-        </ul>
+        <h1>Semester Tuition</h1>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Course</th>
+                <th scope="col">Cost</th>
+              </tr>
+            </thead>
+            <tbody>        
+                {% for course in course_list %}
+                    <tr>
+                        <td>{{ course.department }} {{ course.course_num }} {{ course.course_name }}</td>
+                        <td>${{ course.credit_hours }}00.00</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-end">Total:</td>
+                    <td>${{ total }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end">Amount Paid:</td>
+                    <td>-${{ paid }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><b>Balance:</b></td>
+                    <td><b>${{ balance }}</b></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="d-flex mt-3 justify-content-end" style="width: 95%;">
+        <a href="#" class="btn btn-success {% if not balance %}disabled{% endif %}" style="width: 15%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
     </div>
     {% else %}
     <div class="alert alert-primary mt-2" role="alert" >
