@@ -126,7 +126,7 @@ def coursePage(request, id):
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                       'assignment_list': late_list + upcoming_list + submitted_list,
                                                                       'letterGrade': grade['letter'],
-                                                                      'percentGrade': str(grade['percent']),
+                                                                      'percentGrade': (str(grade['percent']) if grade['percent'] >=0 else '--'),
                                                                       'grade_list': grade_list})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
