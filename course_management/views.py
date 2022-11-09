@@ -237,8 +237,8 @@ def editAssignment(request, assignment_id):
         if assignment.type != prev_type:
             submissions = Submission.objects.filter(assignment=assignment)
             submissions.all().delete()
-        # if the new points are less than the old points, we need to ungrade all submissions
-        elif assignment.points < prev_points:
+        # if the new points are different, we need to ungrade all submissions
+        elif assignment.points != prev_points:
             submissions = Submission.objects.filter(assignment=assignment)
             for submission in submissions:
                 submission.score = None

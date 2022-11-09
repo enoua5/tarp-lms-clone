@@ -28,7 +28,30 @@
                     </div>
                 {% endfor %}
                 <div class="mt-2 mb-2">
-                    <input class="btn btn-primary" type="submit" value="Submit">
+                        {# confirmation modal #}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                            Submit
+                        </button>
+
+                        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title fs-5" id="exampleModalLabel">Are you sure you want to edit this Assignment?</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        This action cannot be undone, and may result in other changes that are not desired.<br>
+                                        If you change the possible points, all student submissions for this assignment will be ungraded.<br>
+                                        If you change the assignment type, all student submissions for this assignment will be deleted.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <input class="btn btn-danger" type="submit" value="Save changes">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <a class="btn btn-dark" href="{% url 'course_management:coursePage' course.id %}" role="button">Cancel</a>
                 </div>
             </div>
