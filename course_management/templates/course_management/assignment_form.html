@@ -4,7 +4,7 @@
     <!-- A Header, that countains potential errors -->
     <div class="card border-secondary">
         <div class="card-header" style="text-align: center">
-        <h4 class="mb-0">Add/edit an assignment</h4>
+        <h4 class="mb-0">{% if form.instance %}Edit{% else %}Add{% endif %} an assignment</h4>
         {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -41,9 +41,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        This action cannot be undone, and may result in other changes that are not desired.<br>
-                                        If you change the possible points, all student submissions for this assignment will be ungraded.<br>
-                                        If you change the assignment type, all student submissions for this assignment will be deleted.
+                                        This action cannot be undone, and may result in other changes that are not desired.<br><br>
+                                        If you change the possible points, all student submissions for this assignment will be <span class="text-warning fw-bold">ungraded.</span><br><br>
+                                        If you change the assignment type, all student submissions for this assignment will be <span class="text-danger fw-bold">deleted.</span>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
