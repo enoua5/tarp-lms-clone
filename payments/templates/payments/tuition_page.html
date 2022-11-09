@@ -201,7 +201,7 @@
         </table>
     </div>
     <div class="d-flex mt-3 justify-content-end" style="width: 95%;">
-        <a href="#" class="btn btn-success {% if not balance %}disabled{% endif %}" style="width: 15%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
+        <a href="#" class="btn btn-success {% if balance <= 0.0 %}disabled{% endif %}" style="width: 15%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
     </div>
 
     {% else %}
