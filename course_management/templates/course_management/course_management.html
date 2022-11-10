@@ -11,7 +11,7 @@
                     <div class="col d-flex justify-content-between" style="width: 25%">
                         <a href="{% url 'course_management:coursePage' course.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
                         <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                        <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmModal" data-bs-type = "delete" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">delete</a>
+                        <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmModal" data-bs-type = "delete" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">Delete</a>
 
                     </div>
                 </div>
