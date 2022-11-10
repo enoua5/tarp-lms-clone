@@ -397,6 +397,8 @@ class SubmitAssignmentTest(LiveServerTestCase):
 
 class TestCalendarLink(LiveServerTestCase):
     def setUp(self):
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
         service = Service(executable_path=ChromeDriverManager().install())
         self.selenium = webdriver.Chrome(service=service)
         self.selenium.maximize_window()
@@ -457,6 +459,8 @@ class TestCalendarLink(LiveServerTestCase):
 
 class TestSignupStudent(LiveServerTestCase):
     def setUp(self):
+        Group.objects.create(name='Student')
+        Group.objects.create(name='Instructor')
         service = Service(executable_path=ChromeDriverManager().install())
         self.selenium = webdriver.Chrome(service=service)
         self.selenium.maximize_window()
