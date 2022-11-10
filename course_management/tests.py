@@ -393,3 +393,68 @@ class SubmitAssignmentTest(LiveServerTestCase):
         # Making sure the submission is connected with a right user
         submission = Submission.objects.filter(student=user.id)
         assert submission.count() > 0
+
+class SeleniumGradeAssignmentTest(LiveServerTestCase):
+    def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        self.selenium.maximize_window()
+
+        # Creating necessary objects
+        student = User.objects.create_user('teststudent', 'student@gmail.com', 'asdfasdfasdf')
+        professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
+        course = Course.objects.create(department='CS', course_num=4000, course_name='Test course',
+                                       instructor=professor, meeting_days='T,Th', meeting_start_time='12:00',
+                                       meeting_end_time='12:30', meeting_location='Building 100', credit_hours=4, a_threshold=93, increment=4)
+        assignment = Assignment.objects.create(course=course, title='Test Assignment',
+                                               description='This is the test assignment',
+                                               due_date='2022-12-31 23:59:00', points=100, type='t')
+        submission = TextSubmission.objects.create(text='Unit test', assignment_id=assignment.id, student_id=student.id)
+
+    def test_grade_success_form(self):
+        selenium = self.selenium
+        # Give Selenium the URL to go to.
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        # Finding the necessary objects
+        course = Course.objects.filter(course_name='Test course')[0]
+        assignment = Assignment.objects.filter(title='Test Assignment')[0]
+        user = User.objects.filter(username='testprofessor')[0]
+
+        # Get the elements that we'll be interacting with.
+        username_field = selenium.find_element(By.ID, 'username')
+        password_field = selenium.find_element(By.ID, 'password')
+        login_btn = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
+
+        # Populate the form with user input.
+        username_field.send_keys('testprofessor')
+        password_field.send_keys('asdfasdfasdf')
+
+        # Click login
+        login_btn.click()
+
+        # Check that we were redirected to the dashboard
+        # assert 'dashboard' in selenium.current_url
+
+        # Go to a correct submission page
+        # IMPORTANT: assumes that the pages are not protected
+        url = '/courses/' + str(course.id) + '/' + str(assignment.id) + '/submit'
+        selenium.get('%s%s' % (self.live_server_url, url))
+
+        # Get the input field and the button
+        input_field = selenium.find_element(By.ID, 'id_text')
+        button = selenium.find_element(By.XPATH, "//button[contains(text(),'Submit')]")
+
+        # Put the data into a form
+        input_field.send_keys('Seleium test submission')
+        button.click()
+        
+        assert 'courses/' + str(course.id) in selenium.current_url
+
+        # Making sure the submission is there
+        submission = TextSubmission.objects.filter(text='Seleium test submission')
+        assert submission.count() > 0
+
+        # Making sure the submission is connected with a right user
+        submission = Submission.objects.filter(student=user.id)
+        assert submission.count() > 0
