@@ -4,7 +4,7 @@
     <!-- A Header, that countains potential errors -->
     <div class="card">
         <div class="card-header" style="text-align: center">
-        <h4 class="mb-0">Add an assignment</h4>
+        <h4 class="mb-0">{% if form.instance.id %}Edit{% else %}Add{% endif %} an assignment</h4>
         {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -28,7 +28,35 @@
                     </div>
                 {% endfor %}
                 <div class="mt-2 mb-2">
-                    <input class="btn btn-primary" type="submit" value="Submit">
+                    {% if form.instance.id %}
+                        {# confirmation modal #}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                            Submit
+                        </button>
+
+                        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title fs-5" id="exampleModalLabel">Are you sure you want to edit this Assignment?</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        This action cannot be undone, and may result in other changes that are not desired.<br><br>
+                                        If you change the possible points, all student submissions for this assignment will be <span class="text-warning fw-bold">ungraded.</span><br><br>
+                                        If you change the assignment type, all student submissions for this assignment will be <span class="text-danger fw-bold">deleted.</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <input class="btn btn-danger" type="submit" value="Save changes">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    {% endif %}
+
                     <a class="btn btn-dark" href="{% url 'course_management:coursePage' course.id %}" role="button">Cancel</a>
                 </div>
             </div>

@@ -83,7 +83,11 @@
             </h2>
             <div id="collapseSubmission" class="accordion-collapse collapse show" aria-labelledby="submissionHeader">
                 <div class="accordion-body m-1">
-                    {% if submission.score is None %}
+                    {% if not submission %}
+                        <div class="alert alert-primary mt-2" role="alert">
+                            You haven't submitted this assignment yet.
+                        </div>
+                    {% elif submission.score is None %}
                         <div class="alert alert-primary mt-2" role="alert">
                             Your submission has not been graded yet.
                         </div>
