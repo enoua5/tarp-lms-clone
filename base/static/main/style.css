@@ -300,18 +300,18 @@ h6.card-subtitle.text-muted, #card-professor-name
     filter: saturate(0) brightness(2);
 }
 
-#notification-dropdown .dropdown-item
+#notification-dropdown .dropdown-item:not(.btn-danger)
 {
-    background-color: rgba(59, 154, 255, 0.35) !important;
+    background-color: rgba(59, 154, 255, 0.25) !important;
     color: #27282d !important;
-    border: none !important;
     background-image: var(--bs-gradient) !important;
-    margin-bottom: 0;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
-#notification-dropdown .dropdown-item:hover
+#notification-dropdown .dropdown-item:hover:not(.btn-danger)
 {
-    background-color: rgba(59, 154, 255, 0.45) !important;
+    background-color: rgba(59, 154, 255, 0.35) !important;
     background-image: var(--bs-gradient) !important;
 }
 
