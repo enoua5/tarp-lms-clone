@@ -118,8 +118,8 @@ def coursePage(request, id):
 
     # Only calculate grade if user is a student
     grade_list = []
-    if request.user.groups.filter(name='Student').exists():
-        grade = course.getStudentGrade(request.user)
+    for student in course.students.all():
+        grade = course.getStudentGrade(student)
         if grade['percent'] >= 0.0:
             grade_list.append(grade['percent'])
 
