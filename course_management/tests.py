@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 # Webdriver Imports
 from webdriver_manager.chrome import ChromeDriverManager
 from payments.models import Tuition
+import time
 
 # Create your tests here.
 
@@ -394,6 +395,141 @@ class SubmitAssignmentTest(LiveServerTestCase):
         submission = Submission.objects.filter(student=user.id)
         assert submission.count() > 0
 
+class TestSignupStudent(LiveServerTestCase):
+    def setUp(self):
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        self.selenium.maximize_window()
+
+    def test_Signup(self):
+        selenium = self.selenium
+        # Go to the login page
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        selenium.maximize_window()
+
+        # Go to the signup page
+        btn = selenium.find_element(By.XPATH, "//a[contains(text(),'Sign Up')]")
+        btn.click()
+
+        element = selenium.find_element(By.ID, 'username')
+        element.send_keys('LarryJohnson')
+        element = selenium.find_element(By.ID, 'email')
+        element.send_keys('LJohnson@gmail.com')
+        element = selenium.find_element(By.ID, 'first_name')
+        element.send_keys('Larry')
+        element = selenium.find_element(By.ID, 'last_name')
+        element.send_keys('Johnson')
+        element = selenium.find_element(By.ID, 'birthdate')
+        # Give it a bad birthday
+        element.send_keys('12/31/2018')
+        element = selenium.find_element(By.ID, 'password1')
+        element.send_keys('asdfasdfasdf')
+        element = selenium.find_element(By.ID, 'password2')
+        element.send_keys('asdfasdfasdf')
+        element = selenium.find_element(By.XPATH, "//input[@value='Sign Up']")
+        element.click()
+
+        # Check that we are still on the same page
+        assert selenium.current_url == (self.live_server_url + '/login/signup/')
+
+        # Change the birthdate to a good value
+        element = selenium.find_element(By.ID, 'birthdate')
+        element.send_keys('12/31/1996')
+
+        # Fill in the password again
+        element = selenium.find_element(By.ID, 'password1')
+        element.send_keys('asdfasdfasdf')
+        element = selenium.find_element(By.ID, 'password2')
+        element.send_keys('asdfasdfasdf')
+
+        # Sign up the user
+        element = selenium.find_element(By.XPATH, "//input[@value='Sign Up']")
+        element.click()
+        user = User.objects.filter(username='LarryJohnson')[0]
+        user.user_permissions.add(Permission.objects.get(name="Can view course"))
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        # Login the user
+        element = selenium.find_element(By.ID, 'username')
+        element.send_keys('LarryJohnson')
+        element = selenium.find_element(By.ID, 'password')
+        element.send_keys('asdfasdfasdf')
+        element = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
+        element.click()
+
+        assert selenium.current_url == (self.live_server_url + '/dashboard/')
+
+        # Alter the profile
+        element = selenium.find_element(By.XPATH, "//a[contains(text(),'Profile')]")
+        element.click()
+
+        # Scroll to the bottom of the page
+        selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(3)
+        # Edit the profile
+        element = selenium.find_element(By.XPATH, "//a[contains(text(),'Edit profile')]")
+        element.click()
+
+        # Clear the first name
+        element = selenium.find_element(By.ID, "id_first_name")
+        element.clear()
+        element = selenium.find_element(By.ID, "id_bio")
+        element.send_keys("A bag (also known regionally as a sack) is a common tool in the form of a non-rigid"
+                          " container. The use of bags predates recorded history, with the earliest bags being "
+                          "no more than lengths of animal skin, cotton, or woven plant fibers, folded up at the "
+                          "edges and secured in that shape with strings of the same material.")
+        element = selenium.find_element(By.ID, "id_address_line1")
+        element.send_keys("House")
+        element = selenium.find_element(By.ID, "id_address_line2")
+        element.send_keys("House street")
+        element = selenium.find_element(By.ID, "id_city")
+        element.send_keys("Ulaanbaatar")
+        element = selenium.find_element(By.ID, "id_state")
+        element.send_keys("Mongolia")
+        element = selenium.find_element(By.ID, "id_zip")
+        element.send_keys("88888")
+        element = selenium.find_element(By.ID, "id_link1")
+        element.send_keys("https://en.wikipedia.org/wiki/Bag")
+        element = selenium.find_element(By.ID, "id_link2")
+        element.send_keys("https://en.wikipedia.org/wiki/Jar")
+        element = selenium.find_element(By.ID, "id_link3")
+        element.send_keys("https://en.wikipedia.org/wiki/Jar")
+
+        selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Submit the profile
+        element = selenium.find_element(By.XPATH, "//button[contains(text(),'Save Changes')]")
+        time.sleep(3)
+        element.click()
+
+        # Check to make sure that it didn't work
+        assert selenium.current_url == (self.live_server_url + '/account/editprofile/')
+        time.sleep(3)
+
+        # Fix the name
+        element = selenium.find_element(By.ID, "id_first_name")
+        element.send_keys("Larry")
+
+        selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Submit the profile
+        element = selenium.find_element(By.XPATH, "//button[contains(text(),'Save Changes')]")
+        time.sleep(3)
+        element.click()
+
+        # Check to make sure we got sent to the profile page
+        assert selenium.current_url == (self.live_server_url + '/account/profile/')
+
+        # Logout
+        btn = selenium.find_element(By.XPATH, "//a[contains(text(), 'Logout')]")
+        btn.click()
+
+        # Check that logout was successful
+        assert selenium.current_url == (self.live_server_url + '/login/')
+
+    def tearDown(self):
+        pass
+
 class TestCalendarLink(LiveServerTestCase):
     def setUp(self):
         service = Service(executable_path=ChromeDriverManager().install())
@@ -402,7 +538,6 @@ class TestCalendarLink(LiveServerTestCase):
         selenium = self.selenium
 
         user = User.objects.create_user('NoonienSoong', 'NSoong@gmail.com', 'asdfasdfasdf')
-
 
 
     def test_link(self):
@@ -454,3 +589,5 @@ class TestCalendarLink(LiveServerTestCase):
 
     def tearDown(self):
         pass
+
+
