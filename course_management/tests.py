@@ -382,6 +382,8 @@ class SubmitAssignmentTest(LiveServerTestCase):
 
         # Put the data into a form
         input_field.send_keys('Seleium test submission')
+        # The below line ensures that the submit button is in view before clicking it.
+        selenium.execute_script("arguments[0].scrollIntoView();", button)
         button.click()
         
         assert 'courses/' + str(course.id) in selenium.current_url
