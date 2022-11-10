@@ -117,17 +117,19 @@ def coursePage(request, id):
             upcoming_list.append(assignment_obj)
 
     # Only calculate grade if user is a student
-    grade_list = []
-    for student in course.students.all():
-        grade = course.getStudentGrade(student)
-        if grade['percent'] >= 0.0:
-            grade_list.append(grade['percent'])
+    if request.user.groups.filter(name='Student').exists():
+        grade_list = []
+        grade = course.getStudentGrade(request.user)
+        for student in course.students.all():
+            student_grade = course.getStudentGrade(student)
+            if student_grade['percent'] >= 0.0:
+                grade_list.append(student_grade['percent'])
 
         return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
-                                                                      'assignment_list': late_list + upcoming_list + submitted_list,
-                                                                      'letterGrade': grade['letter'],
-                                                                      'percentGrade': (str(grade['percent']) if grade['percent'] >=0 else '--'),
-                                                                      'grade_list': grade_list})
+                                                                        'assignment_list': late_list + upcoming_list + submitted_list,
+                                                                        'letterGrade': grade['letter'],
+                                                                        'percentGrade': (str(grade['percent']) if grade['percent'] >=0 else '--'),
+                                                                        'grade_list': grade_list})
 
     return render(request, 'course_management/course_page.html', {'course': course, 'page_title': str(course),
                                                                   'assignment_list': late_list + upcoming_list + submitted_list})
