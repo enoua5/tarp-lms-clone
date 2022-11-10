@@ -11,7 +11,8 @@
                     <div class="col d-flex justify-content-between" style="width: 25%">
                         <a href="{% url 'course_management:coursePage' course.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">View</a>
                         <a href="{% url 'course_management:updateCourse' course.id %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Edit</a>
-                        <a href="{% url 'course_management:deleteCourse' course.id %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">Delete</a>
+                        <a href="#" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#confirmModal" data-bs-type = "delete" data-bs-name = "{{ course.course_num }}  {{ course.course_name }}" data-bs-id="{{course.id}}">delete</a>
+
                     </div>
                 </div>
                 
@@ -24,4 +25,51 @@
     </div>
     {% endif %}
 </div>
+
+<!--  Modal attatched -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalLabel">Title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <p>Are you sure you want to delete this course?</p> -->
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="" class="btn addHref" tabindex="-1" role="button" aria-disabled="true" data-bs-target="#confirmModal">Placeholder</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const confirmModal = document.getElementById('confirmModal')
+    confirmModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+
+    // Extract info from data-bs-* attributes
+    const ID = button.getAttribute('data-bs-id')
+    const Name = button.getAttribute('data-bs-name')
+
+    // Get the modal's content we want to dynamically update
+    const lbl = confirmModal.querySelector('#modalLabel')
+    const btn = confirmModal.querySelector('.addHref')
+    const modalBody = confirmModal.querySelector('.modal-body')
+
+    // Update the title 
+    lbl.textContent = Name
+    
+    // Update the inner text
+    modalBody.textContent = 'Are you sure you want to delete this course?' 
+
+    // Display a correct button
+    btn.href = 'deleteCourse/'.concat(ID)
+    btn.classList.add('btn-danger')
+    btn.textContent = 'Delete'
+})
+</script>
 {% endblock %}
