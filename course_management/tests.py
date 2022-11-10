@@ -400,8 +400,6 @@ class SubmitAssignmentTest(LiveServerTestCase):
        such as 'getShortCourseName' and 'getFormattedCourseDays.'
 '''
 class TestCourseStringFormats(TestCase):
-    c = Client()
-    
     def setUp(self):
         # Create a new test professor.
         professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
