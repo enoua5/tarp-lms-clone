@@ -7,12 +7,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% include 'main/shared_header.html' %}
     <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <style>
+        .logo .log
+        {
+            display: inline-block;
+            width: 190px;
+            height: 190px;
+            background: url('../../../media/thing.png');
+            background-position: 50% 50%;
+            background-size: cover;
+            border-radius: 50%;
+        }
+        body
+        {
+            background-image: url('../../../media/wave.svg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: bottom;
+        }
+        .btn-primary
+        {
+            background-color: #0591e9;
+            border-color: #0066a5;
+        }
+        .btn-primary:hover
+        {
+            background-color: #007ac6 !important;
+        }
+
+        .btn-secondary
+        {
+            background-color: #0253ae;
+        }
+        .btn-secondary:hover
+        {
+            background-color: #004594 !important;
+        }
+
+        h3
+        {
+            color: #001c3d !important;
+        }       
+    </style>
 </head>
 <body>
+    <h1 class="text-center mt-2 display-5">Tarp LMS</h1>
 <div class="container mt-3" style="width: 25rem">
-    <div class="card border-secondary">
+    <div class="text-center logo mt-3 mb-3 ">
+        <a href="" class="log shadow"></a>
+    </div>
+
+    <div class="card rounded-4 shadow">
         <div class="card-header" style="text-align: center">
-            <h4>Log In</h4>
+            <h3>Log In</h3>
             {% if form.errors %}
             <ul class="list-group">
                 {% for field, errors in form.errors.items %}
@@ -34,8 +81,10 @@
                         {{ field }}
                     </div>
                     {% endfor %}
-                    <input class="btn btn-primary" type="submit" value="Log In">
-                    <a href="{% url 'authentication:signup' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">Sign Up</a>
+                    <div class="text-center">
+                        <input class="btn btn-primary mt-2 me-2" type="submit" value="Log In">
+                        <a href="{% url 'authentication:signup' %}" class="btn btn-secondary mt-2" tabindex="-1" role="button" aria-disabled="true">Sign Up</a>
+                    </div>
                 </div> 
             </form>
         </div>

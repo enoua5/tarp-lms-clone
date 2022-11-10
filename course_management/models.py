@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings # Used for linking to user model
 import datetime, pytz # Time & timezone abilities
 import os
-from django.forms.widgets import NumberInput
+
 
 class Course(models.Model):
     department = models.CharField(max_length=20)
@@ -108,6 +108,29 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     submitted_at = models.DateTimeField(auto_now_add=True)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    __prev_score = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__prev_score = self.score
+
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        if self.score != self.__prev_score:
+            from dashboard.models import Notification
+            # assignment grade changed!
+            if self.__prev_score == None:
+                note = "graded"
+            else:
+                note = "grade changed"
+            Notification(
+                course=self.assignment.course,
+                assignment=self.assignment,
+                notified_user=self.student,
+                event_note = note
+            ).save()
+        super().save(force_insert, force_update, *args, **kwargs)
+        self.__prev_score = self.score
 
 
 class FileSubmission(Submission):
