@@ -409,7 +409,7 @@ class SeleniumGradeAssignmentTest(LiveServerTestCase):
         assignment = Assignment.objects.create(course=course, title='Test Assignment',
                                                description='This is the test assignment',
                                                due_date='2022-12-31 23:59:00', points=100, type='t')
-        submission = TextSubmission.objects.create(text='Unit test', assignment_id=assignment.id, student_id=student.id)
+        submission = TextSubmission.objects.create(text='Selenium test', assignment_id=assignment.id, student_id=student.id)
 
     def test_grade_success_form(self):
         selenium = self.selenium
@@ -417,9 +417,9 @@ class SeleniumGradeAssignmentTest(LiveServerTestCase):
         selenium.get('%s%s' % (self.live_server_url, '/login/'))
 
         # Finding the necessary objects
-        course = Course.objects.filter(course_name='Test course')[0]
         assignment = Assignment.objects.filter(title='Test Assignment')[0]
-        user = User.objects.filter(username='testprofessor')[0]
+        student = User.objects.filter(username='teststudent')[0]
+        submission = Submission.objects.get(assignment_id=assignment.id, student_id = student.id)
 
         # Get the elements that we'll be interacting with.
         username_field = selenium.find_element(By.ID, 'username')
@@ -438,23 +438,23 @@ class SeleniumGradeAssignmentTest(LiveServerTestCase):
 
         # Go to a correct submission page
         # IMPORTANT: assumes that the pages are not protected
-        url = '/courses/' + str(course.id) + '/' + str(assignment.id) + '/submit'
+        url = '/courses/grade/' + str(submission.id)
         selenium.get('%s%s' % (self.live_server_url, url))
 
         # Get the input field and the button
-        input_field = selenium.find_element(By.ID, 'id_text')
+        input_field = selenium.find_element(By.ID, 'id_score')
         button = selenium.find_element(By.XPATH, "//button[contains(text(),'Submit')]")
 
         # Put the data into a form
-        input_field.send_keys('Seleium test submission')
+        input_field.send_keys(15)
         button.click()
         
-        assert 'courses/' + str(course.id) in selenium.current_url
+        assert 'courses/submissions/' + str(submission.id) in selenium.current_url
 
         # Making sure the submission is there
-        submission = TextSubmission.objects.filter(text='Seleium test submission')
+        submission = TextSubmission.objects.filter(text='Selenium test')
         assert submission.count() > 0
 
-        # Making sure the submission is connected with a right user
-        submission = Submission.objects.filter(student=user.id)
-        assert submission.count() > 0
+        # Making sure the score is correct
+        full_submission = Submission.objects.get(student=student.id)
+        assert full_submission.score == 15
