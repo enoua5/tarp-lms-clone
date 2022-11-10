@@ -300,18 +300,13 @@ h6.card-subtitle.text-muted, #card-professor-name
     filter: saturate(0) brightness(2);
 }
 
-.yes-notif
-{
-    /**/
-}
-
 #notification-dropdown .dropdown-item
 {
     background-color: rgba(59, 154, 255, 0.35) !important;
     color: #27282d !important;
     border: none !important;
     background-image: var(--bs-gradient) !important;
-    width: 90%;
+    margin-bottom: 0;
 }
 
 #notification-dropdown .dropdown-item:hover
