@@ -466,16 +466,19 @@ class TestCalendarLink(LiveServerTestCase):
     def setUp(self):
         Group.objects.create(name='Student')
         Group.objects.create(name='Instructor')
-        service = Service(executable_path=ChromeDriverManager().install())
-        self.selenium = webdriver.Chrome(service=service)
-        self.selenium.maximize_window()
-        selenium = self.selenium
 
         user = User.objects.create_user('NoonienSoong', 'NSoong@gmail.com', 'asdfasdfasdf')
 
 
     def test_link(self):
         # Login the user
+        service = Service(executable_path=ChromeDriverManager().install())
+        self.selenium = webdriver.Chrome(service=service)
+        # Go to the login page
+        selenium = self.selenium
+        # Go to the login page
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+        selenium.maximize_window()
         uname = selenium.find_element(By.ID, 'username')
         pword = selenium.find_element(By.ID, 'password')
         login_btn = selenium.find_element(By.XPATH, "//input[@type='submit'][@value='Log In']")
@@ -600,26 +603,26 @@ class TestSignupStudent(LiveServerTestCase):
         # Clear the first name
         element = selenium.find_element(By.ID, "id_first_name")
         element.clear()
-        element = selenium.find_element(By.ID, "id_bio")
+        element = selenium.find_element(By.ID, "bio")
         element.send_keys("A bag (also known regionally as a sack) is a common tool in the form of a non-rigid"
                           " container. The use of bags predates recorded history, with the earliest bags being "
                           "no more than lengths of animal skin, cotton, or woven plant fibers, folded up at the "
                           "edges and secured in that shape with strings of the same material.")
-        element = selenium.find_element(By.ID, "id_address_line1")
+        element = selenium.find_element(By.ID, "address_line1")
         element.send_keys("House")
-        element = selenium.find_element(By.ID, "id_address_line2")
+        element = selenium.find_element(By.ID, "address_line2")
         element.send_keys("House street")
-        element = selenium.find_element(By.ID, "id_city")
+        element = selenium.find_element(By.ID, "city")
         element.send_keys("Ulaanbaatar")
-        element = selenium.find_element(By.ID, "id_state")
+        element = selenium.find_element(By.ID, "state")
         element.send_keys("Mongolia")
-        element = selenium.find_element(By.ID, "id_zip")
+        element = selenium.find_element(By.ID, "zip")
         element.send_keys("88888")
-        element = selenium.find_element(By.ID, "id_link1")
+        element = selenium.find_element(By.ID, "link1")
         element.send_keys("https://en.wikipedia.org/wiki/Bag")
-        element = selenium.find_element(By.ID, "id_link2")
+        element = selenium.find_element(By.ID, "link2")
         element.send_keys("https://en.wikipedia.org/wiki/Jar")
-        element = selenium.find_element(By.ID, "id_link3")
+        element = selenium.find_element(By.ID, "link3")
         element.send_keys("https://en.wikipedia.org/wiki/Jar")
 
         selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
