@@ -108,6 +108,7 @@
     </div>
 
     <!-- Plotly Script -->
+    {% if grade_list %}
     <script type="text/javascript">
         var assignmentGrades = {
             x: {{ grade_list|safe }},
@@ -132,4 +133,5 @@
         var graphDiv = document.getElementById('boxplot')
         Plotly.newPlot(graphDiv, data, layout);
     </script>
+    {% endif %}
 {% endblock %}
