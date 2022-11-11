@@ -342,7 +342,7 @@ def build_submission_data(submissions):
 '''
 def getGradedSubmissions(assignment):
     allSubmissions = Submission.objects.filter(assignment=assignment)
-    gradedSubmissions = filter(lambda grade: grade is not None, allSubmissions)
+    gradedSubmissions = filter(lambda grade: grade.score is not None, allSubmissions)
     return gradedSubmissions
 
 '''!

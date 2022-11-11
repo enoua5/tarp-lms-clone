@@ -315,6 +315,11 @@ h6.card-subtitle.text-muted, #card-professor-name
     background-image: var(--bs-gradient) !important;
 }
 
+#notification-dropdown .btn-danger
+{
+    
+}
+
 /*********** Assignment Submission Styling ************/
 .card-header
 {
