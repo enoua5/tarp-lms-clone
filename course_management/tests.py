@@ -396,6 +396,74 @@ class SubmitAssignmentTest(LiveServerTestCase):
         # Making sure the submission is connected with a right user
         submission = Submission.objects.filter(student=user.id)
         assert submission.count() > 0
+        
+        
+'''!
+    @brief Defines a unit test class that tests the Course model's string formatting methods,
+       such as 'getShortCourseName' and 'getFormattedCourseDays.'
+'''
+class TestCourseStringFormats(TestCase):
+    def setUp(self):
+        # Create a new test professor.
+        professor = User.objects.create_user('testprofessor', 'prof@gmail.com', 'asdfasdfasdf')
+        
+        # Create two courses, which follow the naming scheme given in the course form
+        Course(
+            department= 'NET',
+            course_num= 4242,
+            course_name= 'Test Course I',
+            meeting_days= "['Monday', 'Wednesday']",
+            meeting_start_time= '12:00',
+            meeting_end_time= '12:30',
+            meeting_location= 'Building 100',
+            credit_hours= 4,
+            instructor = professor
+        ).save()
+        
+        Course(
+            department= 'CS',
+            course_num= 3636,
+            course_name= 'Test Course II',
+            meeting_days= "['Monday', 'Tuesday', 'Wednesday', 'Thursday']",
+            meeting_start_time= '12:00',
+            meeting_end_time= '12:30',
+            meeting_location= 'Building 100',
+            credit_hours= 4,
+            instructor = professor
+        ).save()
+        
+    '''!
+        @brief Defines a unit test class to verify that the course's short name can be
+           retrieved properly.
+    '''
+    def test_getShortCourseName(self):
+        # Get two new courses.
+        test_course_1 = Course.objects.get(department='NET', course_num=4242)
+        test_course_2 = Course.objects.get(department='CS', course_num=3636)
+        self.assertTrue(test_course_1 is not None, msg='Failed to create or retrieve a test course!')
+        self.assertTrue(test_course_2 is not None, msg='Failed to create or retrieve a test course!')
+        
+        # Validate their short names.
+        self.assertTrue(test_course_1.getShortCourseName() == "NET 4242", msg='Short course name received was invalid.')
+        self.assertTrue(test_course_2.getShortCourseName() == "CS 3636", msg='Short course name received was invalid.')
+        
+    '''!
+        @brief Defines a unit test to verify that the course's meeting days can be retrieved
+            in the correct format.
+    '''
+    def test_getFormattedCourseDays(self):
+        # Get two new courses.
+        test_course_1 = Course.objects.get(department='NET', course_num=4242)
+        test_course_2 = Course.objects.get(department='CS', course_num=3636)
+        self.assertTrue(test_course_1 is not None, msg='Failed to create or retrieve a test course!')
+        self.assertTrue(test_course_2 is not None, msg='Failed to create or retrieve a test course!')
+        
+        # Validate their meeting days.
+        self.assertTrue(test_course_1.getFormattedCourseDays() == "M, W", msg='Course meeting days received are invalid. Should be "M, W" but was ' + test_course_1.getFormattedCourseDays() + ".")
+        self.assertTrue(test_course_2.getFormattedCourseDays() == "M, T, W, Th", msg='Course meeting days received are invalid. Should be "M, T, W, Th" but was ' + test_course_2.getFormattedCourseDays() + ".")
+    
+    def tearDown(self):
+        pass
 
 
 class SeleniumGradeAssignmentTest(LiveServerTestCase):
@@ -452,8 +520,6 @@ class SeleniumGradeAssignmentTest(LiveServerTestCase):
         # Put the data into a form
         input_field.send_keys(15)
         button.click()
-        
-        assert 'courses/submissions/' + str(submission.id) in selenium.current_url
 
         # Making sure the submission is there
         submission = TextSubmission.objects.filter(text='Selenium test')
@@ -576,6 +642,7 @@ class TestSignupStudent(LiveServerTestCase):
 
         # Sign up the user
         element = selenium.find_element(By.XPATH, "//input[@value='Sign Up']")
+        selenium.execute_script("arguments[0].scrollIntoView();", element)
         element.click()
         user = User.objects.filter(username='LarryJohnson')[0]
         user.user_permissions.add(Permission.objects.get(name="Can view course"))
@@ -595,11 +662,9 @@ class TestSignupStudent(LiveServerTestCase):
         element = selenium.find_element(By.XPATH, "//a[contains(text(),'Profile')]")
         element.click()
 
-        # Scroll to the bottom of the page
-        selenium.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(3)
         # Edit the profile
         element = selenium.find_element(By.XPATH, "//a[contains(text(),'Edit profile')]")
+        selenium.execute_script("arguments[0].scrollIntoView();", element)
         element.click()
 
         # Clear the first name
@@ -631,6 +696,7 @@ class TestSignupStudent(LiveServerTestCase):
 
         # Submit the profile
         element = selenium.find_element(By.XPATH, "//button[contains(text(),'Save Changes')]")
+        selenium.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(3)
         element.click()
 
