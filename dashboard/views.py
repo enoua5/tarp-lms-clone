@@ -27,7 +27,7 @@ def dashboard(request):
                 
             # Don't pass assignments if the user doesn't have any.
             if len(assignments) != 0:
-                return render(request, 'dashboard/dashboard.html', {'course_list' : course_list,
+                return render(request, 'dashboard/dashboard.html', {'course_list': course_list,
                                                                     'page_title': "Dashboard",
                                                                     'assignments': assignments})
                 

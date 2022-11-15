@@ -2,25 +2,23 @@
 {% block body %}
 
 {% comment %} Dashboard Container {% endcomment %}
-<div id="dashboard-container" class="container-fluid mt-3">
+<div id="dashboard-container page-bg" class="container-fluid mt-3">
 <div class="row">
 
     {% comment %} Course Card Display {% endcomment %}
     <div id="course-card-container" class="container col-md-9" style="border-right: 1px solid lightgrey;">
-        <h3 class="text-center">Courses</h3>
+        <h3 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">Courses</h3>
         {% if course_list %}
-            <div class="row row-cols-3">
+            <div class="row">
                 {% for course in course_list %}
-                        <div class="p-3 col">
+                        <div class="p-3 col-auto">
                             {# link each card to the corresponding course, inline style is temporary to remove ugly underline #}
                             <a href="{% url 'course_management:coursePage' course.id %}" style="text-decoration: none;">
-                                <div class="card btn text-center" style="width: 18rem;">
+                                <div class="card btn text-center course-card" style="width: 15rem;">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ course.department }} {{course.course_num }}</h5>
+                                        <h4 class="card-title">{{ course.department }} {{course.course_num }}</h5>
                                         <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                                        <p class="card-text">{{ course.instructor.first_name }} {{ course.instructor.last_name }}
-                                                            <br>{{ course.getFormattedCourseDays }} {{ course.meeting_start_time }} - {{ course.meeting_end_time }}
-                                                            <br>{{ course.meeting_location }}</p>
+                                        <h6 class="card-subtitle small mb-2" id="card-professor-name">{{ course.instructor.first_name }} {{ course.instructor.last_name }}</h6>
                                     </div>
                                 </div>
                             </a>
@@ -36,11 +34,11 @@
 
     {% comment %} Assignment To-Do List {% endcomment %}
     <div id="to-do-container" class="container col">
-        <h3 class="text-center">To-Do List</h3>
+        <h3 class="text-center pb-3" style="border-bottom: 1px solid lightgrey;">To-Do List</h3>
         {% if assignments %}
         <ul id="to-do-assignment-group" class="list-group list-group-flush">
             {% for assignment in assignments %}
-                <a href="{% url 'course_management:assignmentSubmission' assignment.course.id assignment.id %}" class="list-group-item flex-column align-items-start mt-1">
+                <a href="{% url 'course_management:assignmentSubmission' assignment.course.id assignment.id %}" class="to-do-item list-group-item flex-column align-items-start mt-1">
                     <div class="d-flex w-80 justify-content-between">
                         <h5 class="mb-1">{{ assignment.title }}</h5>
                     </div>

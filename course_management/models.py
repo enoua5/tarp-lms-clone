@@ -55,6 +55,72 @@ class Course(models.Model):
             courseDays = courseDays.replace(str(weekday[1]), str(weekday[0]))
             
         return courseDays
+    
+    '''!
+        @brief Calculates the student's grade, letter and percent, for the current course.
+        @param in_student Student object (typically the user).
+        @return student_grade A Python dictionary of the format {'letter': str, 'percent': float}
+    '''
+    def getStudentGrade(self, in_student):
+        # Collect graded submissions for the student
+        assignment_list = Assignment.objects.filter(course=self)
+        student_grade = {'letter': 'N/A',
+                        'percent': -1.0}
+        scored_points = 0
+        total_points = 0
+        
+        for assignment in assignment_list:
+            studentSubmissions = Submission.objects.filter(assignment_id=assignment.id, student_id=in_student.id)
+            gradedSubmissions = list(filter(lambda submission: submission.score is not None, studentSubmissions))
+            if len(gradedSubmissions) != 0:
+                # Sorting to get only the last graded submission.
+                gradedSubmissions.sort(key=lambda submission: submission.submitted_at, reverse=True)
+                scored_points += gradedSubmissions[0].score
+                total_points += assignment.points
+                
+        if total_points != 0:
+            student_grade['percent'] = round((scored_points / total_points) * 100.0, 2)
+            student_grade['letter'] = self.calcLetterGrade(student_grade['percent'])
+            
+        return student_grade 
+
+    '''!
+        @brief Calculates the letter grade that a student currently has in the course.
+        @param percentGrade The student's current grade percent in the course.
+    '''
+    def calcLetterGrade(self, percentGrade):
+        # Cut out the A threshold
+        Ascore = self.a_threshold
+        # Cut out the increment value
+        inc = self.increment
+        letterGrade = None
+
+        if (percentGrade >= Ascore):
+            letterGrade = 'A'
+        elif (percentGrade >= (Ascore - inc)):
+            letterGrade = 'A-'
+        elif (percentGrade >= (Ascore - (inc * 2))):
+            letterGrade = 'B+'
+        elif (percentGrade >= (Ascore - (inc * 3))):
+            letterGrade = 'B'
+        elif (percentGrade >= (Ascore - (inc * 4))):
+            letterGrade = 'B-'
+        elif (percentGrade >= (Ascore - (inc * 5))):
+            letterGrade = 'C+'
+        elif (percentGrade >= (Ascore - (inc * 6))):
+            letterGrade = 'C'
+        elif (percentGrade >= (Ascore - (inc * 7))):
+            letterGrade = 'C-'
+        elif (percentGrade >= (Ascore - (inc * 8))):
+            letterGrade = 'D+'
+        elif (percentGrade >= (Ascore - (inc * 9))):
+            letterGrade = 'D'
+        elif (percentGrade >= (Ascore - (inc * 10))):
+            letterGrade = 'D-'
+        else:
+            letterGrade = 'E'
+
+        return letterGrade
 
 
 # assignment model

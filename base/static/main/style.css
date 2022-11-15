@@ -6,22 +6,323 @@
 .dropdown-item {
     white-space: pre-wrap;
 }
+/*********** Navbar Styling  ************/
+.navbar
+{
+    background-image: url('../../../media/site_images/stacked-waves-haikei.svg');
+    background-position: left;
+    background-size: cover;
+}
 
+.nav-link
+{
+    color: #e1e1e1;
+}
+
+.nav-link.active
+{
+    color: #FFFFFF;
+}
+
+#logout-link
+{
+    color: #1C1D1F !important;
+}
+
+/*********** Footer Styling *************/
+
+/*********** Global Font Options ***********/
+h1,h2,h3
+{
+    font-weight: 350;
+    color: #1C1D1F;
+}
+
+h4, h5
+{
+    color: #1C1D1F;
+    font-weight: 375;
+}
+
+p, .small
+{
+    color: #1C1D1F;
+}
+
+a.list-group-item:hover
+{
+    color: #2359AF;
+}
+
+/********* Alert Styling ********/
+.alert-warning
+{
+    background-color: rgba(53, 139, 230, 0.1) !important;
+    border: none;
+    color: #1C1D1F;
+}
+
+.alert-primary
+{
+    background-color: rgba(53, 139, 230, 0.1) !important;
+    border: none;
+    color: #1C1D1F;
+}
+
+/********* Course Cards *********/
+
+.course-card
+{
+    box-shadow: 0px 0px 10px rgba(0, 3, 64, 0.2);
+    background-color: rgba(59, 154, 255, 0.25) !important;
+    background-image: var(--bs-gradient) !important;
+    border: none;
+}
+
+h4.card-title
+{
+    color: #2359AF;
+}
+
+h6.card-subtitle.text-muted, #card-professor-name
+{
+    color: #36527e !important;
+}
+
+.course-card:hover
+{
+    background-color: rgba(59, 154, 255, 0.35) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+
+/********* Dashboard To-Do List ***********/
+.to-do-item:hover
+{
+    background-color: rgba(53, 139, 230, 0.05) !important;
+    color: 2359AF !important;
+    border-radius: 5px;
+}
+
+.to-do-item h5
+{
+    color: #2359AF !important;
+}
+
+/*********** Course Page Styling **********/
+#courseTitle a h1
+{
+    color: #2359AF !important;
+}
+
+/********* Global Button Styling **********/
+
+.btn-primary, .btn-success
+{
+    background-color: #358CE6;
+    border-color: #307dcf;
+}
+
+.btn-primary:hover, .btn-success:hover
+{
+    background-color: #2b73c0 !important;
+    border-color: #2661a1 !important;
+}
+
+.btn-danger
+{
+    background-color: #E84855 !important;
+    border-color: #e83f4d !important;
+}
+
+.btn-danger:hover
+{
+    background-color: #cf414d !important;
+    border-color: #c93743 !important;
+}
+
+.btn-outline-primary
+{
+    border-color: #2b73c0 !important;
+    color: #2b73c0 !important;
+}
+
+.btn-outline-primary:hover
+{
+    background-color: #2b73c0 !important;
+    color: #fff !important;
+}
+
+.btn-dark
+{
+    background-color: #0D2F66 !important;
+    border-color: #09234c !important;
+}
+
+/********* Global Accordion Styling *********/
+
+.accordion-button:not(.collapsed)
+{
+    box-shadow: none;
+    background-color: rgba(59, 154, 255, 0.45) !important;
+}
+
+.accordion-button:focus
+{
+    box-shadow: none;
+}
+
+.accordion-button
+{
+    background-color: rgba(59, 154, 255, 0.35) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+/********* Assignment Tags ************/
+
+.bg-danger
+{
+    background-color: #E84855 !important;
+}
+
+.bg-info
+{
+    background-color: #2359AF !important;
+}
+
+/********* Calendar ************/
+
+/* Course Events */
+.fc-event-title-container
+{
+    background-color: rgba(57, 133, 255, 0.25) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+/* Assignments */
+.fc-daygrid-dot-event
+{
+    color: #358CE6;
+}
+
+/* Today Box Color */
+.fc-day-today
+{
+    background-color: rgba(53, 139, 230, 0.05) !important;
+}
+
+/* Today Button */
+.fc-today-button
+{
+    background-color: rgba(57, 133, 255, 1) !important;
+    background-image: var(--bs-gradient) !important;
+    border: none !important;
+}
+
+.fc-today-button:focus
+{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Month Controls */
+.fc-prev-button, .fc-next-button
+{
+    background-color: rgba(57, 133, 255, 1) !important;
+    background-image: var(--bs-gradient) !important;
+    border: none !important;
+}
+
+.fc-prev-button:focus, .fc-next-button:focus
+{
+    box-shadow: 0px 0px 5px rgba(35, 89, 175, 1.0) !important;
+}
+
+/* Day Labels */
+.fc-col-header-cell-cushion
+{
+    color: #2359AF !important;
+    text-decoration: none;
+}
+
+/* Day Label Boxes */
+.fc-col-header-cell
+{
+    background-color: rgba(53, 139, 230, 0.25) !important;
+}
+
+/* Day Number */
+.fc-daygrid-day-number
+{
+    color: #2359AF !important;
+    text-decoration: none;
+}
+
+/************ Profile *************/
+.profile-header
+{
+    background-color: rgba(53, 139, 230, 0.1);
+}
+
+/************ Course Registration *************/
+#course-search-controls h4
+{
+    font-weight: 400;
+}
+
+.course-lead
+{
+    font-weight: 400;
+}
+
+/************* Badge Styling ****************/
+.badge.bg-info
+{
+    background-color: #2359AF !important;
+}
+
+/************* Assignment Page Styling **********/
+#studentAssignmentPanel .accordion-button
+{
+    background-color: rgba(59, 154, 255, 0.20) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+#studentAssignmentPanel .accordion-button:not(.collapsed)
+{
+    background-color: rgba(59, 154, 255, 0.30) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+/*********** Notification Styling *************/
 .no-notif
 {
-    filter: grayscale(1);
+    filter: saturate(0) brightness(2);
 }
 
-.yes-notif
+#notification-dropdown .dropdown-item:not(.btn-danger)
 {
-    /**/
+    background-color: rgba(59, 154, 255, 0.25) !important;
+    color: #27282d !important;
+    background-image: var(--bs-gradient) !important;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
-/* Used to hide the navbar when printing the page */
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
+#notification-dropdown .dropdown-item:hover:not(.btn-danger)
+{
+    background-color: rgba(59, 154, 255, 0.35) !important;
+    background-image: var(--bs-gradient) !important;
+}
+
+#notification-dropdown .btn-danger
+{
+    
+}
+
+/*********** Assignment Submission Styling ************/
+.card-header
+{
+    background-color: rgba(59, 154, 255, 0.25) !important;
+    background-image: var(--bs-gradient) !important;
 }
