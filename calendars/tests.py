@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test import LiveServerTestCase
 from django.test import Client
 from account.models import Profile
 from course_management.models import Course
 import unittest
+from selenium import webdriver
 
 # Create your tests here.
 
@@ -33,7 +35,9 @@ class TestMakeCourse(TestCase):
                                                   'meeting_start_time': '12:00',
                                                   'meeting_end_time': '12:30',
                                                   'meeting_location': 'Building 100',
-                                                  'credit_hours': 4})
+                                                  'credit_hours': 4,
+                                                  'a_threshold': 90,
+                                                  'increment': 4})
 
         # Status code should be 302 for redirect
         self.assertTrue(response.status_code == 302, msg='Error: Post failed to return redirection status.')

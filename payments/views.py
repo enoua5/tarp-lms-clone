@@ -13,12 +13,33 @@ def tuition(request):
     # A precaution, in case student/course relationship does not exist
     try:        
         course_list = request.user.courses.all()
-        balance = Tuition.objects.get(user=request.user).balance
+        balance = float(Tuition.objects.get(user=request.user).balance)
+        total = getSemesterTotal(request.user)
+        amt_paid = total - balance
 
-        return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance})
+        return render(request, 'payments/tuition_page.html', {'course_list': course_list,
+                                                              'balance': balance,
+                                                              'total': f"{total:0.2f}",
+                                                              'paid': f"{amt_paid:0.2f}"})
     except:  
         return render(request, 'payments/tuition_page.html', {'course_list' : {}})
 
+
+## Supporting Functions
+'''!
+    @brief Calculates the total cost of the semester for the student.
+    @param student The student object.
+    @return total The total cost of the semester for the student (before payment).
+'''
+def getSemesterTotal(student):
+    course_list = student.courses.all()
+    total = 0.0
+    
+    for course in course_list:
+        total += course.credit_hours * 100.0
+        
+    return total
+  
 # Stripe nonsence 
 @csrf_exempt
 def createpayment(request):
@@ -41,6 +62,7 @@ def createpayment(request):
       except Exception as e:
         return JsonResponse({'error':str(e)},status= 403)
 
+
 def success(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     receipt_link = stripe.Charge.list(limit=1)['data'][0]['receipt_url']
@@ -56,6 +78,13 @@ def success(request):
     currTuition.save()
 
     course_list = request.user.courses.all()
-    balance = Tuition.objects.get(user=request.user).balance
+    balance = float(Tuition.objects.get(user=request.user).balance)
+    total = getSemesterTotal(request.user)
+    paid = total - balance
 
-    return render(request, 'payments/tuition_page.html', {'course_list' : course_list, 'balance' : balance, 'success' : True, 'paid':paid, 'receipt':receipt_link}) 
+    return render(request, 'payments/tuition_page.html', {'course_list' : course_list,
+                                                          'balance' : balance,
+                                                          'total': total,
+                                                          'paid': paid,
+                                                          'receipt':receipt_link,
+                                                          'success' : True}) 

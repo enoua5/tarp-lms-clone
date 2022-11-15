@@ -146,36 +146,52 @@
     {% endif %}
 
     {% if success %}
-        <div class="alert alert-warning d-flex justify-content-between" role="alert">
-            <h4>Thank you for your tuition payment.</h4>
-            <a class="btn btn-outline-success" href="{{receipt}}" target="_blank" rel="noopener noreferrer" role="button">See a receipt</a>
+        <div class="alert alert-warning d-flex justify-content-between mx-auto" role="alert" style="width: 70%;">
+            <h5 class="my-auto">Thank you for your tuition payment.</h5>
+            <a class="btn btn-success" href="{{receipt}}" target="_blank" rel="noopener noreferrer" role="button">Print Receipt</a>
         </div>
     {% endif %}
 
-    {% if balance >= 0 %}
-    <div class="alert alert-success" role="alert">
-        <div class="d-flex justify-content-between">
-            <h3 class="mt-0 mb-0">Your balance: ${{balance}}</h3>
-            {% if balance > 0 %}
-            <a href="#" class="btn btn-success btn-lg" style="width: 20%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
-            {% endif %}
-        </div>
-    </div>
-    {% endif %}
-
+<div class="container-fluid mt-3" style="width: 80%">
     {% if course_list %}
-    <div class="container-fluid mt-3" style="width: 90%">
-        <table class="table">
-        <tbody>
-            {% for course in course_list %}
-            <tr>
-                <td>{{ course.department }} {{ course.course_num }}  {{ course.course_name }}</td>
-                <td>${{ course.credit_hours }}00</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    <div class="container-fluid mt-3" style="width: 95%">
+        <h1>Semester Tuition</h1>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Course</th>
+                <th scope="col">Cost</th>
+              </tr>
+            </thead>
+            <tbody>        
+                {% for course in course_list %}
+                    <tr>
+                        <td>{{ course.department }} {{ course.course_num }} {{ course.course_name }}</td>
+                        <td>${{ course.credit_hours }}00.00</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-end">Total:</td>
+                    <td>${{ total }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end">Amount Paid:</td>
+                    <td>-${{ paid }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><b>Balance:</b></td>
+                    <td><b>${{ balance }}0</b></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
+    {% if balance > 0 %}
+    <div class="d-flex mt-3 justify-content-end" style="width: 95%;">
+      <a href="#" class="btn btn-success" style="width: 30%" tabindex="-1" role="button" aria-disabled="true" data-bs-toggle="modal" data-bs-target="#payModal">Pay</a>
+    </div>
+    {% endif %}
 
     {% else %}
     <div class="alert alert-primary mt-2" role="alert" >
