@@ -12,9 +12,24 @@
 
             data.sort([{column: 1}]);
 
+            if({{singleValue}} == 1)
+            {
+                toReplace = 'auto';
+            }
+            else
+            {
+                toReplace = 5;
+            }
+
             var options = {
                 legend: { position: 'none' },
-                histogram: {bucketSize: 5,
+                // If we hard code the bucket size, there is a bug: 
+                // Histogram cannot be displayed when all the students have the same
+                // grade on the assignment.
+                // Was:
+                // histogram: {bucketSize: 5,
+
+                histogram: {bucketSize: toReplace,
                             min_value: 0,
                             max_value: {{assignment.points}}},
                 hAxis: {title: "Grade Received (0-{{ assignment.points }})"},

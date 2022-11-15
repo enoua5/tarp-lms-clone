@@ -338,6 +338,9 @@ def submission_list(req, assignment_id):
         ctx['danger_students'] = get_danger_students(assignment)
         ctx['succeeding_students'] = get_succeeding_students(assignment)
 
+    # Bug fix: check if all the values are the same
+    ctx['singleValue'] = 1 if ctx['high'] == ctx['low'] else 0
+        
     return render(req, 'course_management/submission_list.html', ctx)
 
 
@@ -416,7 +419,7 @@ def get_danger_students(assignment):
 
     if submissions:
         for submission in submissions:
-            if submission.score and submission.score < (assignment.points * 0.2):
+            if submission.score != None and submission.score < (assignment.points * 0.2):
                 danger_students.append(submission.student)
 
     return danger_students
