@@ -339,7 +339,8 @@ def submission_list(req, assignment_id):
         ctx['succeeding_students'] = get_succeeding_students(assignment)
 
     # Bug fix: check if all the values are the same
-    ctx['singleValue'] = 1 if ctx['high'] == ctx['low'] else 0
+    if 'high' in ctx:
+        ctx['singleValue'] = 1 if ctx['high'] == ctx['low'] else 0
         
     return render(req, 'course_management/submission_list.html', ctx)
 
