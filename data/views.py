@@ -124,32 +124,32 @@ def get_mine(req, query_dict):
 
 def delete_by_id(req, query_dict):
     if not req.user.is_authenticated:
-        return HttpResponse('{"message": "You are not logged in"}', status=HTTPStatus.UNAUTHORIZED)
+        return JsonResponse({"message": "You are not logged in"}, status=HTTPStatus.UNAUTHORIZED)
 
     item_type = query_dict.get('item_type')
 
     if(item_type == None):
-        return HttpResponse('{"message": "Item type not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message": "Item type not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     item_query_desc = ITEM_MODELS.get(item_type)
 
     if(item_query_desc == None):
-        return HttpResponse('{"message":"Item type not recognized"}', status=HTTPStatus.NOT_FOUND)
+        return JsonResponse({"message":"Item type not recognized"}, status=HTTPStatus.NOT_FOUND)
 
     item_id = query_dict.get('id')
     if(item_id == None):
-        return HttpResponse('{"message": "Item id not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message": "Item id not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     item_model = item_query_desc['model']
 
     perm = ITEM_MODELS.get(item_type)['permission']
     if not req.user.has_perm(perm) and perm is not None:
-        return HttpResponse('{"message": "You do not have permission to view that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to view that item"}, status=HTTPStatus.FORBIDDEN)
 
     try:
         item = item_model.objects.get(id=item_id)
     except(Exception):
-        return HttpResponse('{"message": "No item by that id found"}', status=HTTPStatus.NOT_FOUND)
+        return JsonResponse({"message": "No item by that id found"}, status=HTTPStatus.NOT_FOUND)
         
     allowed = False
     if ITEM_MODELS.get(item_type)['allow_delete']:
@@ -159,36 +159,36 @@ def delete_by_id(req, query_dict):
                 break
     
     if not allowed:
-        return HttpResponse('{"message": "You do not have permission to delete that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to delete that item"}, status=HTTPStatus.FORBIDDEN)
 
     item.delete()
 
-    return HttpResponse('{"message":"Deletion success"}', status=HTTPStatus.ACCEPTED)
+    return JsonResponse({"message":"Deletion success"}, status=HTTPStatus.ACCEPTED)
 
 def delete_all(req, query_dict):
     if not req.user.is_authenticated:
-        return HttpResponse('{"message": "You are not logged in"}', status=HTTPStatus.UNAUTHORIZED)
+        return JsonResponse({"message": "You are not logged in"}, status=HTTPStatus.UNAUTHORIZED)
 
     item_type = query_dict.get('item_type')
 
     if(item_type == None):
-        return HttpResponse('{"message": "Item type not specified"}', status=HTTPStatus.BAD_REQUEST)
+        return JsonResponse({"message": "Item type not specified"}, status=HTTPStatus.BAD_REQUEST)
 
     item_query_desc = ITEM_MODELS.get(item_type)
 
     if(item_query_desc == None):
-        return HttpResponse('{"message":"Item type not recognized"}', status=HTTPStatus.NOT_FOUND)
+        return JsonResponse({"message":"Item type not recognized"}, status=HTTPStatus.NOT_FOUND)
 
     item_model = item_query_desc['model']
 
     perm = ITEM_MODELS.get(item_type)['permission']
     if not req.user.has_perm(perm) and perm is not None:
-        return HttpResponse('{"message": "You do not have permission to view that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to view that item"}, status=HTTPStatus.FORBIDDEN)
 
         
     allowed = False
     if not ITEM_MODELS.get(item_type)['allow_delete']:
-        return HttpResponse('{"message": "You do not have permission to delete that item"}', status=HTTPStatus.FORBIDDEN)
+        return JsonResponse({"message": "You do not have permission to delete that item"}, status=HTTPStatus.FORBIDDEN)
 
     search_params = Q()
 
@@ -202,7 +202,7 @@ def delete_all(req, query_dict):
     for item in items:
         item.delete()
 
-    return HttpResponse('{"message":"Deletion success"}', status=HTTPStatus.ACCEPTED)
+    return JsonResponse({"message":"Deletion success"}, status=HTTPStatus.ACCEPTED)
 
 def seen_all_notifs(req, query_dict):
     notifs = Notification.objects.filter(notified_user=req.user).all()
